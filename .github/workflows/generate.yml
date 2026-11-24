@@ -31,8 +31,9 @@ jobs:
 
       - uses: astral-sh/setup-uv@v6
 
+      # نسخة جاهزة من ffmpeg (ثوانٍ بدل ~15 دقيقة عبر apt-get)
       - name: تثبيت ffmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
 
       - name: تثبيت MoneyPrinterTurbo
         env:
