@@ -11,6 +11,8 @@ on:
     paths:
       - series.toml
       - mirai.py
+      - sanad_mirai.py
+      - dialogues/**
       - assets/**
       - .github/workflows/generate.yml
 
@@ -44,6 +46,15 @@ jobs:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           COVERR_API_KEY: ${{ secrets.COVERR_API_KEY }}
         run: python mirai.py setup
+
+      # الحلقات الحوارية (ميراي وسند): رسوم + صوتان من edge-tts، وPiper احتياطاً
+      - name: توليد حلقات ميراي وسند الحوارية
+        run: |
+          pip install -q edge-tts pillow piper-tts
+          python -c "from PIL import features; assert features.check('raqm')" \
+            || (sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libfribidi0 libraqm0)
+          python -m piper.download_voices --data-dir vendor/piper ar_JO-kareem-medium
+          python sanad_mirai.py
 
       - name: توليد الحلقات
         env:

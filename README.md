@@ -44,6 +44,19 @@ PIXABAY_API_KEY=مفتاحك python3 mirai.py generate
 - `--source local` لاستخدام لقطاتك من مجلد `assets/`.
 - `--voice ar-EG-SalmaNeural-Female` لتغيير الصوت لكل الحلقات.
 
+## حلقات ميراي وسند الحوارية 🌱
+
+حوار بين شخصيتين: **ميراي** (بصوت `ar-SA-ZariyahNeural`) و**سند** (بصوت `ar-SA-HamedNeural`)،
+مع رسوم مرسومة برمجياً وترجمة عربية بخطوط Lalezar وTajawal وMarhey.
+
+```bash
+python3 sanad_mirai.py ep06-lets-plant
+```
+
+نص كل حلقة في `dialogues/<id>.toml`: لكل جملة المتحدث (`mirai` أو `sanad`) والنص والمشهد.
+المشاهد المتاحة: `seed`, `needs`, `plant_seed`, `water`, `wait`, `sprout`, `grow`, `fruit`.
+تُولَّد هذه الحلقات أيضاً تلقائياً في GitHub Actions مع بقية الحلقات.
+
 ## أدوات ذكاء اصطناعي مجانية إضافية
 
 صوت عربي بدون إنترنت، ترجمة تلقائية، وتحرير فيديو عبر Claude: `bash tools/install-free-ai-tools.sh`.

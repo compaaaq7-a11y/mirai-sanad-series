@@ -1,0 +1,66 @@
+# حلقة حوارية بين ميراي وسند. تُولَّد بالأمر:
+#   python3 sanad_mirai.py ep06-lets-plant
+#
+# speaker: mirai أو sanad
+# scene: المشهد المرسوم خلف الحوار
+#   seed, needs, plant_seed, water, wait, sprout, grow, fruit
+
+id = "ep06-lets-plant"
+title = "هيا نزرع"
+subtitle = "حلقة عن الصبر والبدايات الصغيرة"
+outro = "وأنتم، ماذا ستزرعون اليوم؟"
+
+[[lines]]
+speaker = "mirai"
+scene = "seed"
+text = "سند! انظر، وجدتُ بذرةَ طماطم صغيرة. هل يمكن أن تصبح نبتة كبيرة؟"
+
+[[lines]]
+speaker = "sanad"
+scene = "seed"
+text = "طبعاً يا ميراي! كل نبتة كبيرة بدأت ببذرة صغيرة. هيا نزرعها معاً."
+
+[[lines]]
+speaker = "mirai"
+scene = "needs"
+text = "وماذا نحتاج؟"
+
+[[lines]]
+speaker = "sanad"
+scene = "needs"
+text = "ثلاثة أشياء فقط: أصيصٌ فيه تربة، وماء، وشمس."
+
+[[lines]]
+speaker = "mirai"
+scene = "plant_seed"
+text = "سأحفر حفرة صغيرة بعمق إصبعين، وأضع البذرة فيها."
+
+[[lines]]
+speaker = "sanad"
+scene = "water"
+text = "ممتاز. نغطيها بالتراب، ونسقيها قليلاً. لا تُغرقيها بالماء!"
+
+[[lines]]
+speaker = "mirai"
+scene = "wait"
+text = "مرّ يومان... ولم يحدث شيء!"
+
+[[lines]]
+speaker = "sanad"
+scene = "wait"
+text = "الزراعة تعلّمنا الصبر. البذرة تعمل تحت التراب، حتى لو لم نرها."
+
+[[lines]]
+speaker = "mirai"
+scene = "sprout"
+text = "انظر يا سند! ظهرت ورقتان خضراوان!"
+
+[[lines]]
+speaker = "sanad"
+scene = "grow"
+text = "وهكذا كل حلم: نزرعه، ونرعاه كل يوم، ثم نراه يكبر."
+
+[[lines]]
+speaker = "mirai"
+scene = "fruit"
+text = "إذن سأزرع شيئاً جديداً كل أسبوع، في الحديقة، وفي عقلي أيضاً!"
