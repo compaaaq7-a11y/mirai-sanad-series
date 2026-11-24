@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "mcp-video": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "mcp-video"
+      ],
+      "env": {}
+    }
+  }
+}

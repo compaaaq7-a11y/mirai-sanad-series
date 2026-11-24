@@ -44,6 +44,11 @@ PIXABAY_API_KEY=مفتاحك python3 mirai.py generate
 - `--source local` لاستخدام لقطاتك من مجلد `assets/`.
 - `--voice ar-EG-SalmaNeural-Female` لتغيير الصوت لكل الحلقات.
 
+## أدوات ذكاء اصطناعي مجانية إضافية
+
+صوت عربي بدون إنترنت، ترجمة تلقائية، وتحرير فيديو عبر Claude: `bash tools/install-free-ai-tools.sh`.
+التفاصيل في [docs/free-ai-tools.md](docs/free-ai-tools.md).
+
 ## إضافة حلقة جديدة
 
 أضف في آخر `series.toml`:
