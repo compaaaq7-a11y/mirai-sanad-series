@@ -13,7 +13,8 @@
 
 عند كل تعديل على `series.toml` ورفعه، يعمل GitHub Actions تلقائياً ويولّد كل الحلقات.
 
-- لتحميل الفيديوهات: تبويب **Actions** ← آخر تشغيل ← **Artifacts** ← `mirai-sanad-videos`.
+- لتحميل الفيديوهات: تبويب **Actions** ← آخر تشغيل ← **Artifacts** ← `mirai-sanad-videos`،
+  أو من فرع `videos` الذي يحوي دائماً آخر نسخة من الحلقات.
 - لتوليد حلقة معيّنة يدوياً: **Actions** ← **توليد حلقات ميراي سند** ← **Run workflow**، واكتب اسم الحلقة (مثل `ep02-ai-tools`).
 - للقطات فيديو حقيقية: سجّل مجاناً في [Pixabay](https://pixabay.com/accounts/register/) ثم انسخ مفتاحك من
   [صفحة الـ API](https://pixabay.com/api/docs/)، وأضفه في
