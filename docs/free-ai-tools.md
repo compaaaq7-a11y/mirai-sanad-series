@@ -20,6 +20,22 @@ bash tools/install-free-ai-tools.sh
 | [mcp-video / Kinocut](https://github.com/pastorsimon1798/mcp-video) | خادم MCP يتيح لـ Claude قص ودمج وترجمة الفيديو عبر ffmpeg | مضاف في `.mcp.json` |
 | yt-dlp, pydub | تنزيل مقاطع مرجعية، قص الصوت | مثبت |
 
+## إضافات Claude Code المثبتة (مجانية، تعمل محلياً)
+
+مفعّلة في `.claude/settings.json`، فتعمل تلقائياً عند فتح المشروع في Claude Code:
+
+| الإضافة | ماذا تفعل |
+| --- | --- |
+| `ffmpeg-llm` | تكتب أوامر ffmpeg دقيقة من وصفك بالكلام، ومعها وكيل خبير `ffmpeg-expert` |
+| `watch-video` | Claude "يشاهد" أي فيديو: لقطات مفتاحية + تفريغ الكلام بـ faster-whisper (مفيد لمراجعة الحلقات) |
+| `video-cleanup` | تنقية الصوت من الضوضاء، ضبط مستوى الصوت، شعار مائي، شريط اسم، وبطاقة ختام |
+
+لتثبيتها يدوياً:
+
+```bash
+claude plugin install ffmpeg-llm@anthropic-plugin-directory --scope project
+```
+
 ## أمثلة سريعة
 
 صوت عربي محلي:

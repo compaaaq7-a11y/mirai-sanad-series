@@ -1,0 +1,7 @@
+{
+  "enabledPlugins": {
+    "ffmpeg-llm@anthropic-plugin-directory": true,
+    "watch-video@anthropic-plugin-directory": true,
+    "video-cleanup@anthropic-plugin-directory": true
+  }
+}
