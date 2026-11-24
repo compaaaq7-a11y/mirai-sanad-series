@@ -15,9 +15,11 @@
 
 - لتحميل الفيديوهات: تبويب **Actions** ← آخر تشغيل ← **Artifacts** ← `mirai-sanad-videos`.
 - لتوليد حلقة معيّنة يدوياً: **Actions** ← **توليد حلقات ميراي سند** ← **Run workflow**، واكتب اسم الحلقة (مثل `ep02-ai-tools`).
-- للقطات فيديو حقيقية: أنشئ مفتاحاً مجانياً من [Pexels](https://www.pexels.com/api/) وأضفه في
-  **Settings ← Secrets and variables ← Actions** باسم `PEXELS_API_KEY`.
-  بدونه تُستخدم الصور والمقاطع الموجودة في `assets/`، أو خلفية بلون واحد.
+- للقطات فيديو حقيقية: سجّل مجاناً في [Pixabay](https://pixabay.com/accounts/register/) ثم انسخ مفتاحك من
+  [صفحة الـ API](https://pixabay.com/api/docs/)، وأضفه في
+  **Settings ← Secrets and variables ← Actions** باسم `PIXABAY_API_KEY`.
+  (يُقبل أيضاً `PEXELS_API_KEY` أو `COVERR_API_KEY`؛ إصدار مفاتيح Pexels الجديدة متوقف حالياً.)
+  بدون مفتاح تُستخدم الصور والمقاطع الموجودة في `assets/`، أو خلفية بلون واحد.
 
 ## على جهازك
 
@@ -30,10 +32,10 @@ python3 mirai.py generate     # توليد كل الحلقات
 python3 mirai.py generate ep01-intro ep03-learning   # حلقات محددة
 ```
 
-مع مفتاح Pexels:
+مع مفتاح Pixabay:
 
 ```bash
-PEXELS_API_KEY=مفتاحك python3 mirai.py generate
+PIXABAY_API_KEY=مفتاحك python3 mirai.py generate
 ```
 
 خيارات أخرى:
@@ -55,7 +57,7 @@ script = """
 """
 ```
 
-- `terms` كلمات إنجليزية للبحث عن اللقطات في Pexels.
+- `terms` كلمات إنجليزية للبحث عن اللقطات في Pixabay أو Pexels.
 - أي إعداد من `[defaults]` يمكن تغييره لحلقة واحدة بكتابته داخلها، مثل `voice_name` أو `video_aspect`.
 
 ## الأصوات العربية المجانية

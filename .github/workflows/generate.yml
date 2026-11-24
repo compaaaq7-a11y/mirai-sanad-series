@@ -37,12 +37,16 @@ jobs:
 
       - name: تثبيت MoneyPrinterTurbo
         env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          COVERR_API_KEY: ${{ secrets.COVERR_API_KEY }}
         run: python mirai.py setup
 
       - name: توليد الحلقات
         env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          COVERR_API_KEY: ${{ secrets.COVERR_API_KEY }}
           EPISODES: ${{ github.event.inputs.episodes }}
         run: python mirai.py generate $EPISODES
 

@@ -9,7 +9,10 @@
     python3 mirai.py generate --source local   # استخدام لقطات من مجلد assets/
 
 متغيرات البيئة الاختيارية:
-    PEXELS_API_KEY  مفتاح Pexels المجاني للقطات الفيديو (بدونه تُستخدم assets/)
+    PIXABAY_API_KEY مفتاح Pixabay المجاني للقطات الفيديو (موصى به)
+    PEXELS_API_KEY  مفتاح Pexels (إصدار مفاتيحه الجديدة متوقف حالياً)
+    COVERR_API_KEY  مفتاح Coverr
+    بدون أي مفتاح تُستخدم اللقطات الموجودة في assets/
     MPT_DIR         مكان MoneyPrinterTurbo (الافتراضي vendor/MoneyPrinterTurbo)
 """
 
@@ -83,27 +86,33 @@ def install_arabic_font() -> None:
         log("لم يُعثر على الخط العربي؛ ستستخدم الأداة خطها الاحتياطي")
 
 
+# مصادر اللقطات المجانية بترتيب الأفضلية: (اسم المصدر، متغير البيئة)
+STOCK_SOURCES = [("pixabay", "PIXABAY_API_KEY"), ("pexels", "PEXELS_API_KEY"), ("coverr", "COVERR_API_KEY")]
+
+
 def write_config() -> None:
-    """أنشئ config.toml للأداة وضع فيه مفتاح Pexels إن وُجد."""
+    """أنشئ config.toml للأداة وضع فيه مفاتيح اللقطات الموجودة في البيئة."""
     config = MPT_DIR / "config.toml"
     if not config.exists():
         shutil.copy2(MPT_DIR / "config.example.toml", config)
-    key = os.environ.get("PEXELS_API_KEY", "").strip()
-    if key:
-        text = config.read_text(encoding="utf-8")
-        text = re.sub(r"(?m)^pexels_api_keys\s*=.*$", f"pexels_api_keys = {json.dumps([key])}", text, count=1)
-        config.write_text(text, encoding="utf-8")
-        log("أُضيف مفتاح Pexels إلى الإعدادات")
+    text = config.read_text(encoding="utf-8")
+    for source, env in STOCK_SOURCES:
+        key = os.environ.get(env, "").strip()
+        if key:
+            text = re.sub(rf"(?m)^{source}_api_keys\s*=.*$",
+                          lambda _m: f"{source}_api_keys = {json.dumps([key])}", text, count=1)
+            log(f"أُضيف مفتاح {source} إلى الإعدادات")
+    config.write_text(text, encoding="utf-8")
 
 
-def pexels_configured() -> bool:
-    if os.environ.get("PEXELS_API_KEY", "").strip():
-        return True
+def configured_source() -> str:
+    """أول مصدر لقطات له مفتاح، وإلا local."""
     config = MPT_DIR / "config.toml"
-    if not config.exists():
-        return False
-    data = tomllib.loads(config.read_text(encoding="utf-8"))
-    return bool(data.get("app", {}).get("pexels_api_keys"))
+    app = tomllib.loads(config.read_text(encoding="utf-8")).get("app", {}) if config.exists() else {}
+    for source, env in STOCK_SOURCES:
+        if os.environ.get(env, "").strip() or app.get(f"{source}_api_keys"):
+            return source
+    return "local"
 
 
 # ---------------------------------------------------------------- series
@@ -175,7 +184,7 @@ def generate(args) -> int:
             sys.exit(f"حلقات غير موجودة: {', '.join(sorted(unknown))}")
         episodes = [ep for ep in episodes if ep["id"] in wanted]
 
-    source = args.source or ("pexels" if pexels_configured() else "local")
+    source = args.source or configured_source()
     log(f"مصدر اللقطات: {source}")
     manifest = build_manifest(episodes, series.get("defaults", {}), source, args.voice)
     log(f"سيتم توليد {len(episodes)} حلقة")
@@ -214,8 +223,8 @@ def main() -> None:
     sub.add_parser("list", help="عرض الحلقات").set_defaults(func=list_episodes)
     g = sub.add_parser("generate", help="توليد الحلقات")
     g.add_argument("episodes", nargs="*", help="أسماء الحلقات (الافتراضي: الكل)")
-    g.add_argument("--source", choices=["pexels", "pixabay", "local"],
-                   help="مصدر اللقطات (الافتراضي: pexels إن وُجد مفتاح، وإلا local)")
+    g.add_argument("--source", choices=["pixabay", "pexels", "coverr", "local"],
+                   help="مصدر اللقطات (الافتراضي: أول مصدر له مفتاح، وإلا local)")
     g.add_argument("--voice", help="تجاوز الصوت لكل الحلقات (مثلاً no-voice للتجربة)")
     g.set_defaults(func=generate)
     args = parser.parse_args()
