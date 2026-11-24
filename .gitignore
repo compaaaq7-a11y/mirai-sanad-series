@@ -1,0 +1,5 @@
+vendor/
+build/
+output/
+__pycache__/
+.venv/
