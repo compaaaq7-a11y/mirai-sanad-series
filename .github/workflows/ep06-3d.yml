@@ -63,6 +63,11 @@ jobs:
         with:
           python-version: "3.11"
       - uses: FedericoCarboni/setup-ffmpeg@v3
+        id: ffmpeg
+        continue-on-error: true
+      - name: ffmpeg احتياطي
+        if: steps.ffmpeg.outcome == 'failure'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - run: pip install edge-tts numpy
       - name: التعليق والزقزقة والموسيقى
         run: python blender/ep06_finish.py audio
@@ -81,6 +86,11 @@ jobs:
         with:
           python-version: "3.11"
       - uses: FedericoCarboni/setup-ffmpeg@v3
+        id: ffmpeg
+        continue-on-error: true
+      - name: ffmpeg احتياطي
+        if: steps.ffmpeg.outcome == 'failure'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - run: pip install numpy
       - uses: actions/download-artifact@v4
         with:

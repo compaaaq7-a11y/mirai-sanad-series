@@ -203,7 +203,6 @@ def frange(a, b, step):
 
 # ============================================================ المواد
 SKIN = mat("skin", "#F1AE82", 0.5, sheen=0.3)
-CHEEK = mat("cheek", "#F49A8C", 0.6)
 WHITE = mat("eye_white", "#FFFFFF", 0.25)
 IRIS = mat("iris", "#5A3418", 0.2)
 PUPIL = mat("pupil", "#120A05", 0.15)
@@ -382,7 +381,6 @@ def kid(name, pos, head_deg, girl=False):
     part("sphere", f"{name}_head", hc, (0.24, 0.23, 0.235), SKIN, hp)
     for sx in (1, -1):
         part("sphere", f"{name}_ear{sx}", hc + Vector((0.235 * sx, 0.01, -0.01)), (0.035, 0.05, 0.06), SKIN, hp)
-        part("sphere", f"{name}_cheek{sx}", hc + Vector((0.13 * sx, -0.19, -0.075)), (0.045, 0.02, 0.03), CHEEK, hp)
     part("sphere", f"{name}_nose", hc + Vector((0, -0.235, -0.04)), (0.028, 0.02, 0.022), SKIN, hp)
     eyes = empty(f"{name}_eyes", hc + Vector((0, -0.207, 0.0)), hp)
     k["eyes"] = eyes
