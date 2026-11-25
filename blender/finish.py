@@ -38,9 +38,9 @@ EPISODES = {
     "ep07": dict(
         out="ep07-first-flight-3d.mp4",
         lines=[
-            (0.8, "بعد أيام، عاد سند وميراي إلى الشجرة."),
-            (4.6, "كان الفرخ قد كبر، وحان وقت رحلته الأولى."),
-            (8.3, "رفرف قليلًا، ثم قفز إلى غصن قريب."),
+            (0.6, "بعد أيام، عاد سند وميراي إلى الشجرة."),
+            (5.0, "كان الفرخ قد كبر، وحان وقت رحلته الأولى."),
+            (9.3, "رفرف قليلًا، ثم قفز إلى غصن قريب."),
             (14.2, "حاول مرةً أخرى… وإذا به يطير!"),
             (23.0, "ضحك سند وصفّقت ميراي، وطار العصفور بجانب أمّه."),
         ],
@@ -201,17 +201,26 @@ def audio(args):
     n = int(SR * DUR)
     voice = np.zeros(n)
     spans = []
-    if not args.no_voice:
+    if not args.no_voice and not (args.keep_voice and (BUILD / "line0.mp3").exists()):
         asyncio.run(tts_all(BUILD))
+    prev_end = 0.0
     for i, (start, text) in enumerate(CFG["lines"]):
         p = BUILD / f"line{i}.mp3"
         if args.no_voice or not p.exists():
             spans.append((start, start + 3.5, text))
             continue
         clip = read_audio(p)
+        # قصّ الصمت من البداية والنهاية، ومنع تداخل جملة مع التي قبلها
+        loud = np.nonzero(np.abs(clip) > 0.01)[0]
+        if len(loud):
+            clip = clip[max(0, loud[0] - int(0.03 * SR)):loud[-1] + int(0.08 * SR)]
+        if start < prev_end + 0.15:
+            print(f"الجملة {i + 1}: تأخير من {start:.2f} إلى {prev_end + 0.15:.2f} لتجنّب التداخل")
+            start = prev_end + 0.15
         i0 = int(start * SR)
         voice[i0:i0 + len(clip)] += clip[: n - i0]
         end = start + len(clip) / SR
+        prev_end = end
         spans.append((start, end, text))
         nxt = CFG["lines"][i + 1][0] if i + 1 < len(CFG["lines"]) else DUR
         if end > nxt + 0.05:
@@ -283,6 +292,7 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("audio")
     a.add_argument("--no-voice", action="store_true", help="بدون تعليق (للتجربة بلا إنترنت)")
+    a.add_argument("--keep-voice", action="store_true", help="استخدام ملفات التعليق الموجودة بدل توليدها من جديد")
     a.set_defaults(func=audio)
     v = sub.add_parser("video")
     v.add_argument("--frames")
