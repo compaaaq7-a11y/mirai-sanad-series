@@ -12,7 +12,7 @@ from math import atan2, cos, degrees, radians, sin
 from pathlib import Path
 
 import bpy
-from mathutils import Vector
+from mathutils import Euler, Vector
 
 FPS = 24
 DURATION = 30.0
@@ -193,7 +193,7 @@ WHITE = mat("eye_white", "#FFFFFF", 0.25)
 IRIS = mat("iris", "#5A3418", 0.2)
 PUPIL = mat("pupil", "#120A05", 0.15)
 SHINE = mat("shine", "#FFFFFF", 0.1, emit=3.0)
-MOUTH = mat("mouth", "#B5413F", 0.4)
+MOUTH = mat("mouth", "#6E2E26", 0.5)
 BROW_S = mat("brow_s", "#5A3218", 0.6)
 HAIR_S = mat("hair_sanad", "#7A4524", 0.55, vary=("#5E3419", 6), sheen=0.4)
 HAIR_M = mat("hair_mirai", "#3A2216", 0.45, sheen=0.4)
@@ -211,6 +211,8 @@ CAT_EYE = mat("cat_eye", "#7BC043", 0.2)
 NOSE = mat("pink", "#F28AA0", 0.4)
 CHICK = mat("chick_yellow", "#FFD84A", 0.6, sheen=0.8)
 MOM = mat("mom_blue", "#4F86D9", 0.5, sheen=0.5)
+MOM_TAIL = mat("mom_tail", "#2F5FAF", 0.5, sheen=0.5)
+CHICK_TAIL = mat("chick_tail", "#F5B82E", 0.6, sheen=0.8)
 MOM_B = mat("mom_belly", "#FFA45C", 0.55, sheen=0.5)
 BEAK = mat("beak", "#FF9A1F", 0.4)
 YARN = mat("yarn", "#E8456B", 0.8, bump=(0.6, 40), sheen=0.6)
@@ -379,13 +381,15 @@ def kid(name, pos, head_deg, girl=False):
         part("sphere", f"{name}_shine{sx}", e + Vector((0.009, -0.014, 0.012)), (0.008, 0.003, 0.008), SHINE, eyes)
         part("sphere", f"{name}_brow{sx}", hc + Vector((0.085 * sx, -0.2, 0.085)), (0.035, 0.01, 0.008),
              BROW_S if not girl else HAIR_M, hp, rot=(0, -8 * sx, 0))
-    # ابتسامة: نصف حلقة
-    bpy.ops.mesh.primitive_torus_add(major_radius=0.045, minor_radius=0.008, major_segments=24, minor_segments=8)
+    # ابتسامة: خط رفيع منحنٍ ملتصق بالوجه
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.042, minor_radius=0.0045, major_segments=32, minor_segments=8)
     sm = bpy.context.object
     import bmesh
     bm = bmesh.new()
     bm.from_mesh(sm.data)
-    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y > -0.012], context="VERTS")
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y > -0.018], context="VERTS")
+    for v in bm.verts:  # انحناء الخط مع سطح الوجه حتى لا يبرز من الجانب
+        v.co.z += 3.2 * v.co.x * v.co.x
     bm.to_mesh(sm.data)
     bm.free()
     for p in sm.data.polygons:
@@ -393,9 +397,9 @@ def kid(name, pos, head_deg, girl=False):
     sm.data.materials.append(MOUTH)
     sm.name = f"{name}_smile"
     sm.parent = hp
-    sm.location = hc + Vector((0, -0.205, -0.1))
-    sm.rotation_euler = (radians(90 - 8), 0, 0)
-    sm.scale = (1, 1, 0.5)
+    sm.location = hc + Vector((0, -0.2045, -0.098))
+    sm.rotation_euler = (radians(90 - 10), 0, 0)
+    sm.scale = (1, 1, 0.55)
 
     if not girl:  # شعر بني مجعّد
         golden = math.pi * (3 - math.sqrt(5))
@@ -506,7 +510,6 @@ def bird(name, pos, head_deg, body_m, size=1.0, mom=False):
     part("sphere", f"{name}_torso", (0, 0, 0.09), (0.09, 0.1, 0.085), body_m, bd)
     if mom:
         part("sphere", f"{name}_belly", (0, -0.04, 0.08), (0.075, 0.07, 0.07), MOM_B, bd)
-        part("cone", f"{name}_tail", (0, 0.13, 0.11), (0.05, 0.02, 0.1), body_m, bd, rot=(-70, 0, 0))
     hp = empty(f"{name}_headpivot", (0, -0.05, 0.15), bd)
     b["head"] = hp
     part("sphere", f"{name}_head", (0, -0.01, 0.03), 0.068, body_m, hp)
@@ -518,6 +521,21 @@ def bird(name, pos, head_deg, body_m, size=1.0, mom=False):
         for j in range(3):
             part("sphere", f"{name}_tuft{j}", (0.012 * (j - 1), 0.0, 0.1), (0.012, 0.012, 0.03), body_m, hp,
                  rot=(0, 20 * (j - 1), 0))
+    # ذيل جميل: ريشات مسطّحة متفرّقة كالمروحة، مرفوعة قليلاً
+    tail = empty(f"{name}_tailpivot", (0, 0.085, 0.1), bd)
+    b["tail"] = tail
+    n_f = 5 if mom else 3
+    flen = 0.14 if mom else 0.115
+    tip_m = MOM_TAIL if mom else CHICK_TAIL
+    for j in range(n_f):
+        fan = (j - (n_f - 1) / 2) * (18 if mom else 22)
+        e = Euler((radians(28), 0, radians(fan)), "XYZ")
+        d = Vector((0, 1, 0))
+        d.rotate(e)
+        part("sphere", f"{name}_feather{j}", d * flen * 0.5, (0.024 if mom else 0.026, flen * 0.5, 0.008), body_m, tail,
+             rot=(28, 0, fan))
+        part("sphere", f"{name}_feathertip{j}", d * flen * 0.88, (0.02 if mom else 0.022, flen * 0.16, 0.0085), tip_m,
+             tail, rot=(28, 0, fan))
     wings = []
     for sx in (1, -1):
         wp = empty(f"{name}_wing{sx}", (0.08 * sx, 0.0, 0.12), bd)
