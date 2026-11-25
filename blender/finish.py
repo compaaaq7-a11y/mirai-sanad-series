@@ -190,10 +190,24 @@ def clap(rng):
     return noise_band(m, 800, 6000, rng) * np.exp(-np.arange(m) / (SR * 0.012))
 
 
+# تشكيل الأسماء ليُنطق «ميراي» كاملاً لا «ميري»
+SAY = {"ميراي": "مِيرَايْ"}
+
+
 async def tts_all(out_dir: Path):
+    import os
     import edge_tts
+    kw = {}
+    ca = os.environ.get("SSL_CERT_FILE")
+    if ca:  # خلف وكيل HTTPS بشهادة خاصة
+        import ssl
+        import edge_tts.communicate as cm
+        cm._SSL_CTX = ssl.create_default_context(cafile=ca)
+        kw["proxy"] = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
     for i, (_, text) in enumerate(CFG["lines"]):
-        await edge_tts.Communicate(text, VOICE, rate=RATE).save(str(out_dir / f"line{i}.mp3"))
+        for k, v in SAY.items():
+            text = text.replace(k, v)
+        await edge_tts.Communicate(text, VOICE, rate=RATE, **kw).save(str(out_dir / f"line{i}.mp3"))
 
 
 def audio(args):
