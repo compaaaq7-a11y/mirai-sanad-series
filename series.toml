@@ -13,7 +13,7 @@ title = "ميراي سند"
 [defaults]
 video_language = "ar"
 video_aspect = "9:16"                 # 9:16 عمودي (تيك توك/ريلز/شورتس) أو 16:9 يوتيوب
-voice_name = "ar-SA-HamedNeural-Male" # أصوات أخرى: ar-SA-ZariyahNeural-Female, ar-EG-ShakirNeural-Male, ar-EG-SalmaNeural-Female, ar-SY-AmanyNeural-Female, ar-LB-LaylaNeural-Female, ar-JO-SanaNeural-Female
+voice_name = "ar-SA-HamedNeural-Male" # أصوات أخرى: ar-SA-ZariyahNeural-Female, ar-EG-ShakirNeural-Male, ar-EG-SalmaNeural-Female, ar-SY-AmanyNeural-Female, ar-LB-LaylaNeural-Female, ar-JO-SanaNeural-Female, ar-IQ-RanaNeural-Female
 voice_rate = 1.0
 bgm_type = "random"                   # موسيقى خلفية عشوائية من مكتبة الأداة، أو "none"
 bgm_volume = 0.15
@@ -94,7 +94,7 @@ script = """
 id = "ep06-baby-bird"
 title = "سند وميراي والفرخ الصغير"
 terms = "baby bird, bird nest, sunny garden, orange cat, ball of yarn, children playing"
-voice_name = "ar-SY-AmanyNeural-Female"    # صوت نسائي شامي دافئ للحكاية
+voice_name = "ar-IQ-RanaNeural-Female"      # صوت نسائي عراقي بالفصحى للحكاية
 voice_rate = 0.9                            # إيقاع هادئ
 bgm_volume = 0.1                            # موسيقى خافتة تحت التعليق
 script = """
