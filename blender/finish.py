@@ -1,7 +1,7 @@
-"""صوت وتركيب حلقة «سند وميراي والفرخ الصغير» ثلاثية الأبعاد.
+"""صوت وتركيب حلقات سند وميراي ثلاثية الأبعاد (ep06، ep07).
 
-    python blender/ep06_finish.py audio    # التعليق (edge-tts) + زقزقة + موسيقى
-    python blender/ep06_finish.py video    # دمج الإطارات مع الصوت في mp4
+    python blender/finish.py --ep ep07 audio    # التعليق (edge-tts) + زقزقة + مؤثرات + موسيقى
+    python blender/finish.py --ep ep07 video    # دمج الإطارات مع الصوت في mp4
 
 المتطلبات: ffmpeg، numpy، edge-tts (لخطوة audio فقط؛ --no-voice للتجربة بدون إنترنت).
 """
@@ -16,22 +16,44 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
-BUILD = ROOT / "build" / "ep06"
 SR = 44100
 DUR = 30.0
 VOICE = "ar-IQ-RanaNeural"
 RATE = "-8%"
 
-# كل جملة تبدأ مع مشهدها (بالثواني)
-LINES = [
-    (0.9, "سمع سند وميراي زقزقةً تحت الشجرة."),
-    (6.3, "كان فرخٌ صغير قد سقط من عشّه، وقطةٌ تستعدّ للانقضاض عليه!"),
-    (12.4, "دحرجت ميراي كرة الصوف، فركضت القطة خلفها."),
-    (16.6, "وحمل سند الفرخ برفق وأعاده إلى عشّه."),
-    (23.4, "وحين عادت أمّه، زقزق كأنّه يقول لهما: شكرًا!"),
-]
-CHICK_CHIRPS = [0.6, 1.4, 2.2, 3.4, 4.6, 23.6, 24.0, 24.4, 24.8, 29.0, 29.4]
-MOM_CHIRPS = [23.3, 24.2]
+# إعدادات كل حلقة: الجمل (تبدأ مع مشهدها بالثواني) والمؤثرات الصوتية
+EPISODES = {
+    "ep06": dict(
+        out="ep06-baby-bird-3d.mp4",
+        lines=[
+            (0.9, "سمع سند وميراي زقزقةً تحت الشجرة."),
+            (6.3, "كان فرخٌ صغير قد سقط من عشّه، وقطةٌ تستعدّ للانقضاض عليه!"),
+            (12.4, "دحرجت ميراي كرة الصوف، فركضت القطة خلفها."),
+            (16.6, "وحمل سند الفرخ برفق وأعاده إلى عشّه."),
+            (23.4, "وحين عادت أمّه، زقزق كأنّه يقول لهما: شكرًا!"),
+        ],
+        chick=[0.6, 1.4, 2.2, 3.4, 4.6, 23.6, 24.0, 24.4, 24.8, 29.0, 29.4],
+        mom=[23.3, 24.2],
+    ),
+    "ep07": dict(
+        out="ep07-first-flight-3d.mp4",
+        lines=[
+            (0.8, "بعد أيام، عاد سند وميراي إلى الشجرة."),
+            (4.6, "كان الفرخ قد كبر، وحان وقت رحلته الأولى."),
+            (8.3, "رفرف قليلًا، ثم قفز إلى غصن قريب."),
+            (14.2, "حاول مرةً أخرى… وإذا به يطير!"),
+            (23.0, "ضحك سند وصفّقت ميراي، وطار العصفور بجانب أمّه."),
+        ],
+        chick=[0.3, 4.0, 4.7, 5.3, 10.5, 21.5, 22.0, 22.5, 27.0, 28.2],
+        mom=[6.3, 7.1, 14.4, 15.0, 26.4],
+        flaps=[(7.9, 8.6, 0.6), (9.5, 10.4, 1.0), (15.3, 15.9, 0.6), (15.9, 21.1, 0.8)],
+        rustle=(0.0, 3.5),
+        swell=(16.5, 22.0),
+        claps=[11.0, 11.5, 12.0],
+    ),
+}
+CFG = EPISODES["ep06"]
+BUILD = ROOT / "build" / "ep06"
 
 
 def run(cmd):
@@ -140,9 +162,37 @@ def music() -> np.ndarray:
 
 
 # ------------------------------------------------------------ التعليق
+def noise_band(n, lo, hi, rng):
+    """ضوضاء مفلترة بين ترددين (لحفيف الأوراق ورفرفة الأجنحة)."""
+    x = rng.standard_normal(n)
+    spec = np.fft.rfft(x)
+    f = np.fft.rfftfreq(n, 1 / SR)
+    spec[(f < lo) | (f > hi)] = 0
+    y = np.fft.irfft(spec, n)
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def flutter(t0, t1, n, rng, gain=1.0):
+    """رفرفة: نبضات هوائية سريعة."""
+    out = np.zeros(n)
+    t = t0
+    while t < t1:
+        m = int(SR * 0.07)
+        b = noise_band(m, 300, 2500, rng) * np.sin(np.linspace(0, np.pi, m)) ** 2
+        i = int(t * SR)
+        out[i:i + m] += b[: n - i] * gain
+        t += rng.uniform(0.1, 0.14)
+    return out
+
+
+def clap(rng):
+    m = int(SR * 0.06)
+    return noise_band(m, 800, 6000, rng) * np.exp(-np.arange(m) / (SR * 0.012))
+
+
 async def tts_all(out_dir: Path):
     import edge_tts
-    for i, (_, text) in enumerate(LINES):
+    for i, (_, text) in enumerate(CFG["lines"]):
         await edge_tts.Communicate(text, VOICE, rate=RATE).save(str(out_dir / f"line{i}.mp3"))
 
 
@@ -153,7 +203,7 @@ def audio(args):
     spans = []
     if not args.no_voice:
         asyncio.run(tts_all(BUILD))
-    for i, (start, text) in enumerate(LINES):
+    for i, (start, text) in enumerate(CFG["lines"]):
         p = BUILD / f"line{i}.mp3"
         if args.no_voice or not p.exists():
             spans.append((start, start + 3.5, text))
@@ -163,37 +213,53 @@ def audio(args):
         voice[i0:i0 + len(clip)] += clip[: n - i0]
         end = start + len(clip) / SR
         spans.append((start, end, text))
-        nxt = LINES[i + 1][0] if i + 1 < len(LINES) else DUR
+        nxt = CFG["lines"][i + 1][0] if i + 1 < len(CFG["lines"]) else DUR
         if end > nxt + 0.05:
             print(f"تحذير: الجملة {i + 1} تتداخل مع التالية ({end:.2f} > {nxt})")
     rng = np.random.default_rng(3)
     birds = np.zeros(n)
-    for t in CHICK_CHIRPS:
+    for t in CFG["chick"]:
         c = chirp(1.0, rng)
         i0 = int(t * SR)
         birds[i0:i0 + len(c)] += c[: n - i0]
-    for t in MOM_CHIRPS:
+    for t in CFG.get("mom", []):
         c = chirp(0.72, rng) * 0.8
         i0 = int(t * SR)
         birds[i0:i0 + len(c)] += c[: n - i0]
+    fx = np.zeros(n)
+    for t0, t1, g in CFG.get("flaps", []):
+        fx += flutter(t0, t1, n, rng, 0.35 * g)
+    if "rustle" in CFG:
+        r0, r1 = CFG["rustle"]
+        m = int((r1 - r0) * SR)
+        lv = noise_band(m, 1500, 7000, rng) * 0.12
+        lv *= np.interp(np.arange(m), [0, m * 0.3, m * 0.7, m - 1], [0, 1, 0.6, 0]) * (0.6 + 0.4 * np.sin(np.arange(m) / SR * 7))
+        fx[int(r0 * SR):int(r0 * SR) + m] += lv
+    for t in CFG.get("claps", []):
+        c = clap(rng) * 0.4
+        i0 = int(t * SR)
+        fx[i0:i0 + len(c)] += c
     mus = music()
     # خفض الموسيقى أثناء الكلام
     duck = np.ones(n)
     for s, e, _ in spans:
         duck[int(max(0, s - 0.2) * SR):int(min(DUR, e + 0.3) * SR)] = 0.55
+    if "swell" in CFG:  # الموسيقى ترتفع لحظة النجاح
+        s0, s1 = CFG["swell"]
+        duck[int(s0 * SR):int(s1 * SR)] = np.maximum(duck[int(s0 * SR):int(s1 * SR)], 1.9)
     k = int(SR * 0.25)
     duck = np.convolve(duck, np.ones(k) / k, mode="same")
     vpk = np.abs(voice).max()
     if vpk > 0:
         voice = voice / vpk * 0.9
-    left = voice + 0.16 * mus * duck + 0.35 * birds
-    right = voice + 0.16 * mus * duck + 0.35 * np.roll(birds, int(SR * 0.004))
+    left = voice + 0.16 * mus * duck + 0.35 * birds + fx
+    right = voice + 0.16 * mus * duck + 0.35 * np.roll(birds, int(SR * 0.004)) + np.roll(fx, int(SR * 0.003))
     stereo = np.stack([left, right], axis=1)
     stereo /= max(1.0, np.abs(stereo).max() / 0.95)
     write_wav(BUILD / "audio.wav", stereo)
 
     (BUILD / "spans.json").write_text(json.dumps(spans, ensure_ascii=False, indent=1), encoding="utf-8")
-    print("تم: build/ep06/audio.wav")
+    print(f"تم: {BUILD / 'audio.wav'}")
 
 
 def video(args):
@@ -211,17 +277,24 @@ def video(args):
 
 
 def main():
+    global CFG, BUILD
     ap = argparse.ArgumentParser()
+    ap.add_argument("--ep", default="ep06", choices=sorted(EPISODES), help="الحلقة")
     sub = ap.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("audio")
     a.add_argument("--no-voice", action="store_true", help="بدون تعليق (للتجربة بلا إنترنت)")
     a.set_defaults(func=audio)
     v = sub.add_parser("video")
-    v.add_argument("--frames", default=str(BUILD / "frames"))
-    v.add_argument("--out", default=str(ROOT / "output" / "ep06-baby-bird-3d.mp4"))
+    v.add_argument("--frames")
+    v.add_argument("--out")
     v.add_argument("--start", type=int, default=1, help="رقم أول إطار")
     v.set_defaults(func=video)
     args = ap.parse_args()
+    CFG = EPISODES[args.ep]
+    BUILD = ROOT / "build" / args.ep
+    if args.cmd == "video":
+        args.frames = args.frames or str(BUILD / "frames")
+        args.out = args.out or str(ROOT / "output" / CFG["out"])
     args.func(args)
 
 

@@ -15,8 +15,7 @@ on:
         default: "540x960"
   push:
     paths:
-      - blender/**
-      - .github/workflows/ep06-3d.yml
+      - blender/ep06_baby_bird.py
 
 permissions:
   contents: write
@@ -70,7 +69,7 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - run: pip install edge-tts numpy
       - name: التعليق والزقزقة والموسيقى
-        run: python blender/ep06_finish.py audio
+        run: python blender/finish.py audio
       - uses: actions/upload-artifact@v4
         with:
           name: audio
@@ -102,7 +101,7 @@ jobs:
           name: audio
           path: build/ep06
       - name: تركيب الفيديو
-        run: python blender/ep06_finish.py video --out output/ep06-baby-bird-3d.mp4
+        run: python blender/finish.py video --out output/ep06-baby-bird-3d.mp4
       - uses: actions/upload-artifact@v4
         with:
           name: ep06-baby-bird-3d
