@@ -211,6 +211,8 @@ MOUTH = mat("mouth", "#B5413F", 0.4)
 BROW_S = mat("brow_s", "#5A3218", 0.6)
 HAIR_S = mat("hair_sanad", "#7A4524", 0.55, vary=("#5E3419", 6), sheen=0.4)
 HAIR_M = mat("hair_mirai", "#3A2216", 0.45, sheen=0.4)
+HAIR_M_CURL = mat("hair_mirai_curl", "#3A2216", 0.5, vary=("#24140C", 7), sheen=0.5)
+
 SHIRT = mat("shirt_blue", "#3D8BE0", 0.7, sheen=0.5)
 SHORTS = mat("shorts", "#2B3C66", 0.7, sheen=0.4)
 DRESS = mat("dress_yellow", "#FFC93C", 0.7, sheen=0.5)
@@ -421,10 +423,46 @@ def kid(name, pos, head_deg, girl=False):
             rad = random.uniform(0.06, 0.075)
             part("ball", f"{name}_curl{i}", hc + d * 0.225 + Vector((0, 0.01, 0.015)), rad, HAIR_S, hp)
     else:  # شعر داكن وضفيرتان
-        part("sphere", f"{name}_haircap", hc + Vector((0, 0.06, 0.05)), (0.25, 0.225, 0.225), HAIR_M, hp)
-        for j, x in enumerate((-0.11, -0.03, 0.05, 0.12)):
-            part("sphere", f"{name}_bang{j}", hc + Vector((x, -0.17, 0.15 - abs(x) * 0.3)), (0.075, 0.05, 0.05), HAIR_M, hp,
-                 rot=(20, 0, 0))
+        # غطاء شعر واحد متصل: يغطي الجبهة وأعلى الرأس وخلفه ويترك الوجه مكشوفاً
+        import bmesh
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=1, segments=128, ring_count=64)
+        cap = bpy.context.object
+        bm = bmesh.new()
+        bm.from_mesh(cap.data)
+        def sstep(e0, e1, x):
+            t = max(0.0, min(1.0, (x - e0) / (e1 - e0)))
+            return t * t * (3 - 2 * t)
+
+        # بدل قصّ الشكل: نُدخل منطقة الوجه داخل الرأس بتدرّج ناعم فيظهر خط شعر منحنٍ وأملس
+        for v in bm.verts:
+            d = v.co.copy()
+            hairline = 0.42 + 0.25 * min(1.0, abs(d.x) / 0.6) ** 2
+            face = sstep(-0.35, -0.5, d.y) * sstep(hairline + 0.03, hairline - 0.03, d.z) * sstep(0.78, 0.68, abs(d.x))
+            under = sstep(-0.4, -0.5, d.z) * sstep(0.4, 0.3, d.y)
+            v.co = d * (1 - 0.3 * max(face, under))
+        bm.to_mesh(cap.data)
+        bm.free()
+        for p in cap.data.polygons:
+            p.use_smooth = True
+        cap.data.materials.append(HAIR_M)
+        cap.name = f"{name}_haircap"
+        cap.parent = hp
+        cap.location = hc + Vector((0, 0.008, 0.012))
+        cap.scale = (0.256, 0.244, 0.246)
+        # تجعيدات داكنة فوق الغطاء، بنفس خط الشعر، ليبدو الشعر مجعّداً ومتصلاً
+        golden = math.pi * (3 - math.sqrt(5))
+        for i in range(260):
+            zz = 1 - (i / 259) * 2
+            rr = math.sqrt(max(0.0, 1 - zz * zz))
+            a = golden * i
+            d = Vector((cos(a) * rr, sin(a) * rr, zz))
+            hairline = 0.42 + 0.25 * min(1.0, abs(d.x) / 0.6) ** 2
+            face = sstep(-0.35, -0.5, d.y) * sstep(hairline + 0.03, hairline - 0.03, d.z) * sstep(0.78, 0.68, abs(d.x))
+            under = sstep(-0.4, -0.5, d.z) * sstep(0.4, 0.3, d.y)
+            if max(face, under) > 0.05 or d.z < -0.35:
+                continue
+            p = Vector((d.x * 0.256, d.y * 0.244, d.z * 0.246)) + hc + Vector((0, 0.008, 0.012))
+            part("ball", f"{name}_curl{i}", p, random.uniform(0.042, 0.055), HAIR_M_CURL, hp)
         for sx in (1, -1):
             bp = empty(f"{name}_braid{sx}", hc + Vector((0.2 * sx, 0.06, -0.06)), hp)
             for j in range(6):
