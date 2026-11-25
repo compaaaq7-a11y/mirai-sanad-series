@@ -1,0 +1,117 @@
+name: حلقة ثلاثية الأبعاد - الفرخ الصغير
+
+# ترسم حلقة «سند وميراي والفرخ الصغير» في Blender على 12 جهازاً بالتوازي،
+# ثم تضيف التعليق (edge-tts) والزقزقة والموسيقى، وتنشر الفيديو في فرع videos.
+on:
+  workflow_dispatch:
+    inputs:
+      samples:
+        description: "عيّنات Cycles لكل بكسل (جودة أعلى = أبطأ)"
+        required: false
+        default: "16"
+      res:
+        description: "دقة الرسم (تُكبَّر بعدها إلى 1080x1920)"
+        required: false
+        default: "540x960"
+  push:
+    paths:
+      - blender/**
+      - .github/workflows/ep06-3d.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ep06-3d-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SAMPLES: ${{ github.event.inputs.samples || '16' }}
+  RES: ${{ github.event.inputs.res || '540x960' }}
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: true
+      matrix:
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: تثبيت Blender (bpy)
+        run: pip install "bpy==4.2.*"
+      - name: رسم الإطارات
+        run: |
+          A=$(( ${{ matrix.chunk }} * 60 + 1 ))
+          B=$(( A + 59 ))
+          python blender/ep06_baby_bird.py --frames $A $B --res "$RES" --samples "$SAMPLES" --out build/ep06/frames
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.chunk }}
+          path: build/ep06/frames/*.png
+          retention-days: 2
+
+  audio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+      - run: pip install edge-tts numpy
+      - name: التعليق والزقزقة والموسيقى
+        run: python blender/ep06_finish.py audio
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audio
+          path: build/ep06/*
+          retention-days: 2
+
+  assemble:
+    needs: [render, audio]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+      - run: pip install numpy
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: frames-*
+          path: build/ep06/frames
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: audio
+          path: build/ep06
+      - name: تركيب الفيديو
+        run: python blender/ep06_finish.py video --out output/ep06-baby-bird-3d.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ep06-baby-bird-3d
+          path: output/ep06-baby-bird-3d.mp4
+      - name: إضافة الفيديو إلى فرع videos
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          URL="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          if git clone -q --depth 1 --branch videos "$URL" vb; then :; else
+            mkdir vb && cd vb && git init -q -b videos && git remote add origin "$URL" && cd ..
+          fi
+          cp output/ep06-baby-bird-3d.mp4 vb/
+          cd vb
+          git add ep06-baby-bird-3d.mp4
+          git commit -q -m "3D ep06 from run $RUN_ID"
+          git push -q origin videos
