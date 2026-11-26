@@ -25,6 +25,10 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -58,7 +62,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mirai-sanad-videos
-          path: output/*.mp4
+          path: |
+            output/*.mp4
+            output/*.json
           if-no-files-found: warn
 
       # نشر الفيديوهات في فرع videos (نسخة واحدة تُستبدل كل مرة) ليستلمها Claude ويرسلها مباشرة
@@ -73,6 +79,13 @@ jobs:
           git init -q -b videos
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- *.mp4
+          git add -- *.mp4 *.json
           git commit -q -m "Videos from run $RUN_ID"
           git push -q -f "https://x-access-token:${TOKEN}@github.com/${REPO}.git" videos
+
+      # نشر تلقائي على قناة يوتيوب @sanad-meme (يعمل متى وُجدت أسرار YT_*؛ لا يكرر حلقة منشورة)
+      - name: النشر على يوتيوب
+        if: success() && env.YT_REFRESH_TOKEN != ''
+        env:
+          EPISODES: ${{ github.event.inputs.episodes }}
+        run: python mirai.py publish $EPISODES

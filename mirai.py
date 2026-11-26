@@ -7,6 +7,7 @@
     python3 mirai.py generate              # توليد كل الحلقات
     python3 mirai.py generate ep01-intro   # توليد حلقة واحدة أو أكثر
     python3 mirai.py generate --source local   # استخدام لقطات من مجلد assets/
+    python3 mirai.py publish               # نشر الحلقات الجاهزة على قناة يوتيوب
 
 متغيرات البيئة الاختيارية:
     PIXABAY_API_KEY مفتاح Pixabay المجاني للقطات الفيديو (موصى به)
@@ -14,6 +15,7 @@
     COVERR_API_KEY  مفتاح Coverr
     بدون أي مفتاح تُستخدم اللقطات الموجودة في assets/
     MPT_DIR         مكان MoneyPrinterTurbo (الافتراضي vendor/MoneyPrinterTurbo)
+    YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN  صلاحية النشر على قناة يوتيوب
 """
 
 from __future__ import annotations
@@ -26,6 +28,9 @@ import shutil
 import subprocess
 import sys
 import tomllib
+import urllib.error
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -208,12 +213,115 @@ def generate(args) -> int:
         if task.get("status") == "succeeded" and videos:
             dest = OUTPUT_DIR / f"{name}.mp4"
             shutil.copy2(videos[0], dest)
+            if ep:
+                write_metadata(ep, series)
             log(f"✓ {name} → {dest.relative_to(ROOT)}")
         else:
             failed += 1
             log(f"✗ {name}: فشل في مرحلة {task.get('failed_stage')}: {task.get('error')}")
     log(f"النتيجة: {summary.get('succeeded', 0)} نجحت، {failed} فشلت")
     return 1 if failed else 0
+
+# ---------------------------------------------------------------- youtube
+def episode_metadata(ep: dict, series: dict) -> dict:
+    """عنوان ووصف ووسوم الحلقة كما تُنشر على يوتيوب."""
+    info = series.get("series", {})
+    channel = info.get("channel_url", "").rstrip("/")
+    name = info.get("title", "")
+    title = ep.get("title", ep["id"])
+    full_title = f"{title} | {name}" if name else title
+    lines = [title, "", ep["script"].strip(), ""]
+    if channel:
+        lines += [f"🔔 اشترك في {name} ليصلك كل جديد: {channel}?sub_confirmation=1",
+                  f"📺 كل الحلقات: {channel}/videos", ""]
+    lines.append(ep.get("hashtags", info.get("hashtags", "")))
+    tags = [x.strip() for x in ep.get("tags", info.get("tags", "")).split(",") if x.strip()]
+    tags += [title] + [x.strip() for x in ep.get("terms", "").split(",") if x.strip()]
+    return {
+        "title": full_title[:100],
+        "description": "\n".join(lines).strip()[:5000],
+        "tags": list(dict.fromkeys(tags)),
+        "categoryId": str(ep.get("category_id", info.get("category_id", "27"))),
+        "privacy": ep.get("privacy", info.get("privacy", "public")),
+    }
+
+
+def write_metadata(ep: dict, series: dict) -> None:
+    meta = episode_metadata(ep, series)
+    OUTPUT_DIR.mkdir(exist_ok=True)
+    (OUTPUT_DIR / f"{ep['id']}.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def http(url: str, data: bytes | None = None, headers: dict | None = None, method: str | None = None):
+    req = urllib.request.Request(url, data=data, headers=headers or {}, method=method)
+    try:
+        return urllib.request.urlopen(req, timeout=600)
+    except urllib.error.HTTPError as e:
+        sys.exit(f"خطأ من يوتيوب ({e.code}): {e.read().decode('utf-8', 'replace')[:500]}")
+
+
+def youtube_token() -> str:
+    env = {k: os.environ.get(k, "").strip() for k in ("YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN")}
+    missing = [k for k, v in env.items() if not v]
+    if missing:
+        sys.exit(f"لا توجد صلاحية نشر على يوتيوب؛ ينقص: {', '.join(missing)}")
+    body = urllib.parse.urlencode({"client_id": env["YT_CLIENT_ID"], "client_secret": env["YT_CLIENT_SECRET"],
+                                   "refresh_token": env["YT_REFRESH_TOKEN"], "grant_type": "refresh_token"})
+    with http("https://oauth2.googleapis.com/token", body.encode()) as r:
+        return json.load(r)["access_token"]
+
+
+def published_titles(token: str) -> set[str]:
+    """عناوين كل الفيديوهات المنشورة في القناة، حتى لا تُنشر حلقة مرتين."""
+    auth = {"Authorization": f"Bearer {token}"}
+    api = "https://www.googleapis.com/youtube/v3"
+    with http(f"{api}/channels?part=contentDetails&mine=true", headers=auth) as r:
+        items = json.load(r).get("items", [])
+    if not items:
+        return set()
+    playlist = items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
+    titles, page = set(), ""
+    while True:
+        q = urllib.parse.urlencode({"part": "snippet", "playlistId": playlist, "maxResults": 50, "pageToken": page})
+        with http(f"{api}/playlistItems?{q}", headers=auth) as r:
+            data = json.load(r)
+        titles |= {i["snippet"]["title"] for i in data.get("items", [])}
+        page = data.get("nextPageToken")
+        if not page:
+            return titles
+
+
+def upload_video(token: str, video: Path, meta: dict) -> str:
+    body = json.dumps({
+        "snippet": {"title": meta["title"], "description": meta["description"], "tags": meta["tags"],
+                    "categoryId": meta["categoryId"], "defaultLanguage": "ar", "defaultAudioLanguage": "ar"},
+        "status": {"privacyStatus": meta["privacy"], "selfDeclaredMadeForKids": False},
+    }, ensure_ascii=False).encode()
+    size = video.stat().st_size
+    with http("https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+              body, {"Authorization": f"Bearer {token}", "Content-Type": "application/json; charset=UTF-8",
+                     "X-Upload-Content-Type": "video/mp4", "X-Upload-Content-Length": str(size)}) as r:
+        location = r.headers["Location"]
+    with video.open("rb") as f, http(location, f.read(), {"Content-Type": "video/mp4"}, "PUT") as r:
+        return json.load(r)["id"]
+
+
+def publish(args) -> int:
+    series = load_series()
+    episodes = [ep for ep in series["episodes"] if not args.episodes or ep["id"] in args.episodes]
+    token = youtube_token()
+    done = published_titles(token)
+    for ep in episodes:
+        video = OUTPUT_DIR / f"{ep['id']}.mp4"
+        meta = episode_metadata(ep, series)
+        if not video.exists():
+            log(f"- {ep['id']}: لا يوجد فيديو بعد، تخطّيتها")
+        elif meta["title"] in done:
+            log(f"- {ep['id']}: منشورة سابقاً")
+        else:
+            vid = upload_video(token, video, meta)
+            log(f"✓ نُشرت {ep['id']}: https://youtu.be/{vid}")
+    return 0
 
 
 def main() -> None:
@@ -227,6 +335,9 @@ def main() -> None:
                    help="مصدر اللقطات (الافتراضي: أول مصدر له مفتاح، وإلا local)")
     g.add_argument("--voice", help="تجاوز الصوت لكل الحلقات (مثلاً no-voice للتجربة)")
     g.set_defaults(func=generate)
+    pb = sub.add_parser("publish", help="نشر الحلقات الجاهزة على قناة يوتيوب")
+    pb.add_argument("episodes", nargs="*", help="أسماء الحلقات (الافتراضي: الكل)")
+    pb.set_defaults(func=publish)
     args = parser.parse_args()
     sys.exit(args.func(args) or 0)
 

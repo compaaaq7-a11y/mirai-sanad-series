@@ -1,5 +1,9 @@
 # ميراي سند 🎬
 
+[![YouTube](https://img.shields.io/badge/YouTube-@sanad--meme-red?logo=youtube)](https://www.youtube.com/@sanad-meme?sub_confirmation=1)
+
+📺 **شاهد الحلقات واشترك في القناة: [youtube.com/@sanad-meme](https://www.youtube.com/@sanad-meme?sub_confirmation=1)**
+
 سلسلة فيديوهات عربية قصيرة. كل حلقة تتحول تلقائياً إلى فيديو كامل (صوت عربي، ترجمة نصية، لقطات، موسيقى)
 باستخدام أداة [MoneyPrinterTurbo](https://github.com/harry0703/MoneyPrinterTurbo).
 
@@ -69,3 +73,12 @@ script = """
 | `ar-SA-ZariyahNeural-Female` | سعودي، امرأة |
 | `ar-EG-ShakirNeural-Male` | مصري، رجل |
 | `ar-EG-SalmaNeural-Female` | مصري، امرأة |
+
+## النشر على يوتيوب
+
+بعد توليد الحلقات يُنشر كل فيديو جديد تلقائياً على [القناة](https://www.youtube.com/@sanad-meme)
+بعنوان ووصف ووسوم جاهزة (رابط الاشتراك، رابط كل الحلقات، الهاشتاغات). الحلقة المنشورة سابقاً لا تُنشر مرة ثانية.
+الوصف والوسوم تُحفظ أيضاً بجانب كل فيديو في `output/<id>.json`، وتُضبط من قسم `[series]` في `series.toml`.
+
+يحتاج النشر التلقائي إلى ثلاثة أسرار في **Settings ← Secrets and variables ← Actions**:
+`YT_CLIENT_ID` و`YT_CLIENT_SECRET` و`YT_REFRESH_TOKEN` (بصلاحية `https://www.googleapis.com/auth/youtube`). شرح الحصول عليها خطوة بخطوة في فيديو `docs/youtube-tokens-tutorial.mp4`.
