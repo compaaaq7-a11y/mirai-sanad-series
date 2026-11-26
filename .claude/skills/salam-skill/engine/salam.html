@@ -239,7 +239,7 @@ function buildProp(p,cam,R){
       ${p.comment!=null?`<div class="sheet"><div class="ttl">التعليقات</div><div class="in"><span class="send"></span><span class="ctext"></span></div></div>`:''}
       ${p.dm?`<div class="dm"><div class="bub">${p.dm.text||''}</div><div class="card"><div class="img"></div><div class="cap">${p.dm.title||''}<small>${p.dm.link||''}</small></div></div></div>`:''}`;
     if(hero){const h=e.querySelector('.hero');hero.split(' ').forEach(t=>h.appendChild(wordEl({w:t,c:'white'},150)));}
-    if(p.dm&&p.dm.hero){const im=e.querySelector('.dm .img');im.appendChild(wordEl({w:p.dm.hero,c:'red'},110));}
+    if(p.dm&&p.dm.hero){const im=e.querySelector('.dm .img');im.appendChild(wordEl({w:p.dm.hero,c:'white'},110));}
     cam.appendChild(e);
     return {e,p,ctext:e.querySelector('.ctext'),sheet:e.querySelector('.sheet'),dm:e.querySelector('.dm')};
   }
