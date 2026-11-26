@@ -1,0 +1,50 @@
+[
+ {
+  "shot": 0,
+  "from": 0.0,
+  "to": 5.0,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-160335/",
+  "user": "Engin_Akyurt"
+ },
+ {
+  "shot": 1,
+  "from": 5.0,
+  "to": 9.4,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-25993/",
+  "user": "KatyJefferson"
+ },
+ {
+  "shot": 2,
+  "from": 9.4,
+  "to": 14.1,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-65801/",
+  "user": "danydory"
+ },
+ {
+  "shot": 3,
+  "from": 14.1,
+  "to": 18.5,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-2996/",
+  "user": "jLasWilson"
+ },
+ {
+  "shot": 4,
+  "from": 18.5,
+  "to": 23.0,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-99205/",
+  "user": "federicomaderno"
+ },
+ {
+  "shot": 5,
+  "from": 23.0,
+  "to": 30.0,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-142088/",
+  "user": "Kanenori"
+ }
+]
