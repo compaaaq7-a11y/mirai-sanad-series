@@ -1,0 +1,35 @@
+name: نشر حلقة ثلاثية الأبعاد على يوتيوب
+
+# يعمل عند إضافة أو تعديل ملف في publish/ (نشر صريح بموافقة صاحب القناة).
+# يأخذ الفيديو من فرع videos ويرفعه بالعنوان والوصف المكتوبين في الملف، ولا يكرر عنواناً منشوراً.
+on:
+  push:
+    paths:
+      - publish/*.json
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: النشر
+        run: |
+          git fetch -q --depth 1 origin videos
+          for meta in $(git diff --name-only HEAD~1 HEAD -- 'publish/*.json'); do
+            [ -f "$meta" ] || continue
+            video=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['video'])" "$meta")
+            git show "FETCH_HEAD:$video" > "/tmp/$video"
+            python blender/youtube_publish.py "$meta" "/tmp/$video"
+          done
