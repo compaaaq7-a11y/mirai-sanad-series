@@ -1,0 +1,36 @@
+name: إحصاءات القناة على يوتيوب (قراءة فقط)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - blender/youtube_stats.py
+      - .github/workflows/youtube-stats.yml
+
+permissions:
+  contents: write
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: قراءة الإحصاءات
+        run: python blender/youtube_stats.py youtube-stats.json
+      - name: حفظ النتيجة في فرع videos
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git clone -q --depth 1 --branch videos "https://x-access-token:${TOKEN}@github.com/${REPO}.git" vb
+          mkdir -p vb/stats && cp youtube-stats.json vb/stats/
+          cd vb && git add stats && git commit -q -m "YouTube stats snapshot" && git push -q origin videos
