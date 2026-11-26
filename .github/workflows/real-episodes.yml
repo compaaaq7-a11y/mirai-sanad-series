@@ -1,0 +1,63 @@
+name: القصة الحقيقية - لقطات حقيقية
+
+# نسخة بلقطات حقيقية لحيوانات حقيقية (Pixabay) من حلقات سند وميراي، بالتعليق نفسه.
+on:
+  workflow_dispatch:
+    inputs:
+      ep:
+        description: "الحلقة: ep06 أو ep07 أو part3 أو part4"
+        required: true
+        default: "ep06"
+  push:
+    paths:
+      - real/**
+      - .github/workflows/real-episodes.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: real-${{ github.ref }}-${{ github.event.inputs.ep || 'ep06' }}
+  cancel-in-progress: true
+
+jobs:
+  real:
+    runs-on: ubuntu-latest
+    env:
+      EP: ${{ github.event.inputs.ep || 'ep06' }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+        id: ffmpeg
+        continue-on-error: true
+      - name: ffmpeg احتياطي
+        if: steps.ffmpeg.outcome == 'failure'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install edge-tts numpy
+      - name: التعليق والمؤثرات
+        run: python blender/finish.py --ep "$EP" audio
+      - name: اللقطات الحقيقية والتركيب
+        run: python real/real_episode.py "$EP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: real-${{ env.EP }}
+          path: output/real-*
+      - name: إضافة الفيديو إلى فرع videos
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          URL="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          git clone -q --depth 1 --branch videos "$URL" vb
+          cp output/real-* vb/
+          cd vb
+          git add real-*
+          git commit -q -m "Real-footage $EP from run $RUN_ID"
+          git push -q origin videos
