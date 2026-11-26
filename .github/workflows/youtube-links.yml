@@ -1,0 +1,24 @@
+name: ربط مقاطع السلسلة على يوتيوب
+
+# يضيف روابط متبادلة إلى أوصاف المقاطع (دون حذف) ويبني قائمة تشغيل مرتّبة، حسب publish/series-links.json.
+on:
+  push:
+    paths:
+      - publish/series-links.json
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python blender/youtube_links.py publish/series-links.json

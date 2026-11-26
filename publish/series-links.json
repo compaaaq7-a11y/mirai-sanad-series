@@ -1,0 +1,51 @@
+{
+  "append": {
+    "WWQ13MYe1c0": [
+      "🌿 شاهد القصة نفسها بحيوانات حقيقية: https://youtu.be/8NmHkyvkjCg",
+      "▶️ الجزء التالي: https://youtu.be/HySVCaNE8fo"
+    ],
+    "8NmHkyvkjCg": [
+      "🎬 النسخة الكرتونية: https://youtu.be/WWQ13MYe1c0",
+      "▶️ القصة الحقيقية التالية: https://youtu.be/tDe1mlg4pMg"
+    ],
+    "HySVCaNE8fo": [
+      "🌿 شاهد القصة نفسها بحيوانات حقيقية: https://youtu.be/tDe1mlg4pMg",
+      "▶️ الجزء التالي: https://youtu.be/HXxIeWH-JEc",
+      "◀️ الجزء السابق: https://youtu.be/WWQ13MYe1c0"
+    ],
+    "tDe1mlg4pMg": [
+      "🎬 النسخة الكرتونية: https://youtu.be/HySVCaNE8fo",
+      "▶️ القصة الحقيقية التالية: https://youtu.be/Ogikq6vJQME"
+    ],
+    "HXxIeWH-JEc": [
+      "🌿 شاهد القصة نفسها بحيوانات حقيقية: https://youtu.be/Ogikq6vJQME",
+      "▶️ الجزء التالي: https://youtu.be/kBAIW937P50",
+      "◀️ الجزء السابق: https://youtu.be/HySVCaNE8fo"
+    ],
+    "Ogikq6vJQME": [
+      "🎬 النسخة الكرتونية: https://youtu.be/HXxIeWH-JEc",
+      "▶️ القصة الحقيقية التالية: https://youtu.be/aCRhkENpFUg"
+    ],
+    "kBAIW937P50": [
+      "🌿 شاهد القصة نفسها بحيوانات حقيقية: https://youtu.be/aCRhkENpFUg",
+      "◀️ الجزء السابق: https://youtu.be/HXxIeWH-JEc"
+    ],
+    "aCRhkENpFUg": [
+      "🎬 النسخة الكرتونية: https://youtu.be/kBAIW937P50"
+    ]
+  },
+  "playlist": {
+    "title": "سلسلة سند وميراي 🐥🐱🐄",
+    "description": "قصص قصيرة للأطفال عن الرحمة والتعاون والشجاعة، بنسختين: كرتونية وحقيقية.",
+    "videos": [
+      "WWQ13MYe1c0",
+      "8NmHkyvkjCg",
+      "HySVCaNE8fo",
+      "tDe1mlg4pMg",
+      "HXxIeWH-JEc",
+      "Ogikq6vJQME",
+      "kBAIW937P50",
+      "aCRhkENpFUg"
+    ]
+  }
+}
