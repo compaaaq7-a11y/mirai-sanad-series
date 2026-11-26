@@ -1,0 +1,30 @@
+# ستوري بورد إعلان "ضربة" — إعادة بناء للفيديو المرجعي (reference/reference.mp4)
+# سطر = مشهد = قطع. راجع SKILL.md لصيغة الأوامر.
+@ fps=30
+
+[bg=dark fx=ring,sparks] +ضربة
+[bg=red fx=shake] +*وحدة*
+[bg=cream fx=shake] +*تكفي.*
+[bg=dark fx=slash] المونتاج / -اللي -جالس
+[bg=camera] قدامك / +*الحين؟*
+[bg=dark] صدّق / أو لا،
+[bg=red fx=shake] *معمول* / +*بالكامل*
+[bg=cream fx=ring] -داخل / {كلود}<+Claude>
+[bg=dark fx=slash] وقبل ما / يروح بالك بعيد…
+[bg=cream] ترى ما فيه أي / +اشتراكات / خارجية،
+[bg=red fx=sparks,shake] ولا وجع راس / {إم سي بي}<+*MCP*>
+[bg=dark] ولا منصات تقعد / تسحب منك / +كريدتات / على كل رندر.
+[bg=cream] السالفة كلها / +*سكيل* / بنيتها وطوّرتها / بنفسي.
+[bg=red] الشغل صار / بينك وبينه / +مباشرة.
+[bg=dark] وبكل / +بساطة:
+[bg=dark prop=chat question="وش نسوي اليوم؟" text="صمّم لي مونتاج بأسلوب «ضربة» لإعلان معرض سيارات، ٢٠ ثانية: الوصول، ثم السيارات، ثم عرض نهاية"] تعطيه الفكرة / أو السيناريو،
+[bg=red prop=cards items="تكفي|قدامك الحين؟|معمول بالكامل|داخل Claude"] والسكيل تطلّع لك / ترتيب اللقطات
+[bg=red prop=cards items="داخل Claude|معمول بالكامل|قدامك الحين؟|تكفي" cut=soft] وحركة المونتاج / والقصقصة
+[bg=cream fx=ring] بشكل / +احترافي.
+[bg=dark] يختصر عليك / ساعات شغل / وتركيبها.
+[bg=cream prop=chat header="تركيب السكيل" question="" file="سكيل-ضربة.zip" text="ركّب هالسكيل" reply="تم! سكيل ضربة جاهزة، عطني فكرتك ونبدأ."] تعطي الملف لكلود / وهو يركّبها بنفسه.
+[bg=dark prop=phone app="متجري" hero="ضربة" title="ضربة" desc="سكيل مونتاج احترافي داخل Claude" button="اشترِ الآن"] السكيل هذي / وفّرتها
+[bg=dark prop=phone app="متجري" hero="ضربة" title="ضربة" desc="سكيل مونتاج احترافي داخل Claude" button="اشترِ الآن" cut=soft] وجاهزة / +*بمتجري.*
+[bg=dark prop=phone app="متجري" hero="ضربة" comment="سكيل"] إذا ودّك فيها / اكتب لي بالكومنتات / +*«سكيل»*
+[bg=dark prop=phone app="متجري" dm_text="هلا! هذا رابط «سكيل»" dm_title="سكيل ضربة" dm_link="متجري" dm_hero="وحدة"] ويوصلك الرابط / على الخاص
+[bg=dark prop=phone app="متجري" hero="ضربة" title="ضربة" desc="سكيل مونتاج احترافي داخل Claude" button="اشترِ الآن" fx=ring,sparks cut=soft] +*فوراً.*

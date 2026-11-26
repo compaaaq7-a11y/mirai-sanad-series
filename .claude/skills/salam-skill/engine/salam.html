@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>salam-skill engine</title>
+<!--
+  محرك salam-skill: يرسم أي لحظة t من الفيديو بشكل حتمي (deterministic).
+  يُقرأ الخط الزمني من window.TIMELINE (يحقنه render.mjs)، ويُستدعى window.seek(t) لكل فريم.
+  للمعاينة في المتصفح: افتح salam.html?preview=1 بعد وضع timeline.js بجانبه.
+-->
+<style>
+@font-face{font-family:Lalezar;src:url(fonts/Lalezar-400-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:Lalezar;src:url(fonts/Lalezar-400-latin.woff2) format('woff2')}
+@font-face{font-family:Tajawal;font-weight:500;src:url(fonts/Tajawal-500-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:Tajawal;font-weight:500;src:url(fonts/Tajawal-500-latin.woff2) format('woff2')}
+@font-face{font-family:Tajawal;font-weight:800;src:url(fonts/Tajawal-800-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:Tajawal;font-weight:800;src:url(fonts/Tajawal-800-latin.woff2) format('woff2')}
+@font-face{font-family:Oswald;font-weight:600;src:url(fonts/Oswald-600-latin.woff2) format('woff2')}
+
+:root{
+  --red:#E3121F; --red-deep:#A8000F; --cream:#F1ECE4; --ink:#0B0405;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;transform-origin:0 0;background:var(--ink)}
+.scene{position:absolute;inset:0;overflow:hidden;display:none}
+.layer{position:absolute;inset:0}
+
+/* ---------- الخلفيات ---------- */
+.bg-dark{background:radial-gradient(ellipse 70% 38% at 50% 30%,#6a0b10 0%,#2a0507 45%,#0B0405 80%)}
+.bg-dark .floor{position:absolute;left:-50%;right:-50%;bottom:-8%;height:52%;
+  transform:perspective(700px) rotateX(72deg);transform-origin:50% 0;
+  background-image:linear-gradient(rgba(255,40,50,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(255,40,50,.55) 2px,transparent 2px);
+  background-size:150px 150px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 35%,#000 100%)}
+.bg-dark .horizon{position:absolute;left:0;right:0;top:57%;height:6px;background:rgba(255,40,50,.35);filter:blur(6px)}
+
+.bg-red{background:#C8051A}
+.bg-red .rays{position:absolute;left:-60%;top:-40%;width:220%;height:180%;
+  background:repeating-conic-gradient(from 0deg at 50% 62%,#E8202C 0deg 5deg,#C4041A 5deg 10deg)}
+.bg-red .glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 30% at 50% 60%,rgba(255,170,170,.55),transparent 70%)}
+.bg-red .floor{position:absolute;left:0;right:0;bottom:0;height:42%;
+  background:linear-gradient(to bottom,rgba(255,120,130,.75),#E03040 30%,#C40418 100%)}
+
+.bg-cream,.bg-camera{background:var(--cream)}
+.bg-cream .rings,.bg-camera .rings{position:absolute;inset:0;
+  background:repeating-radial-gradient(circle at 62% 38%,transparent 0 58px,rgba(0,0,0,.055) 58px 60px)}
+.bg-cream .floor,.bg-camera .floor{position:absolute;left:0;right:0;bottom:0;height:44%;background:linear-gradient(to bottom,#F8F5F0,#EFEAE2)}
+.bg-cream .grain,.bg-camera .grain{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,.08))}
+
+.rec{position:absolute;inset:0;font-family:Oswald;font-weight:600;color:#111;font-size:46px;letter-spacing:1px}
+.rec .c{position:absolute;width:120px;height:120px;border:0 solid #111}
+.rec .tl{left:84px;top:240px;border-top-width:6px;border-left-width:6px}
+.rec .tr{right:84px;top:240px;border-top-width:6px;border-right-width:6px}
+.rec .bl{left:84px;bottom:180px;border-bottom-width:6px;border-left-width:6px}
+.rec .br{right:84px;bottom:180px;border-bottom-width:6px;border-right-width:6px}
+.rec .lbl{position:absolute;left:120px;top:282px;direction:ltr}
+.rec .lbl i{display:inline-block;width:26px;height:26px;border-radius:50%;background:#E3121F;margin-right:14px;vertical-align:4px}
+.rec .tc{position:absolute;right:120px;top:282px;direction:ltr}
+
+.ember{position:absolute;width:6px;height:6px;border-radius:50%;background:#ff8a6a;box-shadow:0 0 10px 3px rgba(255,80,40,.7)}
+
+/* ---------- الكاميرا والنص ---------- */
+.cam{position:absolute;inset:0;transform-origin:50% 45%}
+.tb{position:absolute;left:50px;right:50px;text-align:center;
+  -webkit-box-reflect:below -18px linear-gradient(transparent 45%,rgba(255,255,255,.30))}
+.line{display:flex;flex-direction:row;justify-content:center;align-items:baseline;white-space:nowrap;transform-origin:50% 50%}
+.w{position:relative;display:inline-block;font-family:Lalezar;line-height:1.12;margin:0 .1em;will-change:transform,filter,opacity}
+.w::after{content:attr(data-t);position:absolute;inset:0;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+.c-white{color:#d8d8d8}
+.c-white::after{background-image:linear-gradient(#ffffff 0%,#f2f2f2 46%,#a9a9a9 54%,#ececec 100%)}
+.c-red{color:#d40f1d}
+.c-red::after{background-image:linear-gradient(#ff5b5b 0%,#ef1b28 46%,#b3000f 55%,#ff3a44 100%)}
+.c-black{color:#202020}
+.c-black::after{background-image:linear-gradient(#5a5a5a 0%,#2a2a2a 46%,#0a0a0a 54%,#3a3a3a 100%)}
+.c-silver{color:#bdbdbd}
+.c-silver::after{background-image:linear-gradient(#fafafa 0%,#cfcfcf 45%,#7d7d7d 55%,#d9d9d9 100%)}
+
+/* ---------- المؤثرات ---------- */
+.ring{position:absolute;left:50%;width:720px;height:150px;margin-left:-360px;border-radius:50%;
+  border:10px solid #ff2a35;box-shadow:0 0 40px 10px rgba(255,30,40,.8),inset 0 0 30px rgba(255,60,60,.8)}
+.spark{position:absolute;width:5px;height:26px;border-radius:3px;background:linear-gradient(#fff3c0,#ff7a1a);box-shadow:0 0 12px #ff6a00}
+.slash{position:absolute;left:0;height:6px;width:100%;background:#ff2a35;box-shadow:0 0 24px 8px rgba(255,30,40,.85);transform-origin:100% 50%}
+.flash{position:absolute;inset:0;background:#fff;pointer-events:none}
+
+/* ---------- العناصر (props) ---------- */
+.chat{position:absolute;left:170px;width:740px;height:820px;border-radius:34px;background:#262626;
+  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 2px #3a3a3a;font-family:Tajawal;color:#eee;overflow:hidden;
+  -webkit-box-reflect:below 6px linear-gradient(transparent 70%,rgba(255,255,255,.12))}
+.chat .hd{height:90px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#bbb;border-bottom:1px solid #333}
+.chat .q{font-size:46px;font-weight:800;text-align:center;margin:70px 0 50px}
+.chat .box{margin:0 44px;min-height:250px;border-radius:26px;background:#303030;border:1px solid #3d3d3d;padding:30px 34px;font-size:34px;line-height:1.5;color:#e8e8e8}
+.chat .box .cur{display:inline-block;width:3px;height:36px;background:#e8e8e8;vertical-align:-6px;margin-right:4px}
+.chat .att{display:inline-flex;align-items:center;gap:14px;background:#3a3a3a;border-radius:18px;padding:14px 22px;font-size:28px;margin-bottom:18px}
+.chat .att b{display:inline-block;width:44px;height:44px;border-radius:10px;background:#E3121F}
+.chat .msg{font-size:34px;margin-top:14px;line-height:1.5}
+.chat .model{display:flex;align-items:center;gap:12px;margin:26px 44px 0;font-size:26px;color:#aaa;direction:ltr;justify-content:flex-end}
+.chat .model b{width:34px;height:34px;border-radius:9px;background:#D97757}
+.chat .chips{display:flex;justify-content:center;gap:18px;margin-top:40px}
+.chat .chips span{background:#333;border-radius:40px;padding:12px 30px;font-size:28px;color:#ccc}
+
+.phone{position:absolute;left:280px;width:520px;height:1060px;border-radius:70px;background:#0d0d0d;
+  box-shadow:0 0 0 10px #2b2b2b,0 0 0 13px #6b6b6b,0 50px 90px rgba(0,0,0,.7),0 0 120px rgba(255,30,40,.25);overflow:hidden;font-family:Tajawal;color:#fff}
+.phone .bar{height:120px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 40px 18px;font-size:22px;color:#aaa;direction:rtl}
+.phone .bar .app{font-size:38px;font-weight:800;color:#fff}
+.phone .bar .app em{font-style:normal;color:#E3121F}
+.phone .hero{position:absolute;top:130px;left:0;right:0;height:520px;background:radial-gradient(ellipse at 50% 40%,#6a0b10,#160304 75%);display:flex;align-items:center;justify-content:center}
+.phone .hero .w{font-size:150px}
+.phone .meta{position:absolute;top:680px;right:40px;left:40px;text-align:right}
+.phone .meta h3{font-size:46px;font-weight:800;margin-bottom:12px}
+.phone .meta p{font-size:22px;color:#aaa;line-height:1.6}
+.phone .meta .btn{display:inline-block;margin-top:24px;border:2px solid #E3121F;border-radius:14px;padding:10px 26px;font-size:24px;color:#ffcc66}
+.phone .sheet{position:absolute;left:0;right:0;bottom:0;height:470px;border-radius:40px 40px 0 0;background:#1c1c1e;padding-top:30px}
+.phone .sheet .ttl{text-align:center;font-size:30px;font-weight:800;padding-bottom:20px;border-bottom:1px solid #333}
+.phone .sheet .in{position:absolute;left:24px;right:24px;bottom:40px;height:84px;border-radius:42px;background:#2c2c2e;display:flex;align-items:center;padding:0 30px;font-size:34px;color:#ddd;justify-content:space-between}
+.phone .sheet .in .send{width:60px;height:60px;border-radius:50%;background:#3478f6}
+.phone .dm{position:absolute;top:130px;left:0;right:0;bottom:0;background:#121212;padding:40px 30px}
+.phone .dm .bub{background:#2c2c2e;border-radius:26px;padding:20px 26px;font-size:28px;display:inline-block;max-width:90%}
+.phone .dm .card{margin-top:24px;border-radius:26px;overflow:hidden;background:#1d1d1d}
+.phone .dm .card .img{height:300px;background:repeating-conic-gradient(from 0deg at 50% 70%,#E8202C 0deg 6deg,#C4041A 6deg 12deg);display:flex;align-items:center;justify-content:center}
+.phone .dm .card .cap{padding:18px 24px;font-size:30px;font-weight:800}
+.phone .dm .card .cap small{display:block;font-size:22px;color:#999;font-weight:500}
+
+.cards{position:absolute;left:0;right:0;height:420px;display:flex;justify-content:center;gap:26px;perspective:1200px}
+.cards .cd{width:200px;height:340px;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 40px rgba(0,0,0,.4);
+  -webkit-box-reflect:below 8px linear-gradient(transparent 60%,rgba(255,255,255,.25))}
+.cards .cd .w{font-size:62px}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="timeline.js"></script>
+<script>
+(function(){
+const TL = window.TIMELINE;
+const W = TL.width||1080, H = TL.height||1920;
+const stage = document.getElementById('stage');
+const sc = Math.min(W/1080, H/1920);
+stage.style.transform = `scale(${W/1080},${H/1920})`;
+document.body.style.width = W+'px'; document.body.style.height = H+'px';
+
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const easeOutCubic=p=>1-Math.pow(1-p,3);
+const easeOutBack=p=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
+function rng(seed){let s=seed>>>0||1;return()=>((s=Math.imul(s^(s>>>15),2246822519)+0x9e3779b9>>>0)%100000)/100000}
+
+/* ظل البثق ثلاثي الأبعاد حسب اللون */
+const EXT = {
+  white:['#c4c4c4','#5c5c5c'], silver:['#a8a8a8','#4a4a4a'],
+  red:['#b0000e','#4a0006'], black:['#111','#000']
+};
+function extrude(color, px){
+  const [a,b]=EXT[color]||EXT.white, n=Math.max(6,Math.round(px/11)), out=[];
+  for(let i=1;i<=n;i++){ out.push(`0 ${i}px 0 ${mix(a,b,i/n)}`); }
+  out.push(`0 ${n+6}px 18px rgba(0,0,0,.55)`,`0 ${n+30}px 50px rgba(0,0,0,.35)`);
+  return out.join(',');
+}
+function mix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.length===4?h[1+(i>>1)].repeat(2):h.substr(i,2),16));
+  const A=p(a),B=p(b);return `rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`}
+
+function wordEl(w, basePx){
+  const e=document.createElement('span');
+  const color=w.c||'white', px=Math.round(basePx*(w.s||1));
+  e.className='w c-'+color; e.textContent=w.w; e.dataset.t=w.w;
+  e.style.fontSize=px+'px'; e.style.textShadow=extrude(color,px);
+  return e;
+}
+
+/* ---------- بناء المشهد (مرة واحدة) ---------- */
+const built = [];
+function build(i){
+  if(built[i]) return built[i];
+  const s = TL.scenes[i];
+  const bg = s.bg||'dark';
+  const root=document.createElement('div'); root.className='scene';
+  const bgl=document.createElement('div'); bgl.className='layer bg-'+bg; root.appendChild(bgl);
+  const R={root,s,words:[],embers:[],sparks:[]};
+  if(bg==='dark'){ bgl.innerHTML='<div class="horizon"></div><div class="floor"></div>';
+    const r=rng(i*97+3); for(let k=0;k<26;k++){const e=document.createElement('div');e.className='ember';bgl.appendChild(e);
+      R.embers.push({e,x:r()*1080,y:r()*1920,v:40+r()*120,a:.3+r()*.7,sz:.5+r()*1.2});} }
+  if(bg==='red'){ bgl.innerHTML='<div class="rays"></div><div class="glow"></div><div class="floor"></div>'; R.rays=bgl.querySelector('.rays'); }
+  if(bg==='cream'||bg==='camera'){ bgl.innerHTML='<div class="rings"></div><div class="floor"></div><div class="grain"></div>'; }
+  const cam=document.createElement('div'); cam.className='cam'; root.appendChild(cam); R.cam=cam;
+
+  // العنصر المرافق
+  const p=s.prop;
+  if(p){ R.prop=buildProp(p,cam,R); }
+
+  // النص
+  const tb=document.createElement('div'); tb.className='tb'; cam.appendChild(tb); R.tb=tb;
+  const base = s.size || (p ? 118 : 165);
+  tb.style.top = (s.y!=null ? s.y : (p ? 300 : 560))+'px';
+  if(s.reflect===false) tb.style.webkitBoxReflect='none';
+  (s.lines||[]).forEach(line=>{
+    const ld=document.createElement('div'); ld.className='line'; tb.appendChild(ld);
+    line.forEach(w=>{const e=wordEl(w,base); ld.appendChild(e); R.words.push({e,w});});
+  });
+
+  // المؤثرات
+  const fx=document.createElement('div'); fx.className='layer'; root.appendChild(fx); R.fx=fx;
+  (s.fx||[]).forEach(f=>{
+    const name=typeof f==='string'?f:f.type, at=(typeof f==='object'&&f.t!=null)?f.t:s.start+0.05;
+    if(name==='ring'){const e=document.createElement('div');e.className='ring';e.style.top=(parseInt(tb.style.top)+base*1.05)+'px';fx.appendChild(e);R.ring={e,at};}
+    if(name==='sparks'){const r=rng(i*31+7);for(let k=0;k<18;k++){const e=document.createElement('div');e.className='spark';fx.appendChild(e);
+      R.sparks.push({e,at,ang:r()*Math.PI*2,sp:500+r()*900,cx:540+(r()-.5)*300,cy:parseInt(tb.style.top)+base*.6});}}
+    if(name==='slash'){const e=document.createElement('div');e.className='slash';e.style.top=(parseInt(tb.style.top)+base*.55)+'px';fx.appendChild(e);R.slash={e,at};}
+    if(name==='shake'){R.shake=at;}
+  });
+  if(bg==='camera'){const rec=document.createElement('div');rec.className='rec';
+    rec.innerHTML='<div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div><div class="lbl"><i></i>REC</div><div class="tc"></div>';
+    root.appendChild(rec);R.tc=rec.querySelector('.tc');R.recDot=rec.querySelector('.lbl i');}
+  const fl=document.createElement('div'); fl.className='flash'; root.appendChild(fl); R.flash=fl;
+
+  stage.appendChild(root);
+  // تصغير السطر إذا تجاوز عرض الإطار
+  root.style.display='block';
+  tb.querySelectorAll('.line').forEach(ld=>{const ww=ld.scrollWidth; if(ww>980){ld.style.transform=`scale(${980/ww})`;}});
+  root.style.display='none';
+  built[i]=R; return R;
+}
+
+function buildProp(p,cam,R){
+  const y = p.y!=null?p.y:(p.type==='phone'?640:760);
+  if(p.type==='chat'){
+    const e=document.createElement('div'); e.className='chat'; e.style.top=y+'px';
+    e.innerHTML=`<div class="hd">${p.header||'محادثة جديدة'}</div><div class="q">${p.question||'وش نسوي اليوم؟'}</div>
+      <div class="box">${p.file?`<div class="att"><b></b><span>${p.file}</span></div>`:''}<span class="typed"></span><span class="cur"></span>
+      <div class="msg reply"></div></div>
+      <div class="model"><b></b>${p.model||'Claude'}</div>
+      <div class="chips"><span>اكتب</span><span>تعلّم</span><span>برمج</span><span>أفكار</span></div>`;
+    cam.appendChild(e); return {e,p,typed:e.querySelector('.typed'),reply:e.querySelector('.reply'),cur:e.querySelector('.cur')};
+  }
+  if(p.type==='phone'){
+    const e=document.createElement('div'); e.className='phone'; e.style.top=y+'px';
+    const hero=p.hero||'';
+    e.innerHTML=`<div class="bar"><span>English · ${p.tabs||'الأدوات · السكيلات'}</span><span class="app">${p.app||'متجري'}</span></div>
+      <div class="hero"></div>
+      <div class="meta"><h3>${p.title||''}</h3><p>${p.desc||''}</p>${p.button?`<span class="btn">${p.button}</span>`:''}</div>
+      ${p.comment!=null?`<div class="sheet"><div class="ttl">التعليقات</div><div class="in"><span class="send"></span><span class="ctext"></span></div></div>`:''}
+      ${p.dm?`<div class="dm"><div class="bub">${p.dm.text||''}</div><div class="card"><div class="img"></div><div class="cap">${p.dm.title||''}<small>${p.dm.link||''}</small></div></div></div>`:''}`;
+    if(hero){const h=e.querySelector('.hero');hero.split(' ').forEach(t=>h.appendChild(wordEl({w:t,c:'white'},150)));}
+    if(p.dm&&p.dm.hero){const im=e.querySelector('.dm .img');im.appendChild(wordEl({w:p.dm.hero,c:'red'},110));}
+    cam.appendChild(e);
+    return {e,p,ctext:e.querySelector('.ctext'),sheet:e.querySelector('.sheet'),dm:e.querySelector('.dm')};
+  }
+  if(p.type==='cards'){
+    const e=document.createElement('div'); e.className='cards'; e.style.top=y+'px';
+    (p.items||[]).forEach((it,k)=>{const cd=document.createElement('div');cd.className='cd';
+      cd.style.background=(k%2?'#E3121F':'#F1ECE4');cd.appendChild(wordEl({w:it,c:k%2?'white':'red'},62));e.appendChild(cd);});
+    cam.appendChild(e); return {e,p,cards:[...e.children]};
+  }
+  return null;
+}
+
+/* ---------- رسم لحظة t ---------- */
+let current=-1;
+function seek(t){
+  let i=TL.scenes.findIndex(s=>t>=s.start&&t<s.end);
+  if(i<0) i = t<TL.scenes[0].start?0:TL.scenes.length-1;
+  const R=build(i), s=R.s;
+  if(current!==i){ if(current>=0&&built[current]) built[current].root.style.display='none'; R.root.style.display='block'; current=i; }
+  const lt=t-s.start, dur=s.end-s.start, prog=clamp(lt/dur);
+
+  // دخول المشهد: ضربة زووم + ضبابية حركة (whip)
+  const ein=s.soft?1:clamp(lt/0.16);
+  let camS = 1 + (s.push!=null?s.push:0.07)*easeOutCubic(prog) + 0.12*(1-easeOutCubic(ein));
+  let camY = 70*(1-easeOutCubic(ein)), camX=0, camR=(s.tilt||0)*prog;
+  if(R.shake!=null){const d=t-R.shake; if(d>=0&&d<.22){const k=(1-d/.22)*14;camX=Math.sin(d*90)*k;camY+=Math.cos(d*70)*k;}}
+  R.cam.style.transform=`translate(${camX}px,${camY}px) scale(${camS}) rotate(${camR}deg)`;
+  R.cam.style.filter = ein<1?`blur(${(1-ein)*10}px)`:'none';
+  R.flash.style.opacity = (s.soft||s.flash===false)?0:(0.55*(1-clamp(lt/0.09)));
+
+  // الكلمات: تظهر لحظة نطقها بضربة (scale + blur + overshoot)
+  R.words.forEach(({e,w},k)=>{
+    const d=t-w.t;
+    if(d<0){e.style.opacity=0;return;}
+    const p=clamp(d/0.2), eb=easeOutBack(p);
+    const sc = 1.75-0.75*eb, bl=12*(1-easeOutCubic(p));
+    const ty = -50*(1-eb) + Math.sin((t+k)*1.3)*3;
+    e.style.opacity=clamp(d/0.06);
+    e.style.transform=`translateY(${ty}px) scale(${sc})`;
+    e.style.filter=bl>.3?`blur(${bl}px)`:'none';
+  });
+
+  // الخلفيات المتحركة
+  if(R.rays) R.rays.style.transform=`rotate(${t*4}deg)`;
+  R.embers.forEach(m=>{const y=((m.y - t*m.v)%1920+1920)%1920;
+    m.e.style.transform=`translate(${m.x+Math.sin(t*1.5+m.x)*20}px,${y}px) scale(${m.sz})`;m.e.style.opacity=m.a*(0.6+0.4*Math.sin(t*6+m.x));});
+  if(R.tc){const f=Math.floor(t*30)%30, ss=Math.floor(t); R.tc.textContent=`00:00:${String(ss).padStart(2,'0')}:${String(f).padStart(2,'0')}`;
+    R.recDot.style.opacity=(Math.floor(t*2)%2)?.25:1;}
+
+  // المؤثرات
+  if(R.ring){const d=t-R.ring.at;const p=clamp(d/0.7);R.ring.e.style.opacity=d<0?0:(1-p)*(d<.05?d/.05:1);
+    R.ring.e.style.transform=`scale(${0.5+1.1*easeOutCubic(p)})`;}
+  R.sparks.forEach(sp=>{const d=t-sp.at; if(d<0||d>.9){sp.e.style.opacity=0;return;}
+    const x=sp.cx+Math.cos(sp.ang)*sp.sp*d, y=sp.cy+Math.sin(sp.ang)*sp.sp*d+900*d*d;
+    sp.e.style.opacity=1-d/.9; sp.e.style.transform=`translate(${x}px,${y}px) rotate(${sp.ang*57.3+90}deg)`;});
+  if(R.slash){const d=t-R.slash.at;const p=clamp(d/0.25);R.slash.e.style.opacity=d<0?0:(d<.5?1:clamp(1-(d-.5)/.3));
+    R.slash.e.style.transform=`scaleX(${easeOutCubic(p)}) rotate(-4deg)`;}
+
+  // العناصر
+  const P=R.prop;
+  if(P){
+    const pin=P.p.at!=null?P.p.at:(s.soft?s.start-1:s.start);
+    const d=t-pin, p=clamp(d/0.35), eb=easeOutBack(p);
+    P.e.style.opacity=clamp(d/0.12);
+    P.e.style.transform=`translateY(${(1-eb)*260}px) rotateX(${(1-eb)*25}deg) scale(${0.9+0.1*eb})`;
+    if(P.typed){const txt=P.p.text||'',a=P.p.type_from??pin+.2,b=P.p.type_to??(s.end-.2);
+      const n=Math.round(txt.length*clamp((t-a)/Math.max(.1,b-a)));P.typed.textContent=txt.slice(0,n);
+      P.cur.style.opacity=(Math.floor(t*3)%2)?0:1;
+      if(P.p.reply){P.reply.textContent=t>=(P.p.reply_at??s.end-.6)?P.p.reply:'';}}
+    if(P.ctext){const txt=P.p.comment||'',a=P.p.comment_at??s.start+.3;
+      P.ctext.textContent=t<a?'أضف تعليق...':txt.slice(0,Math.round(txt.length*clamp((t-a)/.4)));
+      P.ctext.style.fontWeight=t<a?500:800;}
+    if(P.cards){P.cards.forEach((c,k)=>{const d2=t-(pin+k*.12),p2=easeOutBack(clamp(d2/.3));
+      c.style.opacity=clamp(d2/.08);c.style.transform=`translateY(${(1-p2)*200}px) rotateY(${(k-1.5)*-8}deg)`;});}
+  }
+}
+window.seek=seek;
+window.engineReady=document.fonts.ready.then(()=>{seek(0);return true;});
+
+if(new URLSearchParams(location.search).has('preview')){
+  const t0=performance.now(); const loop=()=>{seek(((performance.now()-t0)/1000)%TL.duration);requestAnimationFrame(loop)};
+  window.engineReady.then(loop);
+}
+})();
+</script>
+</body>
+</html>

@@ -82,3 +82,16 @@ script = """
 
 يحتاج النشر التلقائي إلى ثلاثة أسرار في **Settings ← Secrets and variables ← Actions**:
 `YT_CLIENT_ID` و`YT_CLIENT_SECRET` و`YT_REFRESH_TOKEN` (بصلاحية `https://www.googleapis.com/auth/youtube`). شرح الحصول عليها خطوة بخطوة في فيديو `docs/youtube-tokens-tutorial.mp4`.
+
+## مهارة salam-skill: مونتاج "ضربة"
+
+في `.claude/skills/salam-skill/` مهارة محفوظة لـ Claude Code تصنع فيديو عمودياً بأسلوب الكلمات المتحركة:
+نص ثلاثي الأبعاد يظهر مع كل كلمة منطوقة، وقطع سريع بين خلفيات حمراء وسوداء وكريمية، وتعليق سعودي حماسي.
+اطلبها من Claude باسمها (`salam-skill`) مع فكرة الفيديو، أو شغّلها يدوياً:
+
+```bash
+python3 .claude/skills/salam-skill/scripts/salam.py tts board.txt -o voice.mp3
+python3 .claude/skills/salam-skill/scripts/salam.py make board.txt voice.mp3 -o out.mp4
+```
+
+الدليل الكامل (الأسلوب، الإلقاء، وصفة النص، صيغة الستوري بورد) في `.claude/skills/salam-skill/SKILL.md`.
