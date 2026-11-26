@@ -11,6 +11,7 @@ import json
 import os
 import subprocess
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -65,10 +66,22 @@ def log(m):
     print(m, flush=True)
 
 
+HEADERS = {"User-Agent": "mirai-sanad-series/1.0 (real-footage episode builder)"}
+
+
+def get(url):
+    try:
+        return urllib.request.urlopen(urllib.request.Request(url, headers=HEADERS), timeout=120)
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", "replace")[:300]
+        where = url.split("?")[0]
+        sys.exit(f"خطأ {e.code} من {where}: {body}")
+
+
 def search(key, q):
     url = "https://pixabay.com/api/videos/?" + urllib.parse.urlencode(
         {"key": key, "q": q, "safesearch": "true", "per_page": 20, "order": "popular"})
-    with urllib.request.urlopen(url, timeout=60) as r:
+    with get(url) as r:
         return json.load(r).get("hits", [])
 
 
@@ -100,7 +113,8 @@ def main():
             sys.exit(f"لا يوجد مقطع مناسب للقطة {i} ({queries})")
         q, hit, vid = found
         raw = build / f"raw{i}.mp4"
-        urllib.request.urlretrieve(vid["url"], raw)
+        with get(vid["url"]) as r:
+            raw.write_bytes(r.read())
         start = max(0.0, min(hit["duration"] - need - 0.2, hit["duration"] * 0.2))
         out = build / f"shot{i}.mp4"
         # قصّ مركزي إلى 9:16 بدقة 1080x1920، 30 إطاراً، بلا صوت، مع تلاشٍ قصير عند الأطراف
