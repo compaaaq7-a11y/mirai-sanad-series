@@ -4,6 +4,7 @@
 الأوامر:
   salam.py tts      board.txt -o voice.mp3 [--voice ar-SA-HamedNeural] [--rate +12%]
   salam.py timeline board.txt voice.mp3 -o timeline.json [--words words.json]
+  salam.py timeline board.txt -o timeline.json [--pace 2.3]    (بدون صوت: توقيت بإيقاع الإلقاء)
   salam.py render   timeline.json -o out.mp4 [--scale 0.5] [--still 1,5,9]
   salam.py make     board.txt voice.mp3 -o out.mp4 [--scale 0.5]   (timeline + render)
 
@@ -60,7 +61,7 @@ def parse_kv(s):
 
 def tokenize(text, bg):
     """يُرجع قائمة عناصر: {'w','spoken','shown','c','s','newline'}"""
-    toks = []
+    toks, open_star = [], [False]
     # نص منطوق فقط {...} ونص مكتوب فقط <...>
     parts = re.split(r'(\{[^}]*\}|<[^>]*>)', text)
     for pi, part in enumerate(parts):
@@ -77,8 +78,15 @@ def tokenize(text, bg):
             while w[:1] in '+-':
                 size *= 1.35 if w[0] == '+' else 0.7
                 w = w[1:]
-            if w.startswith('*') and w.endswith('*') and len(w) > 2:
-                accent, w = True, w[1:-1]
+            # تمييز يمتد على عدة كلمات: *كلمة كلمة*
+            if w.startswith('*'):
+                accent, w = True, w[1:]
+                if not w.endswith('*'):
+                    open_star[0] = True
+            elif open_star[0]:
+                accent = True
+            if w.endswith('*'):
+                accent, w, open_star[0] = True, w[:-1], False
             if not w:
                 continue
             shown = w.strip(STRIP_DISPLAY)
@@ -237,16 +245,36 @@ def align_tokens(spoken, words, wav):
 
 
 # ---------------------------------------------------------------- timeline
-def make_timeline(board, audio, words_path=None, out=None):
+def pace_times(scenes, wps):
+    """بدون صوت: توقيت بإيقاع الإلقاء المرجعي (كلمات/ثانية) مع نَفَس قصير عند كل قطع."""
+    t, avg = 0.35, None
+    toks = [x for s in scenes for x in s['tokens'] if not x.get('newline') and x['spoken']]
+    avg = sum(nchars(x['say']) for x in toks) / max(1, len(toks))
+    for s in scenes:
+        for x in s['tokens']:
+            if x.get('newline') or not x['spoken']:
+                continue
+            x['t'] = round(t, 3)
+            t += (0.55 + 0.45 * nchars(x['say']) / avg) / wps
+            if x['say'][-1:] in '.؟?!':
+                t += 0.12
+        t += 0.12
+    return t + 0.9
+
+
+def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
     scenes, glob = parse_board(board)
-    tmp = tempfile.mkdtemp()
-    wav = os.path.join(tmp, 'v.wav')
-    to_wav(audio, wav)
-    dur = duration(audio)
-    words = json.load(open(words_path, encoding='utf-8')) if words_path else whisper_words(wav)
     spoken = [t for s in scenes for t in s['tokens'] if not t.get('newline') and t['spoken']]
-    method = align_tokens(spoken, words, wav)
-    shutil.rmtree(tmp, ignore_errors=True)
+    if audio:
+        tmp = tempfile.mkdtemp()
+        wav = os.path.join(tmp, 'v.wav')
+        to_wav(audio, wav)
+        dur = duration(audio)
+        words = json.load(open(words_path, encoding='utf-8')) if words_path else whisper_words(wav)
+        method = align_tokens(spoken, words, wav)
+        shutil.rmtree(tmp, ignore_errors=True)
+    else:
+        dur, method = pace_times(scenes, pace), f'pace {pace} w/s (no audio)'
 
     out_scenes = []
     for i, s in enumerate(scenes):
@@ -294,7 +322,7 @@ def make_timeline(board, audio, words_path=None, out=None):
         if p and p['type'] == 'chat' and 'type_from' not in p:
             p['type_from'], p['type_to'] = sc['start'] + 0.25, max(sc['start'] + 0.6, sc['end'] - 0.25)
     tl = {'width': 1080, 'height': 1920, 'fps': int(glob.get('fps', 30)), 'duration': round(dur, 3),
-          'audio': os.path.relpath(os.path.abspath(audio), os.path.dirname(os.path.abspath(out or 'x'))),
+          'audio': os.path.relpath(os.path.abspath(audio), os.path.dirname(os.path.abspath(out or 'x'))) if audio else None,
           'align': method, 'scenes': out_scenes}
     for k in ('music', 'music_volume', 'voice_volume', 'whoosh_volume', 'hit_volume', 'sfx'):
         if k in glob:
@@ -348,9 +376,9 @@ def main():
     sub = ap.add_subparsers(dest='cmd', required=True)
     a = sub.add_parser('tts'); a.add_argument('board'); a.add_argument('-o', required=True)
     a.add_argument('--voice', default='ar-SA-HamedNeural'); a.add_argument('--rate', default='+12%'); a.add_argument('--pitch', default='+0Hz')
-    b = sub.add_parser('timeline'); b.add_argument('board'); b.add_argument('audio'); b.add_argument('-o', required=True); b.add_argument('--words')
+    b = sub.add_parser('timeline'); b.add_argument('board'); b.add_argument('audio', nargs='?'); b.add_argument('-o', required=True); b.add_argument('--words'); b.add_argument('--pace', type=float, default=2.3)
     c = sub.add_parser('render'); c.add_argument('timeline'); c.add_argument('-o', required=True)
-    d = sub.add_parser('make'); d.add_argument('board'); d.add_argument('audio'); d.add_argument('-o', required=True); d.add_argument('--words')
+    d = sub.add_parser('make'); d.add_argument('board'); d.add_argument('audio', nargs='?'); d.add_argument('-o', required=True); d.add_argument('--words'); d.add_argument('--pace', type=float, default=2.3)
     for p in (c, d):
         p.add_argument('--scale'); p.add_argument('--still'); p.add_argument('--no-sfx', action='store_true')
     args = ap.parse_args()
@@ -365,14 +393,14 @@ def main():
     if args.cmd == 'tts':
         tts(args.board, args.o, args.voice, args.rate, args.pitch)
     elif args.cmd == 'timeline':
-        tl = make_timeline(args.board, args.audio, args.words, args.o)
+        tl = make_timeline(args.board, args.audio, args.words, args.o, args.pace)
         json.dump(tl, open(args.o, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         print(f"  wrote {args.o}  ({len(tl['scenes'])} scenes, align={tl['align']}, {tl['duration']}s)")
     elif args.cmd == 'render':
         render(args.timeline, args.o, extra())
     elif args.cmd == 'make':
         tl_path = os.path.splitext(args.o)[0] + '.timeline.json'
-        tl = make_timeline(args.board, args.audio, args.words, tl_path)
+        tl = make_timeline(args.board, args.audio, args.words, tl_path, args.pace)
         json.dump(tl, open(tl_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
         print(f"  timeline: {tl_path}  ({len(tl['scenes'])} scenes, align={tl['align']})")
         render(tl_path, args.o, extra())
