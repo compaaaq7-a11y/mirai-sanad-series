@@ -155,7 +155,7 @@ def build_manifest(episodes: list[dict], defaults: dict, source: str, voice: str
     lines = []
     for ep in episodes:
         task = dict(defaults)
-        task.update({k: v for k, v in ep.items() if k not in {"id", "title", "script", "terms"}})
+        task.update({k: v for k, v in ep.items() if k not in {"id", "title", "script", "terms", "approved"}})
         task["video_subject"] = ep.get("title", ep["id"])
         task["video_script"] = " ".join(ep["script"].split())
         task["video_source"] = source
@@ -318,7 +318,9 @@ def publish(args) -> int:
     for ep in episodes:
         video = OUTPUT_DIR / f"{ep['id']}.mp4"
         meta = episode_metadata(ep, series)
-        if not video.exists():
+        if ep.get("approved") is not True:
+            log(f"- {ep['id']}: لم تتم الموافقة عليها بعد (approved = true)، لن تُنشر")
+        elif not video.exists():
             log(f"- {ep['id']}: لا يوجد فيديو بعد، تخطّيتها")
         elif meta["title"] in done:
             log(f"- {ep['id']}: منشورة سابقاً")

@@ -38,10 +38,12 @@ video_transition_mode = "FadeIn"       # None, FadeIn, FadeOut, SlideIn, SlideOu
 # id: اسم ملف الفيديو الناتج (output/<id>.mp4)
 # script: نص الحلقة الذي سيُقرأ ويُكتب كترجمة
 # terms: كلمات بحث إنجليزية للقطات الفيديو (Pixabay أو Pexels) (مفصولة بفواصل)
+# approved: true فقط بعد موافقة صاحب القناة على الفيديو؛ بدونها لا تُنشر الحلقة على يوتيوب أبداً
 # -----------------------------------------------------------------------------
 
 [[episodes]]
 id = "ep01-intro"
+approved = true   # منشورة على القناة
 title = "ما هي ميراي سند؟"
 terms = "future city, sunrise, technology, people walking"
 script = """
@@ -53,6 +55,7 @@ script = """
 
 [[episodes]]
 id = "ep02-ai-tools"
+approved = true   # منشورة على القناة
 title = "الذكاء الاصطناعي مساعدك الجديد"
 terms = "artificial intelligence, laptop, robot, coding"
 script = """
@@ -64,6 +67,7 @@ script = """
 
 [[episodes]]
 id = "ep03-learning"
+approved = true   # منشورة على القناة
 title = "تعلّم مهارة كل شهر"
 terms = "studying, books, online learning, notebook"
 script = """
@@ -75,6 +79,7 @@ script = """
 
 [[episodes]]
 id = "ep04-time"
+approved = true   # منشورة على القناة
 title = "وقتك رأس مالك"
 terms = "clock, morning routine, calendar, focus"
 script = """
@@ -86,6 +91,7 @@ script = """
 
 [[episodes]]
 id = "ep05-together"
+approved = true   # منشورة على القناة
 title = "لا أحد ينجح وحده"
 terms = "teamwork, friends, community, handshake"
 script = """
