@@ -16,9 +16,6 @@ on:
   push:
     paths:
       - blender/ep07_first_flight.py
-      - blender/garden_common.py
-      - blender/finish.py
-      - .github/workflows/ep07-3d.yml
 
 permissions:
   contents: write

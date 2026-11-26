@@ -493,11 +493,25 @@ def cat(pos, head_deg):
     c["legs"] = legs
     tail = empty("cat_tail", (0, 0.27, 0.25), body)
     c["tail"] = tail
-    p = Vector((0, 0, 0))
-    for j in range(8):
-        a = radians(20 + j * 11)
-        p = p + Vector((0, 0.055 * cos(a), 0.055 * sin(a)))
-        part("ball", f"cat_tail{j}", p.copy(), 0.036 - j * 0.001, CAT if j < 7 else CAT_W, tail)
+    # ذيل أملس: منحنى واحد بسُمك يستدقّ نحو الطرف (بلا كرات ولا تجعيد)
+    cu = bpy.data.curves.new("cat_tail_curve", "CURVE")
+    cu.dimensions = "3D"
+    cu.bevel_depth = 1.0
+    cu.bevel_resolution = 6
+    cu.resolution_u = 16
+    cu.use_fill_caps = True
+    sp = cu.splines.new("NURBS")
+    pts = [(0, 0, 0), (0, 0.12, 0.03), (0, 0.24, 0.12), (0, 0.3, 0.27), (0, 0.28, 0.38)]
+    radii = [0.036, 0.034, 0.03, 0.025, 0.017]
+    sp.points.add(len(pts) - 1)
+    for pt, (x, y, z), r in zip(sp.points, pts, radii):
+        pt.co = (x, y, z, 1)
+        pt.radius = r
+    sp.use_endpoint_u = True
+    sp.order_u = 4
+    tail_obj = link(bpy.data.objects.new("cat_tail_mesh", cu))
+    tail_obj.data.materials.append(CAT)
+    tail_obj.parent = tail
     return c
 
 

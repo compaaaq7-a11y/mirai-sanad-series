@@ -1,0 +1,126 @@
+name: حلقة ثلاثية الأبعاد - القطة العالقة
+
+# ترسم الجزء الثالث «القطة العالقة» في Blender على 18 جهازاً بالتوازي،
+# ثم تضيف التعليق (edge-tts) والزقزقة والموسيقى، وتنشر الفيديو في فرع videos.
+on:
+  workflow_dispatch:
+    inputs:
+      samples:
+        description: "عيّنات Cycles لكل بكسل (جودة أعلى = أبطأ)"
+        required: false
+        default: "16"
+      res:
+        description: "دقة الرسم (تُكبَّر بعدها إلى 1080x1920)"
+        required: false
+        default: "540x960"
+  push:
+    paths:
+      - blender/part3_stuck_cat.py
+      - .github/workflows/part3-3d.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: part3-3d-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SAMPLES: ${{ github.event.inputs.samples || '16' }}
+  RES: ${{ github.event.inputs.res || '540x960' }}
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: true
+      matrix:
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: تثبيت Blender (bpy)
+        run: pip install "bpy==4.2.*"
+      - name: رسم الإطارات
+        run: |
+          A=$(( ${{ matrix.chunk }} * 40 + 1 ))
+          B=$(( A + 39 ))
+          python blender/part3_stuck_cat.py --frames $A $B --res "$RES" --samples "$SAMPLES" --out build/part3/frames
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.chunk }}
+          path: build/part3/frames/*.png
+          retention-days: 2
+
+  audio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+        id: ffmpeg
+        continue-on-error: true
+      - name: ffmpeg احتياطي
+        if: steps.ffmpeg.outcome == 'failure'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install edge-tts numpy
+      - name: التعليق والزقزقة والموسيقى
+        run: python blender/finish.py --ep part3 audio
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audio
+          path: build/part3/*
+          retention-days: 2
+
+  assemble:
+    needs: [render, audio]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+        id: ffmpeg
+        continue-on-error: true
+      - name: ffmpeg احتياطي
+        if: steps.ffmpeg.outcome == 'failure'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install numpy
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: frames-*
+          path: build/part3/frames
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: audio
+          path: build/part3
+      - name: تركيب الفيديو
+        run: python blender/finish.py --ep part3 video
+      - uses: actions/upload-artifact@v4
+        with:
+          name: part3-stuck-cat-3d
+          path: output/part3-stuck-cat-3d.mp4
+      - name: إضافة الفيديو إلى فرع videos
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          URL="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
+          if git clone -q --depth 1 --branch videos "$URL" vb; then :; else
+            mkdir vb && cd vb && git init -q -b videos && git remote add origin "$URL" && cd ..
+          fi
+          cp output/part3-stuck-cat-3d.mp4 vb/
+          cd vb
+          git add part3-stuck-cat-3d.mp4
+          git commit -q -m "3D part3 from run $RUN_ID"
+          git push -q origin videos

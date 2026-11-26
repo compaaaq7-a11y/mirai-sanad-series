@@ -51,6 +51,23 @@ EPISODES = {
         swell=(16.5, 22.0),
         claps=[11.0, 11.5, 12.0],
     ),
+    "part3": dict(
+        out="part3-stuck-cat-3d.mp4",
+        lines=[
+            (0.5, "في صباحٍ مشمس، سمع سند وميراي زقزقةً عالية."),
+            (5.0, "كانت القطة قد تسلّقت الشجرة، ولم تستطع النزول!"),
+            (10.4, "أحضر سند صندوقًا، ونادتها ميراي بكرة الصوف."),
+            (16.4, "قفزت القطة بحذر… فالتقطها سند بين ذراعيه."),
+            (23.2, "ومنذ ذلك اليوم، صار الجميع أصدقاء في الحديقة."),
+        ],
+        chick=[0.3, 0.9, 1.5, 2.1, 2.7, 3.3, 3.9, 18.6, 19.0, 25.5, 26.0, 28.6],
+        mom=[0.6, 1.2, 1.8, 2.4, 3.0, 3.6, 18.8, 26.3],
+        flaps=[(0.0, 4.8, 0.5), (10.0, 12.8, 0.5)],
+        meows=[6.2, 7.6, 9.0, 17.2],
+        drag=(11.5, 13.4),
+        swell=(17.8, 22.5),
+        claps=[24.2, 24.46, 24.72, 24.98, 25.24, 25.5],
+    ),
 }
 CFG = EPISODES["ep06"]
 BUILD = ROOT / "build" / "ep06"
@@ -185,6 +202,18 @@ def flutter(t0, t1, n, rng, gain=1.0):
     return out
 
 
+def meow(rng):
+    """مواء قطة صغيرة: نغمة تصعد ثم تنزل مع اهتزاز خفيف."""
+    n = int(SR * 0.65)
+    t = np.arange(n) / SR
+    f = 520 + 420 * np.sin(np.pi * t / t[-1]) ** 1.5 - 120 * (t / t[-1])
+    f *= 1 + 0.012 * np.sin(2 * np.pi * 6 * t)
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    s = np.sin(ph) + 0.5 * np.sin(2 * ph) + 0.25 * np.sin(3 * ph) + 0.12 * np.sin(4 * ph)
+    a = np.clip(np.sin(np.pi * t / t[-1]), 0, 1) ** 0.8
+    return s * a / 1.9 * rng.uniform(0.85, 1.0)
+
+
 def clap(rng):
     m = int(SR * 0.06)
     return noise_band(m, 800, 6000, rng) * np.exp(-np.arange(m) / (SR * 0.012))
@@ -258,6 +287,16 @@ def audio(args):
         lv = noise_band(m, 1500, 7000, rng) * 0.12
         lv *= np.interp(np.arange(m), [0, m * 0.3, m * 0.7, m - 1], [0, 1, 0.6, 0]) * (0.6 + 0.4 * np.sin(np.arange(m) / SR * 7))
         fx[int(r0 * SR):int(r0 * SR) + m] += lv
+    for t in CFG.get("meows", []):
+        c = meow(rng) * 0.45
+        i0 = int(t * SR)
+        fx[i0:i0 + len(c)] += c[: n - i0]
+    if "drag" in CFG:  # جرّ الصندوق على العشب
+        d0, d1 = CFG["drag"]
+        m = int((d1 - d0) * SR)
+        dr = noise_band(m, 120, 900, rng) * 0.18
+        dr *= np.interp(np.arange(m), [0, m * 0.1, m * 0.9, m - 1], [0, 1, 1, 0]) * (0.7 + 0.3 * np.sin(np.arange(m) / SR * 11))
+        fx[int(d0 * SR):int(d0 * SR) + m] += dr
     for t in CFG.get("claps", []):
         c = clap(rng) * 0.4
         i0 = int(t * SR)
