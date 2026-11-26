@@ -38,15 +38,26 @@ jobs:
         if: steps.ffmpeg.outcome == 'failure'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - run: pip install edge-tts numpy
+      # بلا ملف اختيارات (real/picks/<ep>.json): نصنع لوحات مرشّحين للمراجعة البشرية فقط
+      - name: الوضع
+        id: mode
+        run: |
+          if [ -f "real/picks/$EP.json" ]; then echo "mode=build" >> "$GITHUB_OUTPUT"; else echo "mode=candidates" >> "$GITHUB_OUTPUT"; fi
+      - name: لوحات المرشّحين
+        if: steps.mode.outputs.mode == 'candidates'
+        run: python real/real_episode.py "$EP" candidates
       - name: التعليق والمؤثرات
+        if: steps.mode.outputs.mode == 'build'
         run: python blender/finish.py --ep "$EP" audio
-      - name: اللقطات الحقيقية والتركيب
-        run: python real/real_episode.py "$EP"
+      - name: اللقطات المختارة والتركيب
+        if: steps.mode.outputs.mode == 'build'
+        run: python real/real_episode.py "$EP" build
       - uses: actions/upload-artifact@v4
         with:
-          name: real-${{ env.EP }}
+          name: real-${{ env.EP }}-${{ steps.mode.outputs.mode }}
           path: output/real-*
       - name: إضافة الفيديو إلى فرع videos
+        if: steps.mode.outputs.mode == 'build'
         env:
           TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -56,8 +67,8 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           URL="https://x-access-token:${TOKEN}@github.com/${REPO}.git"
           git clone -q --depth 1 --branch videos "$URL" vb
-          cp output/real-* vb/
+          cp output/real-*.mp4 output/real-*.json vb/ 2>/dev/null || true
           cd vb
-          git add real-*
+          git add real-*.mp4 real-*.json
           git commit -q -m "Real-footage $EP from run $RUN_ID"
           git push -q origin videos

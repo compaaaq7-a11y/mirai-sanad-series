@@ -90,7 +90,11 @@ def search(key, q):
 
 # وسوم تُستبعد دائماً: حيوانات مفترسة أو مشاهد مخيفة، ومحتوى مولّد بالذكاء الاصطناعي (القصة «حقيقية»)
 BLOCK = {"lion", "lioness", "tiger", "leopard", "predator", "roar", "wolf", "bear", "blood", "dead", "hunt",
-         "ai", "ai generated", "generated", "artificial intelligence", "animation", "cartoon", "3d", "render"}
+         "ai", "ai generated", "generated", "artificial intelligence", "animation", "cartoon", "3d", "render",
+         "cigarette", "smoke", "smoking", "tobacco", "cigar", "vape", "alcohol", "beer", "wine", "drink",
+         "gun", "weapon", "knife", "war", "fire", "injury", "sad", "cage", "slaughter", "meat"}
+BLOCK_WORDS = {"lion", "lioness", "tiger", "ai", "generated", "animation", "cartoon", "cigarette", "smoking",
+               "smoke", "tobacco", "alcohol", "beer", "wine", "gun", "weapon", "knife", "blood", "meat"}
 
 
 def tags_of(h):
@@ -104,7 +108,7 @@ def pick(key, queries, need, used, must=()):
                 continue
             tags = tags_of(h)
             words = {w for t in tags for w in t.split()}
-            if tags & BLOCK or words & {"lion", "lioness", "tiger", "ai", "generated", "animation", "cartoon"}:
+            if tags & BLOCK or words & BLOCK_WORDS:
                 continue
             if must and not any(m in words or m in tags for m in must):
                 continue
@@ -116,11 +120,86 @@ def pick(key, queries, need, used, must=()):
     return None
 
 
+def ok_hit(h, need, must):
+    tags = tags_of(h)
+    words = {w for t in tags for w in t.split()}
+    if h.get("duration", 0) < need + 0.3 or tags & BLOCK or words & BLOCK_WORDS:
+        return False
+    return not must or any(m in words or m in tags for m in must)
+
+
+def candidates(ep, key, per_shot=6):
+    """لوحة مرشّحين لكل لقطة: كل صف مقطع واحد بثلاث صور (ربع/نصف/ثلاثة أرباع)، للمراجعة البشرية."""
+    out = ROOT / "output" / f"real-candidates-{ep}"
+    out.mkdir(parents=True, exist_ok=True)
+    info = {}
+    for i, shot in enumerate(SHOTS[ep]):
+        t0, t1, queries = shot[:3]
+        must = shot[3] if len(shot) > 3 else ()
+        need = t1 - t0
+        seen, rows = set(), []
+        for q in queries:
+            for h in search(key, q):
+                if h["id"] in seen or not ok_hit(h, need, must):
+                    continue
+                seen.add(h["id"])
+                rows.append((q, h))
+                if len(rows) >= per_shot:
+                    break
+            if len(rows) >= per_shot:
+                break
+        info[i] = []
+        imgs = []
+        for j, (q, h) in enumerate(rows):
+            v = h["videos"]
+            small = next((v[k] for k in ("tiny", "small", "medium") if v.get(k, {}).get("url")), None)
+            if not small:
+                continue
+            tmp = out / f"tmp_{i}_{j}.mp4"
+            with get(small["url"]) as r:
+                tmp.write_bytes(r.read())
+            d = h["duration"]
+            row = out / f"row_{i}_{j}.png"
+            subprocess.run(["ffmpeg", "-v", "error", "-y"] + sum((["-ss", f"{d * f:.2f}", "-i", str(tmp)] for f in (0.25, 0.5, 0.75)), [])
+                           + ["-filter_complex", "[0]scale=-2:180,trim=end_frame=1[a];[1]scale=-2:180,trim=end_frame=1[b];"
+                              "[2]scale=-2:180,trim=end_frame=1[c];[a][b][c]hstack=3,pad=iw+20:ih+10:20:5:white",
+                              "-frames:v", "1", str(row)], check=True)
+            tmp.unlink()
+            imgs.append(row)
+            info[i].append({"row": len(imgs) - 1, "id": h["id"], "query": q, "duration": d, "tags": h.get("tags"),
+                            "page": h.get("pageURL")})
+        if imgs:
+            ins = sum((["-i", str(p)] for p in imgs), [])
+            subprocess.run(["ffmpeg", "-v", "error", "-y"] + ins + ["-filter_complex",
+                           "".join(f"[{k}]scale=640:-2[r{k}];" for k in range(len(imgs))) +
+                           "".join(f"[r{k}]" for k in range(len(imgs))) + f"vstack={len(imgs)}" if len(imgs) > 1 else "[0]scale=640:-2",
+                           "-frames:v", "1", str(out / f"shot{i}.png")], check=True)
+            for p in imgs:
+                p.unlink()
+        log(f"لقطة {i}: {len(imgs)} مرشّح")
+    (out / "candidates.json").write_text(json.dumps(info, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+def by_id(key, vid_id):
+    url = "https://pixabay.com/api/videos/?" + urllib.parse.urlencode({"key": key, "id": vid_id})
+    with get(url) as r:
+        hits = json.load(r).get("hits", [])
+    if not hits:
+        sys.exit(f"المقطع {vid_id} غير موجود")
+    return hits[0]
+
+
 def main():
     ep = sys.argv[1]
+    mode = sys.argv[2] if len(sys.argv) > 2 else "build"
     key = os.environ.get("PIXABAY_API_KEY", "").strip()
     if not key:
         sys.exit("PIXABAY_API_KEY غير موجود")
+    if mode == "candidates":
+        candidates(ep, key)
+        return
+    picks_file = ROOT / "real" / "picks" / f"{ep}.json"
+    picks = json.loads(picks_file.read_text(encoding="utf-8")) if picks_file.exists() else {}
     build = ROOT / "build" / f"real-{ep}"
     build.mkdir(parents=True, exist_ok=True)
     used, parts, credits = set(), [], []
@@ -128,7 +207,13 @@ def main():
         t0, t1, queries = shot[:3]
         must = shot[3] if len(shot) > 3 else ()
         need = t1 - t0
-        found = pick(key, queries, need, used, must)
+        if str(i) in picks:  # مقطع اختير بعد مراجعة بشرية للوحة المرشّحين
+            h = by_id(key, picks[str(i)])
+            v = h["videos"]
+            best = next((v[k] for k in ("large", "medium") if v.get(k, {}).get("url") and v[k]["height"] >= 720), None)
+            found = ("اختيار يدوي", h, best) if best else None
+        else:
+            sys.exit(f"اللقطة {i} بلا اختيار في {picks_file.name}؛ شغّل وضع candidates وراجع اللوحات أولاً")
         if not found:
             sys.exit(f"لا يوجد مقطع مناسب للقطة {i} ({queries})")
         q, hit, vid = found
