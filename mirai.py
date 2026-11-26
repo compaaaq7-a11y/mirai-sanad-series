@@ -234,8 +234,12 @@ def episode_metadata(ep: dict, series: dict) -> dict:
     if channel:
         lines += [f"🔔 اشترك في {name} ليصلك كل جديد: {channel}?sub_confirmation=1",
                   f"📺 كل الحلقات: {channel}/videos", ""]
-    lines.append(ep.get("hashtags", info.get("hashtags", "")))
+    # الفيديو العمودي (9:16) حتى 3 دقائق يضعه يوتيوب تلقائياً في Shorts
+    short = ep.get("video_aspect", series.get("defaults", {}).get("video_aspect")) == "9:16"
+    hashtags = ep.get("hashtags", info.get("hashtags", ""))
+    lines.append(f"{hashtags} #Shorts".strip() if short else hashtags)
     tags = [x.strip() for x in ep.get("tags", info.get("tags", "")).split(",") if x.strip()]
+    tags += ["Shorts"] if short else []
     tags += [title] + [x.strip() for x in ep.get("terms", "").split(",") if x.strip()]
     return {
         "title": full_title[:100],
