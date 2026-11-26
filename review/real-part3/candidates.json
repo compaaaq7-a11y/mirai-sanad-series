@@ -53,23 +53,23 @@
   {
    "row": 0,
    "id": 39009,
-   "query": "cat in tree",
+   "query": "cat climbing tree",
    "duration": 11,
-   "tags": "cat, sleep, pet, cozyness, animal, white cat, domestic cat",
+   "tags": "cat, sleep, pet, cozyness, white cat, animal, domestic cat",
    "page": "https://pixabay.com/videos/id-39009/"
   },
   {
    "row": 1,
    "id": 179212,
-   "query": "cat in tree",
+   "query": "cat climbing tree",
    "duration": 15,
-   "tags": "cat, orange cat, domestic cat, cute, pet, redhead, wildlife, animal, slow motion",
+   "tags": "cat, orange cat, domestic cat, animal, cute, redhead, pet, wildlife, slow motion",
    "page": "https://pixabay.com/videos/id-179212/"
   },
   {
    "row": 2,
    "id": 65438,
-   "query": "cat in tree",
+   "query": "cat climbing tree",
    "duration": 10,
    "tags": "cat, feline, pet, animal, mammal, kitten, eyes, young, hairy, muzzle, sitting, cute, live wallpaper",
    "page": "https://pixabay.com/videos/id-65438/"
@@ -77,7 +77,7 @@
   {
    "row": 3,
    "id": 137613,
-   "query": "cat in tree",
+   "query": "cat climbing tree",
    "duration": 11,
    "tags": "christmas time, advent, pet, cat, british shorthair, christmas balls, christmas tree, christmas decorations, decoration, background, animal, beautiful wallpaper, fir tree",
    "page": "https://pixabay.com/videos/id-137613/"
@@ -85,7 +85,7 @@
   {
    "row": 4,
    "id": 39010,
-   "query": "cat in tree",
+   "query": "cat climbing tree",
    "duration": 11,
    "tags": "cat, sleep, animal, white cat, pet, domestic cat, house cat",
    "page": "https://pixabay.com/videos/id-39010/"
@@ -93,7 +93,7 @@
   {
    "row": 5,
    "id": 137615,
-   "query": "cat in tree",
+   "query": "cat climbing tree",
    "duration": 9,
    "tags": "advent, christmas time, cat, pet, british shorthair, decoration, background, christmas tree, fir tree, beautiful wallpaper, christmas decorations, animal, christmas balls",
    "page": "https://pixabay.com/videos/id-137615/"
@@ -195,7 +195,7 @@
    "id": 39009,
    "query": "cat jumping",
    "duration": 11,
-   "tags": "cat, sleep, pet, cozyness, animal, white cat, domestic cat",
+   "tags": "cat, sleep, pet, cozyness, white cat, animal, domestic cat",
    "page": "https://pixabay.com/videos/id-39009/"
   }
  ],
@@ -203,50 +203,50 @@
   {
    "row": 0,
    "id": 39009,
-   "query": "holding cat arms",
+   "query": "woman holding cat",
    "duration": 11,
-   "tags": "cat, sleep, pet, cozyness, animal, white cat, domestic cat",
+   "tags": "cat, sleep, pet, cozyness, white cat, animal, domestic cat",
    "page": "https://pixabay.com/videos/id-39009/"
   },
   {
    "row": 1,
+   "id": 85465,
+   "query": "woman holding cat",
+   "duration": 13,
+   "tags": "cat, feline, whiskers, woman, animal, pet, cute",
+   "page": "https://pixabay.com/videos/id-85465/"
+  },
+  {
+   "row": 2,
+   "id": 77316,
+   "query": "woman holding cat",
+   "duration": 61,
+   "tags": "woman, model, cat walk, fashion, female, elegant",
+   "page": "https://pixabay.com/videos/id-77316/"
+  },
+  {
+   "row": 3,
+   "id": 179212,
+   "query": "woman holding cat",
+   "duration": 15,
+   "tags": "cat, orange cat, domestic cat, animal, cute, redhead, pet, wildlife, slow motion",
+   "page": "https://pixabay.com/videos/id-179212/"
+  },
+  {
+   "row": 4,
    "id": 65438,
-   "query": "holding cat arms",
+   "query": "woman holding cat",
    "duration": 10,
    "tags": "cat, feline, pet, animal, mammal, kitten, eyes, young, hairy, muzzle, sitting, cute, live wallpaper",
    "page": "https://pixabay.com/videos/id-65438/"
   },
   {
-   "row": 2,
-   "id": 179212,
-   "query": "holding cat arms",
-   "duration": 15,
-   "tags": "cat, orange cat, domestic cat, cute, pet, redhead, wildlife, animal, slow motion",
-   "page": "https://pixabay.com/videos/id-179212/"
-  },
-  {
-   "row": 3,
+   "row": 5,
    "id": 39010,
-   "query": "holding cat arms",
+   "query": "woman holding cat",
    "duration": 11,
    "tags": "cat, sleep, animal, white cat, pet, domestic cat, house cat",
    "page": "https://pixabay.com/videos/id-39010/"
-  },
-  {
-   "row": 4,
-   "id": 39011,
-   "query": "holding cat arms",
-   "duration": 17,
-   "tags": "cat, white, pet, white cat, domestic cat, animal, house cat",
-   "page": "https://pixabay.com/videos/id-39011/"
-  },
-  {
-   "row": 5,
-   "id": 137614,
-   "query": "holding cat arms",
-   "duration": 8,
-   "tags": "advent, animal, christmas time, pet, cat, british shorthair, candlelight, candle, decoration, beautiful wallpaper, background, flame",
-   "page": "https://pixabay.com/videos/id-137614/"
   }
  ],
  "5": [
@@ -287,7 +287,7 @@
    "id": 39009,
    "query": "cat playing garden",
    "duration": 11,
-   "tags": "cat, sleep, pet, cozyness, animal, white cat, domestic cat",
+   "tags": "cat, sleep, pet, cozyness, white cat, animal, domestic cat",
    "page": "https://pixabay.com/videos/id-39009/"
   },
   {
