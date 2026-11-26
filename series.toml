@@ -8,6 +8,12 @@
 
 [series]
 title = "ميراي سند"
+channel_url = "https://www.youtube.com/@sanad-meme"
+# تُضاف لوصف كل حلقة عند النشر على يوتيوب
+hashtags = "#ميراي_سند #تطوير_الذات #المستقبل #نصائح #Shorts"
+tags = "ميراي سند, تطوير الذات, نصائح, المستقبل, تحفيز, مهارات, ذكاء اصطناعي, تعلم, Shorts"
+category_id = "27"                     # 27 = تعليم في يوتيوب
+privacy = "public"                     # public أو unlisted أو private
 
 # إعدادات افتراضية لكل الحلقات (أي حلقة تستطيع تجاوزها بنفس الاسم)
 [defaults]
