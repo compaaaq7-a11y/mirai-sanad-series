@@ -1,0 +1,66 @@
+[
+ {
+  "shot": 0,
+  "from": 0.0,
+  "to": 4.0,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-186195/",
+  "user": "NickyPe"
+ },
+ {
+  "shot": 1,
+  "from": 4.0,
+  "to": 8.0,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-268290/",
+  "user": "Matthias_Groeneveld"
+ },
+ {
+  "shot": 2,
+  "from": 8.0,
+  "to": 10.8,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-197236/",
+  "user": "Zethian"
+ },
+ {
+  "shot": 3,
+  "from": 10.8,
+  "to": 15.4,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-161726/",
+  "user": "JawadAliKhan"
+ },
+ {
+  "shot": 4,
+  "from": 15.4,
+  "to": 18.2,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-51310/",
+  "user": "whitetara"
+ },
+ {
+  "shot": 5,
+  "from": 18.2,
+  "to": 22.6,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-371087/",
+  "user": "Starlight_Music"
+ },
+ {
+  "shot": 6,
+  "from": 22.6,
+  "to": 26.0,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-312750/",
+  "user": "flowerrock"
+ },
+ {
+  "shot": 7,
+  "from": 26.0,
+  "to": 30.0,
+  "query": "اختيار يدوي",
+  "pixabay": "https://pixabay.com/videos/id-100366/",
+  "user": "Trek_Jason"
+ }
+]
