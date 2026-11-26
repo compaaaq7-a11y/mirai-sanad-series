@@ -81,4 +81,4 @@ script = """
 الوصف والوسوم تُحفظ أيضاً بجانب كل فيديو في `output/<id>.json`، وتُضبط من قسم `[series]` في `series.toml`.
 
 يحتاج النشر التلقائي إلى ثلاثة أسرار في **Settings ← Secrets and variables ← Actions**:
-`YT_CLIENT_ID` و`YT_CLIENT_SECRET` و`YT_REFRESH_TOKEN` (صلاحية `youtube.upload` من Google Cloud).
+`YT_CLIENT_ID` و`YT_CLIENT_SECRET` و`YT_REFRESH_TOKEN` (بصلاحية `https://www.googleapis.com/auth/youtube`). شرح الحصول عليها خطوة بخطوة في فيديو `docs/youtube-tokens-tutorial.mp4`.
