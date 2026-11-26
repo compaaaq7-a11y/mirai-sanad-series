@@ -52,6 +52,18 @@ jobs:
       - name: اللقطات المختارة والتركيب
         if: steps.mode.outputs.mode == 'build'
         run: python real/real_episode.py "$EP" build
+      - name: لوحات المرشّحين إلى فرع videos للمراجعة (تُحذف بعد الاختيار)
+        if: steps.mode.outputs.mode == 'candidates'
+        env:
+          TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git clone -q --depth 1 --branch videos "https://x-access-token:${TOKEN}@github.com/${REPO}.git" vb
+          rm -rf "vb/review/real-$EP" && mkdir -p "vb/review/real-$EP"
+          cp output/real-candidates-$EP/* "vb/review/real-$EP/"
+          cd vb && git add review && git commit -q -m "Review sheets for real $EP" && git push -q origin videos
       - uses: actions/upload-artifact@v4
         with:
           name: real-${{ env.EP }}-${{ steps.mode.outputs.mode }}
