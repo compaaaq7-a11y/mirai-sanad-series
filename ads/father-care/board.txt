@@ -1,6 +1,6 @@
 # إعلان: رعاية الأب عند الكبر — بأسلوب salam-skill ("ضربة")
 # الوصفة: خطّاف ← مفاجأة ← قتل الأعذار ← السر ← كيف ← دعوة للتعليق
-@ fps=30
+@ fps=30 pace=2.0 music=auto music_volume=0.5
 
 [bg=dark fx=ring,sparks] +أبوك
 [bg=red fx=shake] +*كبر.*

@@ -104,7 +104,19 @@ if (!flag('no-sfx') && TL.sfx !== false) {
   add(hit, Hh, TL.hit_volume ?? 0.45, 'h');
 }
 if (TL.music) {
-  inputs.push('-stream_loop', '-1', '-i', path.resolve(tlDir, TL.music));
+  let music = TL.music;
+  if (music === 'auto') {
+    // موسيقى خلفية مولّدة: نبض بيس 100bpm + وسادة هادئة (بدون إنترنت أو حقوق)
+    music = path.join(work, 'bed.wav');
+    const b = 0.6; // طول النبضة بالثواني
+    const kick = `0.9*sin(2*PI*(42+70*exp(-28*mod(t,${b})))*mod(t,${b}))*exp(-7*mod(t,${b}))`;
+    const pad = `(0.10*sin(2*PI*55*t)+0.07*sin(2*PI*82.41*t)+0.05*sin(2*PI*130.81*t)+0.03*sin(2*PI*164.81*t))*(0.75+0.25*sin(2*PI*0.2*t))`;
+    const tick = `0.05*(random(0)-0.5)*exp(-60*mod(t+${b / 2},${b}))`;
+    execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i',
+      `aevalsrc='${kick}+${pad}+${tick}':d=${(t1 - t0 + 1).toFixed(2)}:s=48000`,
+      '-af', `lowpass=f=5000,afade=t=in:d=0.4,afade=t=out:st=${Math.max(0, t1 - t0 - 1.5).toFixed(2)}:d=1.5`, music]);
+  } else music = path.resolve(tlDir, music);
+  inputs.push('-stream_loop', '-1', '-i', music);
   filters.push(`[${n}:a]aresample=48000,volume=${TL.music_volume ?? 0.12}[m]`); mixes.push('[m]'); n++;
 }
 const dur = (t1 - t0).toFixed(3);

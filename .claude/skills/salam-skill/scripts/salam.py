@@ -274,6 +274,7 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
         method = align_tokens(spoken, words, wav)
         shutil.rmtree(tmp, ignore_errors=True)
     else:
+        pace = float(glob.get('pace', pace))
         dur, method = pace_times(scenes, pace), f'pace {pace} w/s (no audio)'
 
     out_scenes = []
@@ -327,7 +328,7 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
     for k in ('music', 'music_volume', 'voice_volume', 'whoosh_volume', 'hit_volume', 'sfx'):
         if k in glob:
             v = glob[k]
-            tl[k] = (v != 'no') if k == 'sfx' else (float(v) if k.endswith('volume') else
+            tl[k] = (v != 'no') if k == 'sfx' else (float(v) if k.endswith('volume') else v if v == 'auto' else
                                                      os.path.relpath(os.path.abspath(v), os.path.dirname(os.path.abspath(out or 'x'))))
     return tl
 
