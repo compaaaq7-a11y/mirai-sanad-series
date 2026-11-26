@@ -516,6 +516,157 @@ def cat(pos, head_deg):
     return c
 
 
+def spots_mat():
+    """أبيض ببقع بنية للبقرة."""
+    if "cow_spots" in _mats:
+        return _mats["cow_spots"]
+    m = bpy.data.materials.new("cow_spots")
+    m.use_nodes = True
+    nt = m.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+    bsdf.inputs["Roughness"].default_value = 0.6
+    if "Sheen Weight" in bsdf.inputs:
+        bsdf.inputs["Sheen Weight"].default_value = 0.5
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    tex = nt.nodes.new("ShaderNodeTexNoise")
+    tex.inputs["Scale"].default_value = 1.6
+    tex.inputs["Detail"].default_value = 1.0
+    nt.links.new(tc.outputs["Object"], tex.inputs["Vector"])
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.interpolation = "CONSTANT"
+    ramp.color_ramp.elements[0].position = 0.0
+    ramp.color_ramp.elements[0].color = (*lin("#FFF8F0"), 1)
+    ramp.color_ramp.elements[1].position = 0.58
+    ramp.color_ramp.elements[1].color = (*lin("#7A4A2A"), 1)
+    nt.links.new(tex.outputs["Fac"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
+    _mats["cow_spots"] = m
+    return m
+
+
+def bell_shape(name, parent, loc, scale=1.0):
+    """جرس ذهبي صغير: جسم مخروطي وحافة وكرة رنين وحلقة تعليق."""
+    gold = mat("bell_gold", "#E8B53A", 0.25)
+    g = empty(name, loc, parent)
+    g.scale = (scale,) * 3
+    bpy.ops.mesh.primitive_cone_add(radius1=0.065, radius2=0.032, depth=0.09, vertices=32)
+    body = bpy.context.object
+    body.name = f"{name}_body"
+    body.data.materials.append(gold)
+    for p in body.data.polygons:
+        p.use_smooth = True
+    body.parent = g
+    body.location = (0, 0, -0.045)
+    part("sphere", f"{name}_top", (0, 0, 0.0), (0.033, 0.033, 0.02), gold, g)
+    part("sphere", f"{name}_clapper", (0, 0, -0.1), 0.018, mat("bell_dark", "#6B4A1A", 0.4), g)
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.02, minor_radius=0.006, major_segments=16, minor_segments=6)
+    loop = bpy.context.object
+    loop.name = f"{name}_loop"
+    loop.data.materials.append(gold)
+    loop.parent = g
+    loop.location = (0, 0, 0.025)
+    loop.rotation_euler = (radians(90), 0, 0)
+    return g
+
+
+def cow(pos, head_deg, size=1.3):
+    """بقرة لطيفة بيضاء ببقع بنية، بطوق أحمر (الجرس يُضاف منفصلاً)."""
+    SP = spots_mat()
+    PINK = mat("cow_pink", "#F4A7A3", 0.5)
+    HOOF = mat("cow_hoof", "#3B2A20", 0.5)
+    HORN = mat("cow_horn", "#F3E6C8", 0.4)
+    RED = mat("collar_red", "#C8392E", 0.5)
+    BROWN = mat("cow_tuft", "#6B3E22", 0.6)
+    root = empty("cow", (pos[0], pos[1], 0), rot=(0, 0, head_deg))
+    root.scale = (size,) * 3
+    c = {"root": root}
+    body = empty("cow_body", (0, 0, 0), root)
+    c["body"] = body
+    part("sphere", "cow_torso", (0, 0.02, 0.64), (0.3, 0.56, 0.29), SP, body)
+    part("sphere", "cow_chest", (0, -0.42, 0.66), (0.24, 0.2, 0.24), SP, body)
+    legs = []
+    for i, (lx, ly) in enumerate([(0.16, -0.36), (-0.16, -0.36), (0.16, 0.38), (-0.16, 0.38)]):
+        lp = empty(f"cow_leg{i}", (lx, ly, 0.5), body)
+        part("cyl", f"cow_legm{i}", (0, 0, -0.22), (0.065, 0.065, 0.42), SP, lp)
+        part("cyl", f"cow_hoof{i}", (0, 0, -0.46), (0.07, 0.07, 0.07), HOOF, lp)
+        legs.append(lp)
+    c["legs"] = legs
+    hp = empty("cow_headpivot", (0, -0.55, 0.8), body)
+    c["head"] = hp
+    part("sphere", "cow_neck", (0, 0.06, -0.06), (0.16, 0.2, 0.17), SP, hp)
+    part("sphere", "cow_head", (0, -0.17, 0.08), (0.19, 0.25, 0.18), SP, hp)
+    part("sphere", "cow_muzzle", (0, -0.38, 0.0), (0.16, 0.12, 0.11), PINK, hp)
+    SOLIDS.append(("رأس البقرة", hp, (0, -0.17, 0.08), 0.21))
+    SOLIDS.append(("أنف البقرة", hp, (0, -0.38, 0.0), 0.13))
+    SOLIDS.append(("رقبة البقرة", hp, (0, 0.06, -0.06), 0.15))
+    SOLIDS.append(("صدر البقرة", body, (0, -0.42, 0.66), 0.2))
+    for j, yy in enumerate((-0.3, -0.1, 0.1, 0.3)):
+        SOLIDS.append((f"جسم البقرة{j}", body, (0, yy, 0.64), 0.27))
+    for sx in (1, -1):
+        part("sphere", f"cow_nostril{sx}", (0.05 * sx, -0.49, 0.02), (0.018, 0.01, 0.014), HOOF, hp)
+        part("sphere", f"cow_eye{sx}", (0.115 * sx, -0.3, 0.16), (0.03, 0.014, 0.036), PUPIL, hp)
+        part("sphere", f"cow_shine{sx}", (0.12 * sx, -0.313, 0.175), 0.007, SHINE, hp)
+        part("sphere", f"cow_ear{sx}", (0.22 * sx, -0.1, 0.17), (0.1, 0.035, 0.05), SP, hp, rot=(0, -15 * sx, 0))
+        part("sphere", f"cow_earin{sx}", (0.24 * sx, -0.118, 0.17), (0.07, 0.01, 0.032), PINK, hp, rot=(0, -15 * sx, 0))
+        part("cone", f"cow_horn{sx}", (0.08 * sx, -0.08, 0.28), (0.028, 0.028, 0.09), HORN, hp, rot=(0, 20 * sx, 0))
+    for j in range(3):
+        part("sphere", f"cow_forelock{j}", (0.03 * (j - 1), -0.16, 0.25), (0.04, 0.04, 0.03), BROWN, hp)
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.175, minor_radius=0.022, major_segments=40, minor_segments=10)
+    col = bpy.context.object
+    col.name = "cow_collar"
+    col.data.materials.append(RED)
+    for p in col.data.polygons:
+        p.use_smooth = True
+    col.parent = body
+    col.location = (0, -0.6, 0.72)
+    col.rotation_euler = (radians(72), 0, 0)
+    c["collar_bell_pos"] = (0, -0.66, 0.54)
+    # ذيل أملس بخصلة في طرفه
+    tail = empty("cow_tail", (0, 0.57, 0.8), body)
+    c["tail"] = tail
+    cu = bpy.data.curves.new("cow_tail_curve", "CURVE")
+    cu.dimensions = "3D"
+    cu.bevel_depth = 1.0
+    cu.bevel_resolution = 6
+    cu.resolution_u = 16
+    cu.use_fill_caps = True
+    sp = cu.splines.new("NURBS")
+    pts = [(0, 0, 0), (0, 0.06, -0.08), (0, 0.08, -0.25), (0, 0.07, -0.42)]
+    sp.points.add(len(pts) - 1)
+    for pt, (x, y, z), r in zip(sp.points, pts, [0.022, 0.02, 0.016, 0.013]):
+        pt.co = (x, y, z, 1)
+        pt.radius = r
+    sp.use_endpoint_u = True
+    sp.order_u = 4
+    tobj = link(bpy.data.objects.new("cow_tail_mesh", cu))
+    tobj.data.materials.append(SP)
+    tobj.parent = tail
+    part("sphere", "cow_tail_tuft", (0, 0.07, -0.47), (0.035, 0.035, 0.06), BROWN, tail)
+    return c
+
+
+def cow_walk(c, t0, t1, p1, step=0.5):
+    """مشي البقرة: الأرجل القطرية معاً، وخطوات ثقيلة تُسجَّل للصوت (والجرس إن وُجد)."""
+    root = c["root"]
+    p0 = tuple(root.location)[:2]
+    K(root, t0, loc=(p0[0], p0[1], 0))
+    K(root, t1, loc=(p1[0], p1[1], 0))
+    sgn = 1
+    for t in frange(t0, t1, step / 2):
+        EVENTS.setdefault("cow_steps", []).append(round(t + step / 4, 3))
+        for i, lp in enumerate(c["legs"]):
+            K(lp, t, rx=(16 if i in (0, 3) else -16) * sgn)
+        K(c["body"], t + step / 4, loc=(0, 0, 0.012))
+        K(c["body"], t, loc=(0, 0, 0))
+        K(c["head"], t + step / 4, rx=3)
+        K(c["head"], t, rx=-2)
+        sgn = -sgn
+    for lp in c["legs"]:
+        K(lp, t1, rx=0)
+    K(c["body"], t1, loc=(0, 0, 0))
+    K(c["head"], t1, rx=0)
+
+
 def bird(name, pos, head_deg, body_m, size=1.0, mom=False):
     root = empty(name, pos, rot=(0, 0, head_deg))
     root.scale = (size,) * 3
@@ -571,6 +722,7 @@ EVENTS = {"steps": [], "lands": []}
 
 
 KIDS = []  # يُملأ من kid() لفحص التداخل
+SOLIDS = []  # (اسم، جسم، مركز محلي، نصف قطر محلي): أجزاء صلبة أخرى لا يجوز أن يخترقها رأس طفل
 
 
 def check_overlaps(step=0.125):
@@ -586,8 +738,40 @@ def check_overlaps(step=0.125):
                 if (hand - hc).length < (0.24 + 0.05) * S:
                     bad.append((round(t, 2), k["root"].name, side))
         t += step
+    # رؤوس الأطفال مع الأجزاء الصلبة (رأس البقرة...) ومع بعضها
+    t = 0.0
+    while t < DURATION:
+        scene.frame_set(F(t))
+        heads = [(k["root"].name, k["head"].matrix_world @ Vector((0, 0, 0.23)), 0.24 * S) for k in KIDS]
+        for kn, hc, hr in heads:
+            for sn, obj, lc, lr in SOLIDS:
+                mw = obj.matrix_world
+                c = mw @ Vector(lc)
+                r = lr * max(mw.to_scale())
+                if (c - hc).length < hr + r + 0.08:  # هامش 8 سم حتى لا يبدو تلامساً في الصورة
+                    bad.append((round(t, 2), kn, sn))
+        # الأيدي والأجسام مع الأجزاء الصلبة
+        for k in KIDS:
+            pts = [("يد", k["handpt1"].matrix_world.translation, 0.05 * S),
+                   ("يد", k["handpt-1"].matrix_world.translation, 0.05 * S),
+                   ("جسم", k["hips"].matrix_world @ Vector((0, 0, 0.17)), 0.19 * S)]
+            for pn, pc, pr in pts:
+                for sn, obj, lc, lr in SOLIDS:
+                    mw = obj.matrix_world
+                    c = mw @ Vector(lc)
+                    r = lr * max(mw.to_scale())
+                    if (c - pc).length < pr + r:
+                        bad.append((round(t, 2), k["root"].name, f"{pn}↔{sn}"))
+        for i in range(len(heads)):
+            for j in range(i + 1, len(heads)):
+                if (heads[i][1] - heads[j][1]).length < heads[i][2] + heads[j][2] + 0.08:
+                    bad.append((round(t, 2), heads[i][0], heads[j][0]))
+        t += step
     for t, name, side in bad:
-        print(f"تحذير تداخل: يد {name} ({'+x' if side > 0 else '-x'}) داخل الرأس عند {t} ث")
+        if isinstance(side, int):
+            print(f"تحذير تداخل: يد {name} ({'+x' if side > 0 else '-x'}) داخل الرأس عند {t} ث")
+        else:
+            print(f"تحذير تداخل: رأس {name} يتداخل مع {side} عند {t} ث")
     return bad
 
 
@@ -802,11 +986,13 @@ def render(default_out):
     if args.check:
         bad = check_overlaps()
         print(f"فحص التداخل: {len(bad)} تحذير")
+        if bad:
+            sys.exit(1)  # يوقف الرسم على GitHub إن وُجد أي تداخل
         return
     if args.events:
         import json
         Path(args.events).parent.mkdir(parents=True, exist_ok=True)
-        Path(args.events).write_text(json.dumps({k: sorted(v) for k, v in EVENTS.items()}), encoding="utf-8")
+        Path(args.events).write_text(json.dumps({k: sorted(v) if isinstance(v, list) else v for k, v in EVENTS.items()}), encoding="utf-8")
         print(f"events -> {args.events}")
         return
     if args.save:

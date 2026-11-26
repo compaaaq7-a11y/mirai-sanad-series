@@ -68,6 +68,21 @@ EPISODES = {
         swell=(17.8, 22.5),
         claps=[24.2, 24.46, 24.72, 24.98, 25.24, 25.5],
     ),
+    "part4": dict(
+        out="part4-cow-bell-3d.mp4",
+        lines=[
+            (0.6, "دخلت بقرةٌ حزينة إلى الحديقة… لقد أضاعت جرسها!"),
+            (10.8, "وفجأةً سمع سند وميراي رنينًا بين الأزهار."),
+            (15.4, "كانت القطة تلعب بالجرس!"),
+            (18.2, "أعادته ميراي، وعلّقه سند في طوق البقرة."),
+            (23.7, "فخارت البقرة فرحًا، ومشت وجرسها يرنّ!"),
+        ],
+        chick=[],
+        moos=[(7.0, False), (22.65, True)],
+        meows=[10.15],
+        swell=(19.6, 23.0),
+        rustle=(0.0, 2.5),
+    ),
 }
 CFG = EPISODES["ep06"]
 BUILD = ROOT / "build" / "ep06"
@@ -223,6 +238,35 @@ def footstep(rng, soft=1.0):
     return (rustle + thump) * soft * rng.uniform(0.7, 1.0)
 
 
+def moo(rng, happy=False):
+    """خوار بقرة: نغمة منخفضة غنية تنزلق ببطء، حزينة أطول وأخفض، وسعيدة أقصر وأعلى."""
+    dur = 0.9 if happy else 1.3
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    u = t / t[-1]
+    base = (130 if happy else 105) * (1 + (0.25 if happy else 0.15) * np.sin(np.pi * u) - 0.12 * u)
+    ph = 2 * np.pi * np.cumsum(base) / SR
+    s = sum(np.sin(k * ph) / k ** 0.8 for k in range(1, 14))
+    spec = np.fft.rfft(s)
+    f = np.fft.rfftfreq(n, 1 / SR)
+    form = np.exp(-((f - 650) / 420) ** 2) + 0.5 * np.exp(-((f - 1300) / 500) ** 2) + 0.15
+    s = np.fft.irfft(spec * form, n)
+    a = np.minimum(1, t / 0.12) * np.minimum(1, (t[-1] - t) / 0.25)
+    s = s * a
+    return s / (np.abs(s).max() + 1e-9) * rng.uniform(0.85, 1.0)
+
+
+def cowbell(rng, gain=1.0):
+    """رنين جرس بقرة صغير: نغمات معدنية غير متناسقة تخفت سريعاً."""
+    n = int(SR * 0.7)
+    t = np.arange(n) / SR
+    f0 = 690 * rng.uniform(0.98, 1.02)
+    s = sum(a * np.sin(2 * np.pi * f0 * r * t) * np.exp(-t / d)
+            for r, a, d in ((1.0, 1.0, 0.32), (1.51, 0.6, 0.22), (2.13, 0.45, 0.16), (2.76, 0.3, 0.1), (3.9, 0.15, 0.07)))
+    s *= np.minimum(1, t / 0.002)
+    return s / 2.5 * gain
+
+
 def clap(rng):
     m = int(SR * 0.06)
     return noise_band(m, 800, 6000, rng) * np.exp(-np.arange(m) / (SR * 0.012))
@@ -307,6 +351,29 @@ def audio(args):
             c = footstep(rng, 1.3) * 0.11
             i0 = int(t * SR)
             fx[i0:i0 + len(c)] += c[: max(0, n - i0)]
+    if ev.exists():
+        events = json.loads(ev.read_text(encoding="utf-8"))
+        for t in events.get("claps", []):
+            c = clap(rng) * 0.35
+            i0 = int(t * SR)
+            fx[i0:i0 + len(c)] += c[: max(0, n - i0)]
+        bells = list(events.get("bell", []))
+        start = events.get("cow_bell_from")
+        cow_steps = events.get("cow_steps", [])
+        if start is not None:
+            bells += [t for t in cow_steps if t >= start][::2]   # يرنّ مع كل خطوتين للبقرة
+        for t in bells:
+            c = cowbell(rng, 0.5)
+            i0 = int(t * SR)
+            fx[i0:i0 + len(c)] += c[: max(0, n - i0)]
+        for t in cow_steps:  # وقع حوافر خفيف على العشب
+            c = footstep(rng, 0.8) * 0.07
+            i0 = int(t * SR)
+            fx[i0:i0 + len(c)] += c[: max(0, n - i0)]
+    for t, happy in CFG.get("moos", []):
+        c = moo(rng, happy) * 0.5
+        i0 = int(t * SR)
+        fx[i0:i0 + len(c)] += c[: max(0, n - i0)]
     for t in CFG.get("meows", []):
         c = meow(rng) * 0.45
         i0 = int(t * SR)
@@ -326,6 +393,18 @@ def audio(args):
     duck = np.ones(n)
     for s, e, _ in spans:
         duck[int(max(0, s - 0.2) * SR):int(min(DUR, e + 0.3) * SR)] = 0.55
+    # المؤثرات تنخفض تحت الكلام حتى يبقى التعليق واضحاً، ونطبع أي مؤثر قوي يتراكب مع جملة
+    fduck = np.ones(n)
+    for s0, e0, _ in spans:
+        fduck[int(max(0, s0 - 0.1) * SR):int(min(DUR, e0 + 0.1) * SR)] = 0.5
+    kk = int(SR * 0.15)
+    fduck = np.convolve(fduck, np.ones(kk) / kk, mode="same")
+    for name, times in (("خوار", [t for t, _ in CFG.get("moos", [])]), ("مواء", CFG.get("meows", []))):
+        for t in times:
+            for s0, e0, txt in spans:
+                if s0 - 0.2 < t < e0:
+                    print(f"تنبيه صوت: {name} عند {t} يتراكب مع الجملة «{txt[:20]}…» ({s0:.1f}–{e0:.1f})")
+    fx = fx * fduck
     if "swell" in CFG:  # الموسيقى ترتفع لحظة النجاح
         s0, s1 = CFG["swell"]
         duck[int(s0 * SR):int(s1 * SR)] = np.maximum(duck[int(s0 * SR):int(s1 * SR)], 1.9)
