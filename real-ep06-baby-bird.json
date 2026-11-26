@@ -1,0 +1,74 @@
+[
+ {
+  "shot": 0,
+  "from": 0.0,
+  "to": 2.8,
+  "query": "sunny garden tree",
+  "pixabay": "https://pixabay.com/videos/id-268485/",
+  "user": "choxyltd"
+ },
+ {
+  "shot": 1,
+  "from": 2.8,
+  "to": 6.3,
+  "query": "baby bird ground",
+  "pixabay": "https://pixabay.com/videos/id-357054/",
+  "user": "BlenderTimer"
+ },
+ {
+  "shot": 2,
+  "from": 6.3,
+  "to": 9.4,
+  "query": "cat stalking",
+  "pixabay": "https://pixabay.com/videos/id-263737/",
+  "user": "MikoEP"
+ },
+ {
+  "shot": 3,
+  "from": 9.4,
+  "to": 12.7,
+  "query": "cat eyes close up",
+  "pixabay": "https://pixabay.com/videos/id-130424/",
+  "user": "MabelAmber"
+ },
+ {
+  "shot": 4,
+  "from": 12.7,
+  "to": 17.4,
+  "query": "kitten playing ball of yarn",
+  "pixabay": "https://pixabay.com/videos/id-372725/",
+  "user": "mycuppatea"
+ },
+ {
+  "shot": 5,
+  "from": 17.4,
+  "to": 20.8,
+  "query": "holding baby bird hands",
+  "pixabay": "https://pixabay.com/videos/id-346866/",
+  "user": "MoonpetalMedia"
+ },
+ {
+  "shot": 6,
+  "from": 20.8,
+  "to": 23.3,
+  "query": "bird nest tree branch",
+  "pixabay": "https://pixabay.com/videos/id-311755/",
+  "user": "Kaffeesüchtig"
+ },
+ {
+  "shot": 7,
+  "from": 23.3,
+  "to": 27.0,
+  "query": "mother bird feeding chicks",
+  "pixabay": "https://pixabay.com/videos/id-187970/",
+  "user": "NickyPe"
+ },
+ {
+  "shot": 8,
+  "from": 27.0,
+  "to": 30.0,
+  "query": "bird flying garden",
+  "pixabay": "https://pixabay.com/videos/id-3728/",
+  "user": "Alexas_Fotos"
+ }
+]
