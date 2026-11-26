@@ -333,6 +333,7 @@ def kid(name, pos, head_deg, girl=False):
     root = empty(name, (pos[0], pos[1], 0), rot=(0, 0, head_deg))
     root.scale = (S, S, S)
     k = {"root": root, "girl": girl}
+    KIDS.append(k)
     shoe = SHOE_M if girl else SHOE_S
     legs = []
     for sx in (1, -1):
@@ -565,6 +566,31 @@ def bird(name, pos, head_deg, body_m, size=1.0, mom=False):
 
 
 # ============================================================ أدوات الحركة
+# أحداث صوتية تُستخرج من الحركة نفسها (خطوات المشي...) ليقرأها finish.py
+EVENTS = {"steps": [], "lands": []}
+
+
+KIDS = []  # يُملأ من kid() لفحص التداخل
+
+
+def check_overlaps(step=0.125):
+    """يفحص الحلقة كلها: هل تخترق يدٌ رأسَ صاحبها؟ يطبع تحذيراً بالثانية."""
+    bad = []
+    t = 0.0
+    while t < DURATION:
+        scene.frame_set(F(t))
+        for k in KIDS:
+            hc = k["head"].matrix_world @ Vector((0, 0, 0.23))
+            for side in (1, -1):
+                hand = k[f"handpt{side}"].matrix_world.translation
+                if (hand - hc).length < (0.24 + 0.05) * S:
+                    bad.append((round(t, 2), k["root"].name, side))
+        t += step
+    for t, name, side in bad:
+        print(f"تحذير تداخل: يد {name} ({'+x' if side > 0 else '-x'}) داخل الرأس عند {t} ث")
+    return bad
+
+
 def walk(k, t0, t1, p1, step=0.42, legs_key=True):
     root = k["root"]
     p0 = tuple(root.location)[:2]
@@ -573,6 +599,7 @@ def walk(k, t0, t1, p1, step=0.42, legs_key=True):
     if legs_key:
         sgn = 1
         for t in frange(t0, t1, step / 2):
+            EVENTS["steps"].append(round(t + step / 4, 3))  # لحظة ملامسة القدم للعشب
             K(k["legs"][0], t, rx=24 * sgn)
             K(k["legs"][1], t, rx=-24 * sgn)
             K(k["hips"], t + step / 4, loc=(0, 0, 0.455))
@@ -605,6 +632,7 @@ def turn(k, t0, t1, ang):
 def hop(k, t, h=0.12, dur=0.36):
     root = k["root"]
     x, y = root.location.x, root.location.y
+    EVENTS["lands"].append(round(t + dur, 3))
     K(root, t, loc=(x, y, 0))
     K(root, t + dur / 2, loc=(x, y, h))
     K(root, t + dur, loc=(x, y, 0))
@@ -620,10 +648,16 @@ def look(k, t, rz=0, rx=0, ry=0):
     K(k["head"], t, rx=rx, ry=ry, rz=rz)
 
 
+def _splay(rx):
+    """إبعاد الذراع المرفوعة عن الرأس: كلما ارتفعت فوق الكتف مالت للخارج."""
+    return max(0.0, -rx - 90) * 1.0
+
+
 def arms(k, t, a=(0, 0), b=(0, 0)):
-    """a/b = (rx, ry) للذراع اليمنى(+x) واليسرى(-x). rx سالب = الذراع للأمام."""
-    K(k["arms"][0], t, rx=a[0], ry=a[1])
-    K(k["arms"][1], t, rx=b[0], ry=b[1])
+    """a/b = (rx, ry) للذراع اليمنى(+x) واليسرى(-x). rx سالب = الذراع للأمام.
+    الذراع المرفوعة تُبعَد تلقائياً عن الرأس حتى لا تخترقه."""
+    K(k["arms"][0], t, rx=a[0], ry=a[1] + _splay(a[0]))
+    K(k["arms"][1], t, rx=b[0], ry=b[1] - _splay(b[0]))
 
 
 def bow(k, t, deg):
@@ -725,6 +759,8 @@ def render(default_out):
     ap.add_argument("--frames", nargs=2, type=int)
     ap.add_argument("--still")
     ap.add_argument("--save")
+    ap.add_argument("--events", help="حفظ أحداث الصوت (الخطوات...) في ملف JSON والخروج دون رسم")
+    ap.add_argument("--check", action="store_true", help="فحص تداخل اليدين مع الرأس ثم الخروج")
     args = ap.parse_args(argv)
 
     w, h = (int(v) for v in args.res.lower().split("x"))
@@ -763,6 +799,16 @@ def render(default_out):
     r.image_settings.file_format = "PNG"
     r.image_settings.color_mode = "RGB"
 
+    if args.check:
+        bad = check_overlaps()
+        print(f"فحص التداخل: {len(bad)} تحذير")
+        return
+    if args.events:
+        import json
+        Path(args.events).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.events).write_text(json.dumps({k: sorted(v) for k, v in EVENTS.items()}), encoding="utf-8")
+        print(f"events -> {args.events}")
+        return
     if args.save:
         bpy.ops.wm.save_as_mainfile(filepath=str(Path(args.save).resolve()))
 

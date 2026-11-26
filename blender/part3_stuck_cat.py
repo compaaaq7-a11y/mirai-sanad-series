@@ -299,8 +299,8 @@ ang_m = turn(mirai, 27.2, 27.6, near(ang_m, 0))
 look(sanad, 27.6, rx=0, rz=0)
 look(mirai, 27.6, rx=0, rz=0)
 for tt, a in ((27.8, -150), (28.2, -120), (28.6, -150), (29.0, -120), (29.4, -150)):
-    arms(sanad, tt, (0, 0), (-20, a + 10))
-    arms(mirai, tt, (-20, -a - 10), (0, 0))
+    arms(sanad, tt, (0, 0), (-20, -a - 10))   # تلويح للخارج بعيداً عن الرأس
+    arms(mirai, tt, (-20, a + 10), (0, 0))
 blink(sanad, 24.8)
 blink(mirai, 28.0)
 

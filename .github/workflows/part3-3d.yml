@@ -68,7 +68,11 @@ jobs:
       - name: ffmpeg احتياطي
         if: steps.ffmpeg.outcome == 'failure'
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-      - run: pip install edge-tts numpy
+      - run: pip install edge-tts numpy "bpy==4.2.*"
+      - name: فحص التداخل واستخراج أحداث الصوت (خطوات المشي)
+        run: |
+          python blender/part3_stuck_cat.py --check
+          python blender/part3_stuck_cat.py --events build/part3/events.json
       - name: التعليق والزقزقة والموسيقى
         run: python blender/finish.py --ep part3 audio
       - uses: actions/upload-artifact@v4

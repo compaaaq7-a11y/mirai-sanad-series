@@ -214,6 +214,15 @@ def meow(rng):
     return s * a / 1.9 * rng.uniform(0.85, 1.0)
 
 
+def footstep(rng, soft=1.0):
+    """خطوة خفيفة على العشب: حفيف قصير ناعم مع نقرة منخفضة خافتة."""
+    n = int(SR * 0.09)
+    t = np.arange(n) / SR
+    rustle = noise_band(n, 900, 4500, rng) * np.exp(-t / 0.025) * 0.5
+    thump = np.sin(2 * np.pi * rng.uniform(85, 110) * t) * np.exp(-t / 0.018) * 0.6
+    return (rustle + thump) * soft * rng.uniform(0.7, 1.0)
+
+
 def clap(rng):
     m = int(SR * 0.06)
     return noise_band(m, 800, 6000, rng) * np.exp(-np.arange(m) / (SR * 0.012))
@@ -287,6 +296,17 @@ def audio(args):
         lv = noise_band(m, 1500, 7000, rng) * 0.12
         lv *= np.interp(np.arange(m), [0, m * 0.3, m * 0.7, m - 1], [0, 1, 0.6, 0]) * (0.6 + 0.4 * np.sin(np.arange(m) / SR * 7))
         fx[int(r0 * SR):int(r0 * SR) + m] += lv
+    ev = BUILD / "events.json"
+    if ev.exists():  # خطوات المشي والهبوط من القفزات، مستخرجة من حركة المشهد
+        events = json.loads(ev.read_text(encoding="utf-8"))
+        for t in events.get("steps", []):
+            c = footstep(rng) * 0.09
+            i0 = int(t * SR)
+            fx[i0:i0 + len(c)] += c[: max(0, n - i0)]
+        for t in events.get("lands", []):
+            c = footstep(rng, 1.3) * 0.11
+            i0 = int(t * SR)
+            fx[i0:i0 + len(c)] += c[: max(0, n - i0)]
     for t in CFG.get("meows", []):
         c = meow(rng) * 0.45
         i0 = int(t * SR)
@@ -294,7 +314,7 @@ def audio(args):
     if "drag" in CFG:  # جرّ الصندوق على العشب
         d0, d1 = CFG["drag"]
         m = int((d1 - d0) * SR)
-        dr = noise_band(m, 120, 900, rng) * 0.18
+        dr = noise_band(m, 250, 1400, rng) * 0.06
         dr *= np.interp(np.arange(m), [0, m * 0.1, m * 0.9, m - 1], [0, 1, 1, 0]) * (0.7 + 0.3 * np.sin(np.arange(m) / SR * 11))
         fx[int(d0 * SR):int(d0 * SR) + m] += dr
     for t in CFG.get("claps", []):
