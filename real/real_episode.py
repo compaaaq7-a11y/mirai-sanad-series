@@ -21,15 +21,18 @@ ROOT = Path(__file__).resolve().parent.parent
 # (من، إلى، [كلمات بحث بالأفضلية]) — اللقطات تتبع جمل التعليق
 SHOTS = {
     "ep06": [  # سند وميراي ينقذان الفرخ الصغير (الجمل: 0.9، 6.3، 12.7، 17.6، 23.4)
-        (0.0, 2.8, ["sunny garden tree", "garden trees sunlight", "green park tree"]),
-        (2.8, 6.3, ["baby bird ground", "fledgling bird grass", "chick bird grass", "baby sparrow"]),
-        (6.3, 9.4, ["cat stalking", "cat hunting grass", "cat crouching"]),
-        (9.4, 12.7, ["cat eyes close up", "orange cat staring", "cat watching"]),
-        (12.7, 17.4, ["kitten playing ball of yarn", "cat playing yarn", "kitten playing ball"]),
-        (17.4, 20.8, ["holding baby bird hands", "hands holding bird", "baby bird in hand"]),
-        (20.8, 23.3, ["bird nest tree branch", "bird nest", "nest with chicks"]),
-        (23.3, 27.0, ["mother bird feeding chicks", "bird feeding babies nest", "bird feeding chick"]),
-        (27.0, 30.0, ["bird flying garden", "birds tree branch sunny", "garden flowers sunny"]),
+        (0.0, 2.8, ["sunny garden tree", "garden trees sunlight", "green park tree"], ("tree", "garden", "park")),
+        (2.8, 6.3, ["fledgling bird ground", "baby bird grass", "young sparrow ground", "baby sparrow"],
+         ("fledgling", "chick", "sparrow", "baby bird", "young")),
+        (6.3, 9.4, ["domestic cat crouching grass", "house cat stalking garden", "cat sneaking grass", "cat garden"],
+         ("cat", "kitten")),
+        (9.4, 12.7, ["cat eyes close up", "orange cat staring", "ginger cat face"], ("cat", "kitten")),
+        (12.7, 17.4, ["kitten playing ball", "cat playing toy", "kitten playing yarn"], ("cat", "kitten")),
+        (17.4, 20.8, ["hands holding small bird", "holding baby bird", "bird in hand"], ("hand", "hands")),
+        (20.8, 23.3, ["bird nest tree branch", "bird nest", "nest with chicks"], ("nest",)),
+        (23.3, 27.0, ["bird feeding chicks nest", "mother bird feeding babies", "birds nest chicks feeding"],
+         ("nest", "chicks", "chick", "fledglings")),
+        (27.0, 30.0, ["bird flying slow motion", "bird flying tree", "bird flight"], ("flying", "flight", "fly")),
     ],
     "ep07": [  # أول رحلة للعصفور
         (0.0, 4.6, ["tree branch sunny", "garden tree sunlight", "spring tree leaves"]),
@@ -85,10 +88,25 @@ def search(key, q):
         return json.load(r).get("hits", [])
 
 
-def pick(key, queries, need, used):
+# وسوم تُستبعد دائماً: حيوانات مفترسة أو مشاهد مخيفة، ومحتوى مولّد بالذكاء الاصطناعي (القصة «حقيقية»)
+BLOCK = {"lion", "lioness", "tiger", "leopard", "predator", "roar", "wolf", "bear", "blood", "dead", "hunt",
+         "ai", "ai generated", "generated", "artificial intelligence", "animation", "cartoon", "3d", "render"}
+
+
+def tags_of(h):
+    return {t.strip().lower() for t in h.get("tags", "").split(",") if t.strip()}
+
+
+def pick(key, queries, need, used, must=()):
     for q in queries:
         for h in search(key, q):
             if h["id"] in used or h.get("duration", 0) < need + 0.3:
+                continue
+            tags = tags_of(h)
+            words = {w for t in tags for w in t.split()}
+            if tags & BLOCK or words & {"lion", "lioness", "tiger", "ai", "generated", "animation", "cartoon"}:
+                continue
+            if must and not any(m in words or m in tags for m in must):
                 continue
             v = h["videos"]
             best = next((v[s] for s in ("large", "medium") if v.get(s, {}).get("url") and v[s]["height"] >= 720), None)
@@ -106,9 +124,11 @@ def main():
     build = ROOT / "build" / f"real-{ep}"
     build.mkdir(parents=True, exist_ok=True)
     used, parts, credits = set(), [], []
-    for i, (t0, t1, queries) in enumerate(SHOTS[ep]):
+    for i, shot in enumerate(SHOTS[ep]):
+        t0, t1, queries = shot[:3]
+        must = shot[3] if len(shot) > 3 else ()
         need = t1 - t0
-        found = pick(key, queries, need, used)
+        found = pick(key, queries, need, used, must)
         if not found:
             sys.exit(f"لا يوجد مقطع مناسب للقطة {i} ({queries})")
         q, hit, vid = found
