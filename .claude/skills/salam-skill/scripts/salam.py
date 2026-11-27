@@ -382,6 +382,9 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
           'align': method, 'scenes': out_scenes}
     if 'font' in glob:
         tl['font'] = glob['font']
+    for k in ('size', 'bubble_scale'):   # حجم النص الأساسي (الافتراضي 165) وحجم فقاعات الكوميكس للفيديو كله
+        if k in glob:
+            tl[k] = float(glob[k])
     for k in ('music', 'music_volume', 'voice_volume', 'whoosh_volume', 'hit_volume', 'sfx'):
         if k in glob:
             v = glob[k]

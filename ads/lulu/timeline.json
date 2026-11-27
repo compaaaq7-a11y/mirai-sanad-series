@@ -64,7 +64,7 @@
    "video_volume": 0.0,
    "video_loop": false,
    "bubble": "قرمش!",
-   "bubble_y": 430.0,
+   "bubble_y": 330.0,
    "bubble_t": 4.2,
    "gentle": true,
    "end": 7.5
@@ -184,7 +184,7 @@
    "video_volume": 0.0,
    "video_loop": false,
    "bubble": "ههههه!",
-   "bubble_y": 430.0,
+   "bubble_y": 330.0,
    "bubble_t": 18.9,
    "gentle": true,
    "end": 22.5
@@ -260,7 +260,9 @@
    "end": 30.0
   }
  ],
- "font": "baloo",
+ "font": "vibes",
+ "size": 105.0,
+ "bubble_scale": 0.65,
  "music": "clips/lulu-music.m4a",
  "music_volume": 0.9,
  "whoosh_volume": 0.25,

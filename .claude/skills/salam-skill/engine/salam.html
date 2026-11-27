@@ -199,7 +199,7 @@ const FONTS={
   marhey:{f:"Marhey",w:700,k:0.92},
   amiri:{f:"Amiri",w:700,k:0.95},
   ruqaa:{f:"'Aref Ruqaa'",w:700,k:0.95},
-  vibes:{f:"Vibes",w:400,k:1.05},
+  vibes:{f:"Vibes",w:400,k:1.1,stroke:0.07},   // خط رفيع: يُسمَّك بلونه نفسه حتى يُقرأ
 };
 function wordEl(w, basePx, font){
   const e=document.createElement('span');
@@ -207,6 +207,8 @@ function wordEl(w, basePx, font){
   const color=w.c||'white', px=Math.round(basePx*(w.s||1)*F.k);
   e.className='w c-'+color; e.textContent=w.w; e.dataset.t=w.w;
   e.style.fontFamily=F.f+",Lalezar,sans-serif"; e.style.fontWeight=F.w;
+  if(F.stroke){ const sc={white:'#f4f4f4',silver:'#d9d9d9',red:'#E3121F',black:'#1d1d1d'}[color]||'#f4f4f4'; // تسميك الحروف بلونها نفسه
+    e.style.webkitTextStroke=(px*F.stroke).toFixed(1)+'px '+sc; e.style.paintOrder='stroke fill'; }
   e.style.fontSize=px+'px'; e.style.textShadow=extrude(color,px);
   return e;
 }
@@ -237,7 +239,7 @@ function build(i){
 
   // النص
   const tb=document.createElement('div'); tb.className='tb'; cam.appendChild(tb); R.tb=tb;
-  const base = s.size || (p ? 118 : 165);
+  const base = s.size || TL.size || (p ? 118 : 165);
   tb.style.top = (s.y!=null ? s.y : (p ? 300 : ((bg==='image'||bg==='video') ? 1170 : 560)))+'px';
   // الانعكاس الأرضي: افتراضي على الخلفيات الأربع، ومطفأ على الصور (إلا reflect=true)
   if((bg==='image'||bg==='video') ? s.reflect===true : s.reflect!==false) tb.classList.add('reflect');
@@ -271,7 +273,7 @@ function build(i){
   if(s.bubble){const b=document.createElement('div');b.className='bubble';
     b.innerHTML='<div class="shape"></div><span></span>'; b.style.top='1300px';b.querySelector('span').textContent=s.bubble;
     if(s.bubble_y!=null)b.style.top=s.bubble_y+'px'; if(s.bubble_x!=null)b.style.left=s.bubble_x+'px';
-    fx.appendChild(b);R.bubble={e:b,at:s.bubble_t??(s.start+0.25),rot:s.bubble_rot??-8};}
+    fx.appendChild(b);R.bubble={e:b,at:s.bubble_t??(s.start+0.25),rot:s.bubble_rot??-8,k:s.bubble_scale??TL.bubble_scale??1};}
   if(bg==='camera'){const rec=document.createElement('div');rec.className='rec';
     rec.innerHTML='<div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div><div class="lbl"><i></i>REC</div><div class="tc"></div>';
     root.appendChild(rec);R.tc=rec.querySelector('.tc');R.recDot=rec.querySelector('.lbl i');}
@@ -380,7 +382,7 @@ function draw(i,t){
     let k=Math.floor(lt2*F.fps); k = s.video_loop===false ? Math.min(k,F.count-1) : ((k%F.count)+F.count)%F.count;
     if(k!==R.vlast){ R.vlast=k; R.vimg.src=F.dir+'/'+String(k+1).padStart(5,'0')+'.jpg'; pend=R.vimg.decode().catch(()=>{}); } }
   if(R.bubble){const d=t-R.bubble.at,p=clamp(d/0.28),eb=easeOutBack(p);
-    R.bubble.e.style.opacity=d<0?0:1; R.bubble.e.style.transform=`scale(${d<0?0:0.2+0.8*eb}) rotate(${R.bubble.rot+Math.sin(t*9)*2}deg)`;}
+    R.bubble.e.style.opacity=d<0?0:1; R.bubble.e.style.transform=`scale(${(d<0?0:0.2+0.8*eb)*R.bubble.k}) rotate(${R.bubble.rot+Math.sin(t*9)*2}deg)`;}
   if(R.stars) R.stars.forEach(st=>{const d=t-st.at; if(d<0){st.e.style.opacity=0;return;}
     const tw=0.8+0.2*Math.sin(t*7+st.ph), p=easeOutBack(clamp(d/0.3));
     st.e.style.opacity=clamp(d/0.1)*tw; st.e.style.transform=`translate(${st.x}px,${st.y-30*d}px) scale(${st.sz*p}) rotate(${t*90+st.ph*40}deg)`;});

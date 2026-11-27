@@ -1,13 +1,13 @@
 # قصة «لولو والتفاحة» — طفلة تأكل التفاح وتشرب الحليب وترقص على الموسيقى (30 ثانية)
 # كل المشاهد من صورة البطلة (OpenArt Kling 3 Omni) ومقطع الرقص (OpenArt Vivix W1) لثبات الشخصية.
-# الموسيقى: موسيقى مقطع الرقص نفسه تتكرر. الخط مؤقت حتى يختار المستخدم.
-@ fps=30 font=baloo enter=gentle music=clips/lulu-music.m4a music_volume=0.9 whoosh_volume=0.25 hit_volume=0.3
+# الموسيقى: موسيقى مقطع الرقص نفسه تتكرر. الخط: Vibes (اختيار المستخدم، رقم 28).
+@ fps=30 font=vibes size=105 bubble_scale=0.65 enter=gentle music=clips/lulu-music.m4a music_volume=0.9 whoosh_volume=0.25 hit_volume=0.3
 
 [bg=image image=images/lulu-hero.jpg dur=3.5 move=push focus="55% 45%" fx=stars] هذه / +*لولو!*
-[bg=video video=clips/lulu-dance.mp4 video_from=0 video_rate=0.45 video_volume=0 video_loop=no dur=4 bubble="قرمش!" bubble_y=430 bubble_at=0.7 fx=shake] تحب / +*التفاح!*
+[bg=video video=clips/lulu-dance.mp4 video_from=0 video_rate=0.45 video_volume=0 video_loop=no dur=4 bubble="قرمش!" bubble_y=330 bubble_at=0.7 fx=shake] تحب / +*التفاح!*
 [bg=image image=images/lulu-hero.jpg dur=4 move=push focus="10% 68%" cut=fade xfade=0.4 fx=stars] وتحب / +*الحليب!*
 [bg=image image=images/lulu-hero.jpg dur=2 move=pull fx=stars,shake,ring] +*طاقة!*
 [bg=video video=clips/lulu-dance.mp4 video_from=0 video_volume=0 video_loop=no dur=5] وترقص / +*على الموسيقى!*
-[bg=video video=clips/lulu-dance.mp4 video_from=2.0 video_rate=0.5 video_volume=0 video_loop=no dur=4 bubble="ههههه!" bubble_y=430 bubble_at=0.4 fx=speed] رقصة / +*مضحكة!*
+[bg=video video=clips/lulu-dance.mp4 video_from=2.0 video_rate=0.5 video_volume=0 video_loop=no dur=4 bubble="ههههه!" bubble_y=330 bubble_at=0.4 fx=speed] رقصة / +*مضحكة!*
 [bg=video video=clips/lulu-dance.mp4 video_from=3.6 video_rate=0.6 video_volume=0 video_loop=no dur=3 fx=shake] حركات / +*مجنونة!*
 [bg=image image=images/lulu-hero.jpg dur=4.5 move=pull fx=confetti fade=out] كل يوم / +*تفاحة وحليب!*
