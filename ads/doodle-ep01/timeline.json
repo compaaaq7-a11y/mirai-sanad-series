@@ -2,7 +2,7 @@
  "width": 1080,
  "height": 1920,
  "fps": 30,
- "duration": 28.3,
+ "duration": 28.8,
  "audio": null,
  "align": "pace 2.3 w/s (no audio)",
  "scenes": [
@@ -239,44 +239,51 @@
    "doodle": {
     "chars": [
      {
-      "x0": 400.0,
-      "x1": 400.0,
+      "x0": 380.0,
+      "x1": 380.0,
       "face": "happy",
-      "pose": "bend",
+      "pose": "point",
       "ink": "blue",
       "big": 1.6
      }
     ],
     "draws": [
      {
-      "icon": "water",
-      "x": 200.0,
-      "y": 1570.0,
+      "icon": "can",
+      "x": 610.0,
+      "y": 1230.0,
       "s": 1.1
+     },
+     {
+      "icon": "drops",
+      "x": 770.0,
+      "y": 1330.0,
+      "s": 1.0,
+      "delay": 0.5
      },
      {
       "icon": "sun",
       "x": 900.0,
       "y": 360.0,
       "s": 0.9,
-      "delay": 0.4
+      "delay": 0.3
      },
      {
       "icon": "flower",
-      "x": 760.0,
+      "x": 800.0,
       "y": 1400.0,
       "s": 2.4,
-      "delay": 1.4,
+      "delay": 1.6,
       "grow": true
      }
     ],
     "ground": 1660.0
    },
    "gentle": true,
-   "end": 24.5
+   "end": 25.0
   },
   {
-   "start": 24.5,
+   "start": 25.0,
    "bg": "notebook",
    "lines": [],
    "fx": [
@@ -296,7 +303,7 @@
     "draws": [
      {
       "icon": "flower",
-      "x": 760.0,
+      "x": 800.0,
       "y": 1400.0,
       "s": 2.4
      },
@@ -318,7 +325,7 @@
     "ground": 1660.0
    },
    "gentle": true,
-   "end": 28.3
+   "end": 28.8
   }
  ],
  "font": "scheherazade",

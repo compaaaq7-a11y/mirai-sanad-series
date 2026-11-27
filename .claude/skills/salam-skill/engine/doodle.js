@@ -47,6 +47,8 @@
     alarm: c => `<circle class="dw" r="62" fill="#ffffff" stroke="${c}"/><path class="dw" d="M0 0 V-38 M0 0 L26 14" stroke="${c}" fill="none"/><path class="dw" d="M-70 -50 C-80 -80 -50 -95 -30 -70 M70 -50 C80 -80 50 -95 30 -70" fill="#e63946" stroke="${c}"/><path class="dw" d="M-40 55 L-55 80 M40 55 L55 80" stroke="${c}" fill="none"/>`,
     cup: c => `<path class="dw" d="M-55 -20 H55 L45 75 H-45Z" fill="#ffffff" stroke="${c}"/><path class="dw" d="M55 0 C95 0 95 50 50 50" fill="none" stroke="${c}"/><path class="dw" d="M-50 -8 H50 L47 15 H-47Z" fill="#8b5a2b" stroke="none"/><path class="dw" d="M-25 -40 C-40 -60 -10 -75 -25 -100 M5 -40 C-10 -60 20 -75 5 -100 M35 -40 C20 -60 50 -75 35 -100" stroke="#9aa5b1" fill="none"/>`,
     scarf: c => `<path class="dw" d="M-60 -20 C-20 0 20 0 60 -20 L60 10 C20 30 -20 30 -60 10Z" fill="#e63946" stroke="#9d0208"/><path class="dw" d="M30 10 L40 90 L65 85 L55 5" fill="#e63946" stroke="#9d0208"/><path d="M-40 -5 v18 M-15 2 v18 M10 2 v18" stroke="#ffffff" stroke-width="5" fill="none" class="dw"/>`,
+    can: c => `<path class="dw" d="M-70 -40 H30 L40 60 H-80Z" fill="#5cc46b" stroke="#2e8b3e"/><path class="dw" d="M30 -10 L110 -60 L118 -48 L40 15" fill="#5cc46b" stroke="#2e8b3e"/><path class="dw" d="M-70 -30 C-120 -40 -120 40 -78 40" fill="none" stroke="#2e8b3e"/><path class="dw" d="M-50 -40 C-45 -80 15 -80 20 -40" fill="none" stroke="#2e8b3e"/>`,
+    drops: c => [[-30, 0], [0, 30], [30, 5], [-12, 60], [18, 75]].map(([x, y]) => `<path class="dw" d="M${x} ${y - 16} C${x - 10} ${y} ${x - 8} ${y + 10} ${x} ${y + 10} C${x + 8} ${y + 10} ${x + 10} ${y} ${x} ${y - 16}Z" fill="#3a86ff" stroke="#1d5fd1" stroke-width="3"/>`).join(''),
     exclaim: c => `<path class="dw" d="M0 -80 V30" stroke="#e63946" fill="none"/><circle class="dw" cy="65" r="10" fill="#e63946" stroke="#e63946"/>`,
   };
 
@@ -88,7 +90,7 @@
       case 'sit': P.y = 95; P.lL = [95, -90]; P.lR = [85, -80]; P.aL = [30, 40]; P.aR = [-20, -50]; break;
       case 'dance': { const d = Math.sin(t * 8); P.sway = d * 25; P.aL = [90 + d * 60, 40]; P.aR = [-90 + d * 60, -40]; P.lL = [15 + d * 15, 10]; P.lR = [-15 + d * 15, 10]; P.y = -Math.abs(d) * 12; P.lean = d * 8; break; }
       case 'think': P.aR = [-35, -150]; P.aL = [25, 70]; break;
-      case 'point': P.aR = [-90, -5]; break;
+      case 'point': P.aR = [95, -10]; P.aL = [15, 10]; break;   // الذراع للأمام باتجاه وجه الشخصية
     }
     if (moving && kind === 'stand') return pose('walk', t, true);
     return P;
@@ -184,8 +186,10 @@
     R.draws.forEach(o => {
       const dur = 0.9 * (o.w.speed || 1), p = clamp((t - o.at) / dur), n = o.paths.length;
       const sc = (o.w.s || 1) * (o.w.grow ? (0.2 + 0.8 * eoc(clamp((t - o.at) / (dur * 1.6)))) : 1);
+      const fall = o.w.icon === 'drops' ? ` translate(0 ${(((t * 1.4) % 1) * 70).toFixed(1)})` : '';   // قطرات تنزل باستمرار
       const wig = o.w.wiggle ? ` rotate(${(Math.sin(t * 40) * 12).toFixed(1)}) translate(${(Math.sin(t * 55) * 6).toFixed(1)} 0)` : '';   // ! : اهتزاز (منبّه يرن)
-      o.g.setAttribute('transform', `translate(${o.w.x} ${o.w.y}) scale(${sc.toFixed(3)})${wig}`);
+      o.g.setAttribute('transform', `translate(${o.w.x} ${o.w.y}) scale(${sc.toFixed(3)})${wig}${fall}`);
+      if (o.w.icon === 'drops') o.g.setAttribute('opacity', (1 - ((t * 1.4) % 1) * 0.6).toFixed(2));
       o.paths.forEach((pth, k) => { const q = clamp(p * n - k); pth.style.strokeDashoffset = String(1 - q);
         const f = pth.dataset.fill; pth.style.fillOpacity = f === 'none' ? 0 : clamp((p - 0.75) / 0.25); });
     });

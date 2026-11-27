@@ -40,7 +40,8 @@
 **الرسومات** `draw="sun@820,300|coin@540,1500"`: تُرسم خطاً خطاً أمام المشاهد، ولكل رسمة لونها المميز.
 المكتبة: `sun` `coin` `seed` `sprout` `flower` `wilted` `heart` `star` `house` `cloud` `fan` `water` `book`
 `bulb` `crown` `money` `apple` `pencil` `tree` `rain` `zzz` `question` `exclaim`
-`bed` `blanket` `snow` `alarm` `cup` `scarf`
+`bed` `blanket` `snow` `alarm` `cup` `scarf` `can` (مرشّة سقي) `drops` (قطرات تنزل باستمرار)
+- **السقي الصحيح:** `pose=point` (الذراع للأمام نحو وجه الشخصية) + `can@x+230,ground-430` في يده + `drops` تحت فوهتها فوق النبتة.
 ويُضاف `:1.5` للحجم و`~2` لتأخير البدء بالثواني: `flower@540,1300:1.8~1.5`.
 وفي آخر الرسمة رموز: `+` تنمو من صغيرة، `^` أمام الشخصية (البطانية فوق الجسم)، `!` تهتز (منبّه يرن):
 `blanket@800,1445:2.0^` و`alarm@880,1100:1.3!`.
