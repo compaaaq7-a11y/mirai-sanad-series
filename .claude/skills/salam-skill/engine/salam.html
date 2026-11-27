@@ -43,13 +43,14 @@ html,body{background:#000;overflow:hidden}
   background:linear-gradient(to bottom,rgba(255,120,130,.75),#E03040 30%,#C40418 100%)}
 
 .bg-image{background:var(--ink)}
-.bg-image .photo{position:absolute;inset:-3%;background-size:cover;background-position:50% 40%}
-.bg-image .tint{position:absolute;inset:0;background:
+.bg-image .photo{position:absolute;inset:0;background-size:cover;background-position:50% 40%}
+/* الافتراضي: الصورة كما هي بلا تعتيم (تفضيل المستخدم). tint=dark أو tint=red اختياريان */
+.bg-image .tint{display:none}
+.bg-image.tint-dark .tint{display:block;position:absolute;inset:0;background:
   radial-gradient(ellipse 80% 45% at 50% 30%,rgba(227,18,31,.22),transparent 70%),
   linear-gradient(to bottom,rgba(11,4,5,.70) 0%,rgba(11,4,5,.25) 30%,rgba(11,4,5,.30) 55%,rgba(11,4,5,.92) 100%)}
 .bg-image.tint-red .photo{filter:grayscale(1) contrast(1.15) brightness(.9)}
-.bg-image.tint-red .tint{background:linear-gradient(to bottom,rgba(200,5,26,.55),rgba(120,0,12,.75));mix-blend-mode:multiply}
-.bg-image.tint-none .tint{background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent 30%,transparent 70%,rgba(0,0,0,.6))}
+.bg-image.tint-red .tint{display:block;position:absolute;inset:0;background:linear-gradient(to bottom,rgba(200,5,26,.55),rgba(120,0,12,.75));mix-blend-mode:multiply}
 .bg-cream,.bg-camera{background:var(--cream)}
 .bg-cream .rings,.bg-camera .rings{position:absolute;inset:0;
   background:repeating-radial-gradient(circle at 62% 38%,transparent 0 58px,rgba(0,0,0,.055) 58px 60px)}
@@ -70,8 +71,8 @@ html,body{background:#000;overflow:hidden}
 
 /* ---------- الكاميرا والنص ---------- */
 .cam{position:absolute;inset:0;transform-origin:50% 45%}
-.tb{position:absolute;left:50px;right:50px;text-align:center;
-  -webkit-box-reflect:below -18px linear-gradient(transparent 45%,rgba(255,255,255,.30))}
+.tb{position:absolute;left:50px;right:50px;text-align:center}
+.tb.reflect{-webkit-box-reflect:below -18px linear-gradient(transparent 45%,rgba(255,255,255,.30))}
 .line{display:flex;flex-direction:row;justify-content:center;align-items:baseline;white-space:nowrap;transform-origin:50% 50%}
 .w{position:relative;display:inline-block;font-family:Lalezar;line-height:1.12;margin:0 .1em;will-change:transform,filter,opacity}
 .w::after{content:attr(data-t);position:absolute;inset:0;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
@@ -202,7 +203,12 @@ function build(i){
   const tb=document.createElement('div'); tb.className='tb'; cam.appendChild(tb); R.tb=tb;
   const base = s.size || (p ? 118 : 165);
   tb.style.top = (s.y!=null ? s.y : (p ? 300 : (bg==='image' ? 1170 : 560)))+'px';
-  if(s.reflect===false) tb.style.webkitBoxReflect='none';
+  // الانعكاس الأرضي: افتراضي على الخلفيات الأربع، ومطفأ على الصور (إلا reflect=true)
+  if(bg==='image' ? s.reflect===true : s.reflect!==false) tb.classList.add('reflect');
+  if(bg==='image'){ // على الصور: بلا انعكاس، والوضوح بظل ناعم حول الحروف بدل تعتيم الصورة
+    // النص في الثلث السفلي وينتهي قبل الحافة بـ 220px مهما كان عدد الأسطر
+    if(s.y==null && !p){ const n=(s.lines||[]).length||1; tb.style.top=Math.max(900,1700-n*base*1.2)+'px'; }
+    tb.style.filter='drop-shadow(0 4px 10px rgba(0,0,0,.8)) drop-shadow(0 0 3px rgba(0,0,0,.7))'; }
   (s.lines||[]).forEach(line=>{
     const ld=document.createElement('div'); ld.className='line'; tb.appendChild(ld);
     line.forEach(w=>{const e=wordEl(w,base); ld.appendChild(e); R.words.push({e,w});});
@@ -311,10 +317,11 @@ function draw(i,t){
   if(R.photo){ // حركة الكاميرا على الصورة: push pull left right up down still (أو كين بيرنز تلقائي)
     const a=s.kb_start??s.start, b=s.kb_end??s.end, q=easeInOut(clamp((t-a)/(b-a)));
     const mv=s.move||['push','left','push','right','up'][(i*37)%5];
-    let sc=1.04, dx=0, dy=0;
-    if(mv==='push') sc=1.03+0.14*q; else if(mv==='pull') sc=1.17-0.14*q;
-    else if(mv==='still') sc=1.03+0.03*q;
-    else { sc=1.10; const m=60*(q-0.5)*2; if(mv==='left')dx=m; if(mv==='right')dx=-m; if(mv==='up')dy=m; if(mv==='down')dy=-m; }
+    // زوم خفيف (حتى 8%) حتى لا تفقد الصورة دقتها
+    let sc=1.0, dx=0, dy=0;
+    if(mv==='push') sc=1.0+0.08*q; else if(mv==='pull') sc=1.08-0.08*q;
+    else if(mv==='still') sc=1.0+0.025*q;
+    else { sc=1.06; const m=28*(q-0.5)*2; if(mv==='left')dx=m; if(mv==='right')dx=-m; if(mv==='up')dy=m; if(mv==='down')dy=-m; }
     R.photo.style.transformOrigin=s.focus||'50% 50%';
     R.photo.style.transform=`translate(${dx}px,${dy}px) scale(${sc})`; }
   // تلاشٍ إلى الأسود في نهاية المشهد: fade=out

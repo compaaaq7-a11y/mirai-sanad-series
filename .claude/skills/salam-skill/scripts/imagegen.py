@@ -5,6 +5,7 @@
 
 - يعيد المحاولة تلقائياً عند الانشغال (503/429).
 - يقص شعار pollinations.ai من أسفل الصورة (يطلب صورة أطول بقليل ثم يقصها).
+- الخدمة المجانية تعطي 576x1024 كحد أقصى، فتُكبَّر بـ Real-ESRGAN إلى 1152x2048 (scripts/upscale.py).
 - يحفظ نسخة مخبأة: نفس الوصف + المقاس + البذرة = نفس الملف بدون طلب جديد.
 - اختياري: متغير البيئة POLLINATIONS_TOKEN لحساب مجاني يرفع الحدود ويتيح نماذج أقوى.
 """
@@ -50,9 +51,14 @@ def generate(prompt, out, w=1080, h=1920, seed=7, model=None, tries=8, quiet=Fal
                 print(f'  busy ({getattr(e, "code", e)}), retry in {delay}s...', file=sys.stderr)
             time.sleep(delay)
             delay = min(delay * 1.5, 30)
-    # قص الشعار من الأسفل ثم التكبير للمقاس المطلوب
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', raw, '-vf',
-                    f'crop=iw:ih/{1 + LOGO_CROP:.4f}:0:0,scale={w}:{h}:flags=lanczos', '-q:v', '2', out], check=True)
+    # قص الشعار من الأسفل، ثم تكبير بالذكاء الاصطناعي (Real-ESRGAN) لصورة أوضح وأدق
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import upscale
+    oh = 2048 if h >= w else int(round(2048 * h / w / 2)) * 2
+    ow = int(round(oh * w / h / 2)) * 2
+    method = upscale.upscale(raw, out, ow, oh, crop_bottom=LOGO_CROP / (1 + LOGO_CROP))
+    if not quiet:
+        print(f'  image {ow}x{oh} ({method})', file=sys.stderr)
     os.remove(raw)
     return out
 
