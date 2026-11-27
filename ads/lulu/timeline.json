@@ -1,0 +1,268 @@
+{
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "duration": 30.0,
+ "audio": null,
+ "align": "pace 2.3 w/s (no audio)",
+ "scenes": [
+  {
+   "start": 0.0,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "هذه",
+      "t": 0.4,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "لولو",
+      "t": 1.486,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "image": "images/lulu-hero.jpg",
+   "fx": [
+    "stars"
+   ],
+   "move": "push",
+   "focus": "55% 45%",
+   "gentle": true,
+   "end": 3.5
+  },
+  {
+   "start": 3.5,
+   "bg": "video",
+   "lines": [
+    [
+     {
+      "w": "تحب",
+      "t": 3.9,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "التفاح",
+      "t": 5.09,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "fx": [
+    "shake"
+   ],
+   "video": "clips/lulu-dance.mp4",
+   "video_from": 0.0,
+   "video_rate": 0.45,
+   "video_volume": 0.0,
+   "video_loop": false,
+   "bubble": "قرمش!",
+   "bubble_y": 430.0,
+   "bubble_t": 4.2,
+   "gentle": true,
+   "end": 7.5
+  },
+  {
+   "start": 7.5,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "وتحب",
+      "t": 7.9,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "الحليب",
+      "t": 9.167,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "image": "images/lulu-hero.jpg",
+   "fx": [
+    "stars"
+   ],
+   "soft": true,
+   "xfade": 0.4,
+   "move": "push",
+   "focus": "10% 68%",
+   "gentle": true,
+   "end": 11.5
+  },
+  {
+   "start": 11.5,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "طاقة",
+      "t": 11.9,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "image": "images/lulu-hero.jpg",
+   "fx": [
+    "stars",
+    "shake",
+    "ring"
+   ],
+   "move": "pull",
+   "gentle": true,
+   "end": 13.5
+  },
+  {
+   "start": 13.5,
+   "bg": "video",
+   "lines": [
+    [
+     {
+      "w": "وترقص",
+      "t": 13.9,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "على",
+      "t": 15.128,
+      "c": "red",
+      "s": 1.35
+     },
+     {
+      "w": "الموسيقى",
+      "t": 16.122,
+      "c": "red"
+     }
+    ]
+   ],
+   "video": "clips/lulu-dance.mp4",
+   "video_from": 0.0,
+   "video_volume": 0.0,
+   "video_loop": false,
+   "gentle": true,
+   "end": 18.5
+  },
+  {
+   "start": 18.5,
+   "bg": "video",
+   "lines": [
+    [
+     {
+      "w": "رقصة",
+      "t": 18.9,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "مضحكة",
+      "t": 20.23,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "fx": [
+    "speed"
+   ],
+   "video": "clips/lulu-dance.mp4",
+   "video_from": 2.0,
+   "video_rate": 0.5,
+   "video_volume": 0.0,
+   "video_loop": false,
+   "bubble": "ههههه!",
+   "bubble_y": 430.0,
+   "bubble_t": 18.9,
+   "gentle": true,
+   "end": 22.5
+  },
+  {
+   "start": 22.5,
+   "bg": "video",
+   "lines": [
+    [
+     {
+      "w": "حركات",
+      "t": 22.9,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "مجنونة",
+      "t": 23.759,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "fx": [
+    "shake"
+   ],
+   "video": "clips/lulu-dance.mp4",
+   "video_from": 3.6,
+   "video_rate": 0.6,
+   "video_volume": 0.0,
+   "video_loop": false,
+   "gentle": true,
+   "end": 25.5
+  },
+  {
+   "start": 25.5,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "كل",
+      "t": 25.9,
+      "c": "white"
+     },
+     {
+      "w": "يوم",
+      "t": 26.569,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "تفاحة",
+      "t": 27.327,
+      "c": "red",
+      "s": 1.35
+     },
+     {
+      "w": "وحليب",
+      "t": 28.264,
+      "c": "red"
+     }
+    ]
+   ],
+   "image": "images/lulu-hero.jpg",
+   "fx": [
+    "confetti"
+   ],
+   "move": "pull",
+   "fade": "out",
+   "gentle": true,
+   "end": 30.0
+  }
+ ],
+ "font": "baloo",
+ "music": "clips/lulu-music.m4a",
+ "music_volume": 0.9,
+ "whoosh_volume": 0.25,
+ "hit_volume": 0.3
+}
