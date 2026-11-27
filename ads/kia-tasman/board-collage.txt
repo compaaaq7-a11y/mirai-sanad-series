@@ -1,0 +1,14 @@
+# إعلان كولاج فاخر: كيا تاسمان 2026 لمعرض سيارات (لهجة عراقية) — ليس إعلاناً رسمياً من كيا، بلا شعارها
+# الصور عامة (طرق، مفتاح، بوصلة، خريطة) ولا تُظهر السيارة؛ مع صور المعرض الحقيقية تُضاف السيارة كملصق.
+# الأرقام للتحقق من المعرض قبل النشر.
+@ fps=30 theme=luxury font=scheherazade size=140 pace=1.7 music=auto music_volume=0.45 handle="@showroom"
+
+[bg=cream photos=collage/desert.jpg|collage/mountain.jpg|collage/mud.jpg] الطريق / +*ما يرحم*
+[bg=dark prop=bubbles msgs="وين نروح بالعطلة؟|للجبل!|بس الطريق كله طين…|لا تحاتي، عدنا الحل" prop_y=820] والعائلة / +*تنتظرك*
+[bg=cream fx=shake] وأغلب السيارات =اليوم= / +*تشبه بعض*
+[bg=dark stickers=collage/key.png fx=ring] كيا / +*تاسمـــان* / =2026=
+[bg=cream prop=window title="Specs.exe" text="تسحب حتى 3500 كغم" prop_y=980] قوة / +*تسحب*
+[bg=dark photos=collage/mud.jpg|collage/desert.jpg fx=shake] رمل… طين… / +*جبل!*
+[bg=cream stickers=collage/compass.png|collage/map.png] للشغل / +*وللعائلة*
+[bg=dark prop=hourglass prop_y=900] العرض / +*محدود*
+[bg=cream prop=window title="Instagram.exe" text="احجز تجربة قيادة ←" prop_y=980 fx=stars] احجزها / +*الحيـــن*

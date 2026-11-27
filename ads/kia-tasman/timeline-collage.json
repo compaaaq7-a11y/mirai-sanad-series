@@ -1,0 +1,297 @@
+{
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "duration": 16.568,
+ "audio": null,
+ "align": "pace 1.7 w/s (no audio)",
+ "scenes": [
+  {
+   "start": 0.0,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "الطريق",
+      "t": 0.35,
+      "c": "black"
+     }
+    ],
+    [
+     {
+      "w": "ما",
+      "t": 0.991,
+      "c": "red",
+      "s": 1.35
+     },
+     {
+      "w": "يرحم",
+      "t": 1.421,
+      "c": "red"
+     }
+    ]
+   ],
+   "photos": [
+    "collage/desert.jpg",
+    "collage/mountain.jpg",
+    "collage/mud.jpg"
+   ],
+   "end": 1.996
+  },
+  {
+   "start": 1.996,
+   "bg": "dark",
+   "lines": [
+    [
+     {
+      "w": "والعائلة",
+      "t": 2.076,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "تنتظرك",
+      "t": 2.823,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "prop": {
+    "type": "bubbles",
+    "msgs": "وين نروح بالعطلة؟|للجبل!|بس الطريق كله طين…|لا تحاتي، عدنا الحل",
+    "y": 820.0
+   },
+   "end": 3.504
+  },
+  {
+   "start": 3.504,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "وأغلب",
+      "t": 3.584,
+      "c": "black"
+     },
+     {
+      "w": "السيارات",
+      "t": 4.172,
+      "c": "black"
+     },
+     {
+      "w": "اليوم",
+      "t": 4.919,
+      "c": "black",
+      "box": true
+     }
+    ],
+    [
+     {
+      "w": "تشبه",
+      "t": 5.508,
+      "c": "red",
+      "s": 1.35
+     },
+     {
+      "w": "بعض",
+      "t": 6.043,
+      "c": "red"
+     }
+    ]
+   ],
+   "fx": [
+    "shake"
+   ],
+   "end": 6.565
+  },
+  {
+   "start": 6.565,
+   "bg": "dark",
+   "lines": [
+    [
+     {
+      "w": "كيا",
+      "t": 6.645,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "تاسمـــان",
+      "t": 7.128,
+      "c": "red",
+      "s": 1.35
+     }
+    ],
+    [
+     {
+      "w": "2026",
+      "t": 7.928,
+      "c": "white",
+      "box": true
+     }
+    ]
+   ],
+   "fx": [
+    "ring"
+   ],
+   "stickers": [
+    "collage/key.png"
+   ],
+   "end": 8.503
+  },
+  {
+   "start": 8.503,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "قوة",
+      "t": 8.583,
+      "c": "black"
+     }
+    ],
+    [
+     {
+      "w": "تسحب",
+      "t": 9.065,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "prop": {
+    "type": "window",
+    "title": "Specs.exe",
+    "text": "تسحب حتى 3500 كغم",
+    "y": 980.0
+   },
+   "end": 9.641
+  },
+  {
+   "start": 9.641,
+   "bg": "dark",
+   "lines": [
+    [
+     {
+      "w": "رمل",
+      "t": 9.721,
+      "c": "white"
+     },
+     {
+      "w": "طين",
+      "t": 10.203,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "جبل",
+      "t": 10.685,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "fx": [
+    "shake"
+   ],
+   "photos": [
+    "collage/mud.jpg",
+    "collage/desert.jpg"
+   ],
+   "end": 11.328
+  },
+  {
+   "start": 11.328,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "للشغل",
+      "t": 11.408,
+      "c": "black"
+     }
+    ],
+    [
+     {
+      "w": "وللعائلة",
+      "t": 11.996,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "stickers": [
+    "collage/compass.png",
+    "collage/map.png"
+   ],
+   "end": 12.783
+  },
+  {
+   "start": 12.783,
+   "bg": "dark",
+   "lines": [
+    [
+     {
+      "w": "العرض",
+      "t": 12.863,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "محدود",
+      "t": 13.451,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "prop": {
+    "type": "hourglass",
+    "y": 900.0
+   },
+   "end": 14.079
+  },
+  {
+   "start": 14.079,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "احجزها",
+      "t": 14.159,
+      "c": "black"
+     }
+    ],
+    [
+     {
+      "w": "الحيـــن",
+      "t": 14.801,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "fx": [
+    "stars"
+   ],
+   "prop": {
+    "type": "window",
+    "title": "Instagram.exe",
+    "text": "احجز تجربة قيادة ←",
+    "y": 980.0
+   },
+   "end": 16.568
+  }
+ ],
+ "font": "scheherazade",
+ "theme": "luxury",
+ "handle": "@showroom",
+ "size": 140.0,
+ "music": "auto",
+ "music_volume": 0.45
+}
