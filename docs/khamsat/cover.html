@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ar" dir="ltr"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Lalezar;src:url(../../.claude/skills/salam-skill/engine/fonts/Lalezar-400-arabic.woff2) format('woff2')}
+@font-face{font-family:Tajawal;font-weight:800;src:url(../../.claude/skills/salam-skill/engine/fonts/Tajawal-800-arabic.woff2) format('woff2')}
+*{margin:0;box-sizing:border-box}
+html{width:1280px;height:720px;overflow:hidden}
+body{width:1280px;height:720px;overflow:hidden;background:radial-gradient(ellipse 70% 60% at 30% 30%,#6a0b10,#1e0405 55%,#0B0405);font-family:Tajawal;color:#fff;position:relative}
+.floor{position:absolute;left:-30%;right:-30%;bottom:-20%;height:55%;transform:perspective(500px) rotateX(70deg);
+  background-image:linear-gradient(rgba(255,40,50,.4) 2px,transparent 2px),linear-gradient(90deg,rgba(255,40,50,.4) 2px,transparent 2px);background-size:80px 80px;-webkit-mask-image:linear-gradient(transparent,#000 40%)}
+.txt{position:absolute;right:60px;top:90px;width:600px}
+h1{font-family:Lalezar;font-weight:400;font-size:92px;line-height:1.05;color:#f2f2f2;text-shadow:0 1px 0 #bbb,0 2px 0 #aaa,0 3px 0 #999,0 4px 0 #888,0 5px 0 #777,0 6px 0 #666,0 14px 22px rgba(0,0,0,.6)}
+h1 b{color:#ff2a35;font-weight:400;text-shadow:0 1px 0 #b0000e,0 2px 0 #a0000d,0 3px 0 #90000c,0 4px 0 #80000b,0 5px 0 #70000a,0 6px 0 #600008,0 14px 22px rgba(0,0,0,.6)}
+.sub{margin-top:26px;font-size:30px;font-weight:800;color:#f3d6d6;line-height:1.5}
+.tags{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px}
+.tags span{background:#E3121F;color:#fff;border-radius:999px;padding:8px 20px;font-size:24px;font-weight:800}
+.phones{position:absolute;left:50px;top:70px;display:flex;gap:22px;align-items:flex-start}
+.ph{width:180px;height:320px;border-radius:26px;overflow:hidden;border:6px solid #222;box-shadow:0 0 0 2px #555,0 30px 60px rgba(0,0,0,.6);background:#000}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph:nth-child(1){transform:translateY(90px) rotate(-6deg)}
+.ph:nth-child(2){transform:translateY(20px)}
+.ph:nth-child(3){transform:translateY(90px) rotate(6deg)}
+</style></head><body>
+<div class="floor"></div>
+<div class="phones">
+  <div class="ph"><img src="f3.jpg"></div>
+  <div class="ph"><img src="f1.jpg"></div>
+  <div class="ph"><img src="f2.jpg"></div>
+</div>
+<div class="txt" dir="rtl">
+  <h1>فيديو إعلاني<br><b>يخطف الأنظار</b></h1>
+  <p class="sub">مونتاج بالكلمات المتحركة لمتجرك<br>أو منتجك، جاهز للنشر على ريلز وتيك توك وشورتس</p>
+  <div class="tags"><span>عربي</span><span>9:16 عمودي</span><span>تسليم سريع</span></div>
+</div>
+</body></html>
