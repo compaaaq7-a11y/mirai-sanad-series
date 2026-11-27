@@ -99,6 +99,18 @@ html,body{background:#000;overflow:hidden}
 .ring{position:absolute;left:50%;width:720px;height:150px;margin-left:-360px;border-radius:50%;
   border:10px solid #ff2a35;box-shadow:0 0 40px 10px rgba(255,30,40,.8),inset 0 0 30px rgba(255,60,60,.8)}
 .spark{position:absolute;width:5px;height:26px;border-radius:3px;background:linear-gradient(#fff3c0,#ff7a1a);box-shadow:0 0 12px #ff6a00}
+.bubble{position:absolute;left:50%;top:50%;width:520px;height:340px;margin:-170px 0 0 -260px;display:flex;align-items:center;justify-content:center}
+.bubble .shape{position:absolute;inset:0;background:#111;
+  clip-path:polygon(50% 0%,59% 18%,79% 6%,76% 28%,100% 25%,86% 44%,100% 60%,78% 64%,86% 88%,63% 76%,52% 100%,42% 78%,18% 92%,23% 68%,0% 66%,14% 48%,2% 28%,25% 30%,20% 6%,41% 18%)}
+.bubble .shape::before{content:"";position:absolute;inset:12px;background:#FFD43B;clip-path:inherit}
+.bubble span{position:relative;font-family:'Baloo Bhaijaan 2',Lalezar,sans-serif;font-weight:800;font-size:96px;color:#E3121F;
+  -webkit-text-stroke:5px #111;paint-order:stroke fill;text-shadow:5px 6px 0 #111;white-space:nowrap}
+.star{position:absolute;width:84px;height:84px;background:#FFE066;
+  clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);filter:drop-shadow(0 0 10px rgba(255,230,120,.95))}
+.conf{position:absolute;width:26px;height:44px;border-radius:4px}
+.speed{position:absolute;inset:-20%;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.95) 0deg 1.1deg,transparent 1.1deg 6deg);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,transparent 32%,#000 62%)}
+.vframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .slash{position:absolute;left:0;height:6px;width:100%;background:#ff2a35;box-shadow:0 0 24px 8px rgba(255,30,40,.85);transform-origin:100% 50%}
 .flash{position:absolute;inset:0;background:#fff;pointer-events:none}
 
@@ -211,6 +223,7 @@ function build(i){
       R.embers.push({e,x:r()*1080,y:r()*1920,v:40+r()*120,a:.3+r()*.7,sz:.5+r()*1.2});} }
   if(bg==='red'){ bgl.innerHTML='<div class="rays"></div><div class="glow"></div><div class="floor"></div>'; R.rays=bgl.querySelector('.rays'); }
   if(bg==='cream'||bg==='camera'){ bgl.innerHTML='<div class="rings"></div><div class="floor"></div><div class="grain"></div>'; }
+  if(bg==='video'){ const im=document.createElement('img');im.className='vframe';bgl.appendChild(im);R.vimg=im;R.vlast=-1; }
   if(bg==='image'){ if(s.tint) bgl.classList.add('tint-'+s.tint);
     bgl.innerHTML='<div class="photo"></div><div class="tint"></div>';
     R.photo=bgl.querySelector('.photo'); R.photo.style.backgroundImage=`url("${s.image}")`; }
@@ -246,7 +259,17 @@ function build(i){
       R.sparks.push({e,at,ang:r()*Math.PI*2,sp:500+r()*900,cx:540+(r()-.5)*300,cy:parseInt(tb.style.top)+base*.6});}}
     if(name==='slash'){const e=document.createElement('div');e.className='slash';e.style.top=(parseInt(tb.style.top)+base*.55)+'px';fx.appendChild(e);R.slash={e,at};}
     if(name==='shake'){R.shake=at;}
+    if(name==='stars'){const r=rng(i*53+11);R.stars=[];for(let k=0;k<16;k++){const e=document.createElement('div');e.className='star';fx.appendChild(e);
+      R.stars.push({e,at:at+r()*0.5,x:120+r()*840,y:250+r()*1100,sz:.6+r()*1.1,ph:r()*6});}}
+    if(name==='confetti'){const r=rng(i*71+5),C=['#E3121F','#FFD43B','#2BB673','#2F80ED','#FF7AB6','#FFFFFF'];R.conf=[];
+      for(let k=0;k<90;k++){const e=document.createElement('div');e.className='conf';e.style.background=C[k%C.length];fx.appendChild(e);
+      R.conf.push({e,at:at+r()*0.8,x:r()*1080,v:420+r()*520,sw:30+r()*60,rot:r()*720-360,ph:r()*6});}}
+    if(name==='speed'){const e=document.createElement('div');e.className='speed';fx.insertBefore(e,fx.firstChild);R.speed={e,at};}
   });
+  if(s.bubble){const b=document.createElement('div');b.className='bubble';
+    b.innerHTML='<div class="shape"></div><span></span>'; b.style.top='1300px';b.querySelector('span').textContent=s.bubble;
+    if(s.bubble_y!=null)b.style.top=s.bubble_y+'px'; if(s.bubble_x!=null)b.style.left=s.bubble_x+'px';
+    fx.appendChild(b);R.bubble={e:b,at:s.bubble_t??(s.start+0.25),rot:s.bubble_rot??-8};}
   if(bg==='camera'){const rec=document.createElement('div');rec.className='rec';
     rec.innerHTML='<div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div><div class="lbl"><i></i>REC</div><div class="tc"></div>';
     root.appendChild(rec);R.tc=rec.querySelector('.tc');R.recDot=rec.querySelector('.lbl i');}
@@ -304,10 +327,12 @@ function seek(t){
   const xf=s.xfade||0, inX=xf>0&&i>0&&(t-s.start)<xf;
   if(inX) want.add(i-1);
   shown.forEach(k=>{ if(!want.has(k)) built[k].root.style.display='none'; });
-  if(inX){ draw(i-1,t); const P=built[i-1].root; P.style.display='block'; P.style.zIndex=0; P.style.opacity=1; }
-  draw(i,t); const C=built[i].root; C.style.display='block'; C.style.zIndex=1;
+  const waits=[];
+  if(inX){ waits.push(draw(i-1,t)); const P=built[i-1].root; P.style.display='block'; P.style.zIndex=0; P.style.opacity=1; }
+  waits.push(draw(i,t)); const C=built[i].root; C.style.display='block'; C.style.zIndex=1;
   C.style.opacity = inX ? easeOutCubic(clamp((t-s.start)/xf)) : 1;
   shown=want;
+  const w=waits.filter(Boolean); return w.length?Promise.all(w):undefined;
 }
 function draw(i,t){
   const R=build(i), s=R.s;
@@ -347,6 +372,20 @@ function draw(i,t){
     else { sc=1.06; const m=28*(q-0.5)*2; if(mv==='left')dx=m; if(mv==='right')dx=-m; if(mv==='up')dy=m; if(mv==='down')dy=-m; }
     R.photo.style.transformOrigin=s.focus||'50% 50%';
     R.photo.style.transform=`translate(${dx}px,${dy}px) scale(${sc})`; }
+  // مقطع فيديو: فريم مستخرج مسبقاً لكل لحظة (render.mjs يملأ s.frames)
+  let pend=null;
+  if(R.vimg&&s.frames){ const F=s.frames, lt2=(t-s.start)*(s.video_rate||1)+(s.video_from||0);
+    let k=Math.floor(lt2*F.fps); k = s.video_loop===false ? Math.min(k,F.count-1) : ((k%F.count)+F.count)%F.count;
+    if(k!==R.vlast){ R.vlast=k; R.vimg.src=F.dir+'/'+String(k+1).padStart(5,'0')+'.jpg'; pend=R.vimg.decode().catch(()=>{}); } }
+  if(R.bubble){const d=t-R.bubble.at,p=clamp(d/0.28),eb=easeOutBack(p);
+    R.bubble.e.style.opacity=d<0?0:1; R.bubble.e.style.transform=`scale(${d<0?0:0.2+0.8*eb}) rotate(${R.bubble.rot+Math.sin(t*9)*2}deg)`;}
+  if(R.stars) R.stars.forEach(st=>{const d=t-st.at; if(d<0){st.e.style.opacity=0;return;}
+    const tw=0.8+0.2*Math.sin(t*7+st.ph), p=easeOutBack(clamp(d/0.3));
+    st.e.style.opacity=clamp(d/0.1)*tw; st.e.style.transform=`translate(${st.x}px,${st.y-30*d}px) scale(${st.sz*p}) rotate(${t*90+st.ph*40}deg)`;});
+  if(R.conf) R.conf.forEach(c=>{const d=t-c.at; if(d<0){c.e.style.opacity=0;return;}
+    const y=-60+c.v*d, x=c.x+Math.sin(d*3+c.ph)*c.sw; c.e.style.opacity=y>1950?0:1;
+    c.e.style.transform=`translate(${x}px,${y}px) rotate(${c.rot*d}deg) rotateX(${d*400+c.ph*60}deg)`;});
+  if(R.speed){const d=t-R.speed.at; R.speed.e.style.opacity=d<0?0:(0.6+0.25*Math.sin(t*40)); R.speed.e.style.transform=`rotate(${Math.floor(t*12)*7}deg)`;}
   // تلاشٍ إلى الأسود في نهاية المشهد: fade=out
   if(R.fadeEl){ const f=s.fade_len||1.4; R.fadeEl.style.opacity=clamp((t-(s.end-f))/f); }
   R.embers.forEach(m=>{const y=((m.y - t*m.v)%1920+1920)%1920;
@@ -380,6 +419,7 @@ function draw(i,t){
     if(P.cards){P.cards.forEach((c,k)=>{const d2=t-(pin+k*.12),p2=easeOutBack(clamp(d2/.3));
       c.style.opacity=clamp(d2/.08);c.style.transform=`translateY(${(1-p2)*200}px) rotateY(${(k-1.5)*-8}deg)`;});}
   }
+  return pend;
 }
 window.seek=seek;
 // انتظار الخطوط وكل صور الخلفيات قبل أول فريم

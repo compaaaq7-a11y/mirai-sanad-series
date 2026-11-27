@@ -36,6 +36,17 @@ const t1 = parseFloat(opt('to', TL.duration));
 const work = fs.mkdtempSync(path.join(os.tmpdir(), 'salam-'));
 fs.cpSync(here, work, { recursive: true, filter: s => !s.endsWith('.mjs') });
 TL.scenes.forEach(s => { if (s.image && !/^(https?|file|data):/.test(s.image)) s.image = 'file://' + path.resolve(tlDir, s.image); });
+// مقاطع الفيديو: Chromium المضمّن لا يشغّل H.264، فنستخرج الفريمات مسبقاً بـ ffmpeg
+TL.scenes.forEach((s, i) => {
+  if (!s.video) return;
+  const src = path.resolve(tlDir, s.video), dir = path.join(work, `vid${i}`);
+  fs.mkdirSync(dir, { recursive: true });
+  const W = Math.round(1080 * scale / 2) * 2, H = Math.round(1920 * scale / 2) * 2;
+  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', src, '-vf',
+    `fps=${fps},scale=${W}:${H}:force_original_aspect_ratio=increase:flags=lanczos,crop=${W}:${H}`, '-q:v', '2', path.join(dir, '%05d.jpg')]);
+  s.frames = { dir: 'file://' + dir, fps, count: fs.readdirSync(dir).length };
+  s._videoSrc = src;
+});
 fs.writeFileSync(path.join(work, 'timeline.js'), 'window.TIMELINE=' + JSON.stringify(TL) + ';');
 
 const browser = await chromium.launch();
@@ -104,6 +115,17 @@ if (!flag('no-sfx') && TL.sfx !== false) {
   add(whoosh, W, TL.whoosh_volume ?? 0.35, 'w');
   add(hit, Hh, TL.hit_volume ?? 0.45, 'h');
 }
+// صوت مقاطع الفيديو (إن وجد) في موضع مشهدها
+TL.scenes.forEach(s => {
+  if (!s._videoSrc || s.video_volume === 0) return;
+  const has = execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'a', '-show_entries', 'stream=index', '-of', 'csv=p=0', s._videoSrc]).toString().trim();
+  if (!has) return;
+  const st = s.start - t0, len = s.end - s.start;
+  if (st + len <= 0 || st >= t1 - t0) return;
+  inputs.push('-i', s._videoSrc);
+  filters.push(`[${n}:a]aresample=48000,atrim=${s.video_from || 0}:${(s.video_from || 0) + len},asetpts=N/SR/TB,afade=t=out:st=${Math.max(0, len - 0.3).toFixed(2)}:d=0.3,adelay=${Math.round(Math.max(0, st) * 1000)}:all=1,volume=${s.video_volume ?? 1}[va${n}]`);
+  mixes.push(`[va${n}]`); n++;
+});
 if (TL.music) {
   let music = TL.music;
   if (music === 'calm') {

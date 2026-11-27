@@ -24,8 +24,8 @@ import argparse, json, os, re, shlex, subprocess, sys, wave, shutil, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ENGINE = os.path.join(HERE, '..', 'engine')
 
-DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black', 'image': 'white'}
-ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red', 'image': 'red'}
+DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black', 'image': 'white', 'video': 'white'}
+ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red', 'image': 'red', 'video': 'red'}
 BG_CYCLE = ['dark', 'red', 'cream', 'dark', 'red', 'camera']
 STRIP_DISPLAY = '.،,؛;:!…'
 
@@ -331,6 +331,21 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
             sc['soft'] = True
         if a.get('cut') == 'fade' or 'xfade' in a:
             sc['xfade'] = float(a.get('xfade', 0.6))
+        if a['bg'] == 'video':
+            sc['video'] = os.path.relpath(os.path.join(os.path.dirname(os.path.abspath(board)), a['video']),
+                                          os.path.dirname(os.path.abspath(out or board)))
+            for k in ('video_from', 'video_rate', 'video_volume'):
+                if k in a:
+                    sc[k] = float(a[k])
+            if a.get('video_loop') == 'no':
+                sc['video_loop'] = False
+        if 'bubble' in a:
+            sc['bubble'] = a['bubble']
+            for k in ('bubble_x', 'bubble_y', 'bubble_rot'):
+                if k in a:
+                    sc[k] = float(a[k])
+            if 'bubble_at' in a:
+                sc['bubble_t'] = sc['start'] + float(a['bubble_at'])
         for k in ('move', 'focus', 'fade', 'font'):
             if k in a:
                 sc[k] = a[k]
