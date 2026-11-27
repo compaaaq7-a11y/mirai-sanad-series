@@ -1,0 +1,223 @@
+<title>معرض خطوط سلام</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Cairo:wght@900&family=Tajawal:wght@500;800;900&family=Alexandria:wght@900&family=Rubik:wght@900&family=Changa:wght@800&family=Baloo+Bhaijaan+2:wght@800&family=Lemonada:wght@700&family=Noto+Kufi+Arabic:wght@900&family=Readex+Pro:wght@700&family=Mada:wght@900&family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Reem+Kufi:wght@700&family=Kufam:wght@900&family=Marhey:wght@700&family=Amiri:wght@700&family=Noto+Naskh+Arabic:wght@700&family=Scheherazade+New:wght@700&family=El+Messiri:wght@700&family=Markazi+Text:wght@700&family=Aref+Ruqaa:wght@700&family=Rakkas&family=Mirza:wght@700&family=Gulzar&family=Blaka&family=Jomhuria&family=Katibeh&family=Vibes&display=swap">
+<style>
+/* التخطيط: شريط تحكم لاصق في الأعلى، ثم شبكة بطاقات تعرض كل خط كما سيظهر في الفيديو (بثق ثلاثي الأبعاد على خلفيات سلام) */
+:root{
+  color-scheme:dark;
+  --bg:#0E0708; --panel:#180C0E; --panel-2:#21110F; --fg:#F3ECE6; --muted:#A8958F; --line:rgba(243,236,230,.10);
+  --red:#E3121F; --red-deep:#8A0010; --cream:#F1ECE4; --ink:#0B0405; --focus:#FFB4A8;
+  --ui:"IBM Plex Sans Arabic","Tajawal",system-ui,sans-serif;
+  --display:"Lalezar","Cairo",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:15px;line-height:1.6;direction:rtl;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+.wrap{max-width:1180px;margin:0 auto}
+header.top{padding-block:28px 8px;display:flex;flex-direction:column;gap:6px}
+header.top h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,6vw,54px);line-height:1.1;margin:0;text-wrap:balance}
+header.top h1 span{color:var(--red)}
+header.top p{margin:0;color:var(--muted);max-width:62ch}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);padding-block:12px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.field{display:flex;flex-direction:column;gap:4px;flex:1 1 240px;min-width:0}
+.field label,.grp-label{font-size:12px;color:var(--muted);letter-spacing:.02em}
+#sample{width:100%;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:500 16px var(--ui)}
+#sample:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font:500 14px var(--ui);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-inline-start:6px;border:1px solid var(--line)}
+
+section.cat{margin-block:26px 8px}
+section.cat h2{font:700 18px var(--ui);margin:0 0 4px}
+section.cat p.hint{margin:0 0 12px;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.card.picked{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+.stage{position:relative;height:190px;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:12px}
+.stage.dark{background:radial-gradient(ellipse 80% 60% at 50% 25%,#6a0b10,#1e0405 55%,var(--ink))}
+.stage.dark::after{content:"";position:absolute;left:-40%;right:-40%;bottom:-30%;height:60%;transform:perspective(300px) rotateX(70deg);
+  background-image:linear-gradient(rgba(255,40,50,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(255,40,50,.45) 1px,transparent 1px);background-size:40px 40px;
+  -webkit-mask-image:linear-gradient(transparent,#000 40%)}
+.stage.red{background:repeating-conic-gradient(from 0deg at 50% 70%,#E8202C 0deg 5deg,#C4041A 5deg 10deg)}
+.stage.cream{background:var(--cream)}
+.stage.cream::before{content:"";position:absolute;inset:0;background:repeating-radial-gradient(circle at 60% 40%,transparent 0 22px,rgba(0,0,0,.05) 22px 23px)}
+.word{position:relative;z-index:1;font-size:62px;line-height:1.25;text-align:center;white-space:nowrap;max-width:100%}
+.meta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.name{font:700 15px var(--ui);direction:ltr;text-align:left}
+.num{font:700 13px var(--ui);color:var(--muted);font-variant-numeric:tabular-nums}
+.line2{font-size:20px;line-height:1.5;color:var(--fg);overflow-wrap:anywhere}
+.use{font-size:13px;color:var(--muted)}
+.pick{background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 12px;font:500 13px var(--ui);cursor:pointer;white-space:nowrap}
+.card.picked .pick{background:var(--red);border-color:var(--red);color:#fff}
+
+.tray{position:fixed;inset:auto 0 0 0;z-index:6;background:var(--panel-2);border-top:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px calc(12px + env(safe-area-inset-bottom,0px))}
+.tray .wrap{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;justify-content:space-between}
+#chosen{min-width:0;flex:1 1 260px;font-size:14px;overflow-wrap:anywhere}
+#chosen b{color:var(--red)}
+#copy{background:var(--red);color:#fff;border:0;border-radius:10px;padding:9px 16px;font:700 14px var(--ui);cursor:pointer}
+#copy[disabled]{opacity:.45;cursor:not-allowed}
+#toast{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .15s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>معرض <span>الخطوط</span></h1>
+    <p>كل الخطوط هنا مجانية من Google Fonts، تدعم العربية كاملة، ويقدر محرك الفيديو يستخدمها. اكتب جملتك، غيّر الخلفية لترى الخط كما سيظهر في الفيديو، واضغط «اختيار» على ما يعجبك ثم انسخ الأرقام وأرسلها لي.</p>
+  </header>
+
+  <div class="bar" role="toolbar" aria-label="أدوات العرض">
+    <div class="field">
+      <label for="sample">النص المعروض</label>
+      <input id="sample" type="text" value="أبوك كبِر" maxlength="40" autocomplete="off">
+    </div>
+    <div class="field" style="flex:0 1 auto">
+      <span class="grp-label" id="bg-l">الخلفية</span>
+      <div class="seg" role="group" aria-labelledby="bg-l" id="bgs">
+        <button type="button" data-bg="dark" aria-pressed="true">أسود<span class="swatch" style="background:#2a0507"></span></button>
+        <button type="button" data-bg="red" aria-pressed="false">أحمر<span class="swatch" style="background:#E3121F"></span></button>
+        <button type="button" data-bg="cream" aria-pressed="false">كريمي<span class="swatch" style="background:#F1ECE4"></span></button>
+      </div>
+    </div>
+    <div class="field" style="flex:0 1 auto">
+      <span class="grp-label" id="fx-l">الشكل</span>
+      <div class="seg" role="group" aria-labelledby="fx-l" id="fxs">
+        <button type="button" data-fx="3d" aria-pressed="true">ثلاثي الأبعاد</button>
+        <button type="button" data-fx="flat" aria-pressed="false">مسطّح</button>
+      </div>
+    </div>
+  </div>
+
+  <main id="cats"></main>
+</div>
+
+<div class="tray" aria-live="polite">
+  <div class="wrap">
+    <div id="chosen">لم تختر أي خط بعد.</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span id="toast"></span>
+      <button type="button" id="copy" disabled>انسخ اختياري</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATS = [
+  {id:'bold', title:'عريضة للعناوين — أسلوب «ضربة»', hint:'ثقيلة وواضحة من بعيد، تتحمل البثق ثلاثي الأبعاد. الأنسب للإعلانات السريعة والريلز.', fonts:[
+    ['Lalezar',400,'الخط الحالي في السكل. عريض بزوايا ناعمة، شعبي وحماسي'],
+    ['Cairo',900,'حديث ونظيف، مقروء جداً، مناسب لكل المواضيع'],
+    ['Tajawal',900,'بسيط وأنيق، أخف حضوراً من القاهرة'],
+    ['Alexandria',900,'هندسي عريض بطابع عصري قوي'],
+    ['Rubik',900,'دائري الأطراف، ودود ومرح'],
+    ['Changa',800,'مضغوط بزوايا حادة، رياضي وتقني'],
+    ['Baloo Bhaijaan 2',800,'مستدير ممتلئ، لطيف ومناسب للأطفال والعائلة'],
+    ['Lemonada',700,'منحنٍ ومرح، لمحتوى خفيف ومبهج'],
+    ['Noto Kufi Arabic',900,'كوفي حديث متين، رسمي وواضح'],
+    ['Readex Pro',700,'عصري متوازن، مناسب للتقنية والتعليم'],
+    ['Mada',900,'نحيل الحركات وعريض الجسم، أنيق ومختلف'],
+    ['IBM Plex Sans Arabic',700,'مؤسسي هادئ، للشركات والمحتوى الجاد'],
+  ]},
+  {id:'kufi', title:'كوفية وهندسية', hint:'زوايا وخطوط مستقيمة، بطابع تراثي أو تقني حسب الخط.', fonts:[
+    ['Reem Kufi',700,'كوفي فاطمي حديث، فخم ومميز للعناوين القصيرة'],
+    ['Kufam',900,'كوفي عريض ثقيل، قوي وجريء'],
+    ['Marhey',700,'هندسي مرح بأطراف مستديرة'],
+  ]},
+  {id:'naskh', title:'نسخ كلاسيكي — للفصحى والقصص', hint:'خط الكتب والقرآن والأدب. الأنسب للنصوص الفصحى والقصص العاطفية مثل «خبز المساء».', fonts:[
+    ['Amiri',700,'نسخ كلاسيكي أصيل، أدبي ووقور'],
+    ['Noto Naskh Arabic',700,'نسخ واضح ومتوازن للقراءة'],
+    ['Scheherazade New',700,'نسخ تقليدي بحركات واضحة'],
+    ['El Messiri',700,'بين النسخ والحديث، أنيق للعناوين'],
+    ['Markazi Text',700,'نسخ صحفي معاصر، رصين وجميل'],
+  ]},
+  {id:'hand', title:'رقعة وخط يد', hint:'دفء الكتابة باليد. للعبارات العاطفية القصيرة والتواقيع.', fonts:[
+    ['Aref Ruqaa',700,'رقعة حقيقية، شخصي ودافئ'],
+    ['Rakkas',400,'عريض بروح الخط اليدوي، للعناوين المعبّرة'],
+    ['Mirza',700,'نسخ يدوي ناعم، رومانسي'],
+    ['Gulzar',400,'نستعليق فارسي الطابع، شاعري ومائل'],
+  ]},
+  {id:'deco', title:'زخرفية للعروض الخاصة', hint:'حضور قوي جداً، استخدمها لكلمة واحدة فقط وليس للنص الطويل.', fonts:[
+    ['Blaka',400,'قوطي عربي بزخرفة حادة، درامي'],
+    ['Jomhuria',400,'ضخم مضغوط، ملصقات ولافتات'],
+    ['Katibeh',400,'خط عناوين قديم الطابع، فني'],
+    ['Vibes',400,'زخرفي دائري، حيوي وشبابي'],
+  ]},
+];
+const LINE2='الشغل صار بينك وبينه مباشرة';
+const EXT={dark:['#c4c4c4','#5c5c5c'],red:['#b0000e','#4a0006'],cream:['#3a3a3a','#000']};
+const COLOR={dark:'#f6f6f6',red:'#ffffff',cream:'#1d1d1d'};
+const ACCENT={dark:'#ff2a35',red:'#111',cream:'#E3121F'};
+
+let bg='dark', fx='3d', picked=new Set();
+try{ picked=new Set(JSON.parse(localStorage.getItem('salam-fonts')||'[]')); }catch(e){}
+
+function mix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));const A=p(a),B=p(b);return `rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`}
+function shadow(){ if(fx==='flat') return 'none'; const [a,b]=EXT[bg],o=[];for(let i=1;i<=7;i++)o.push(`0 ${i}px 0 ${mix(a,b,i/7)}`);o.push('0 12px 18px rgba(0,0,0,.45)');return o.join(',') }
+
+let n=0; const all=[];
+const main=document.getElementById('cats');
+CATS.forEach(c=>{
+  const sec=document.createElement('section'); sec.className='cat';
+  sec.innerHTML=`<h2>${c.title}</h2><p class="hint">${c.hint}</p><div class="grid"></div>`;
+  const grid=sec.querySelector('.grid');
+  c.fonts.forEach(([fam,wt,use])=>{
+    n++; const id=n;
+    const card=document.createElement('article'); card.className='card'; card.dataset.id=id;
+    card.innerHTML=`<div class="stage"><div class="word"></div></div>
+      <div class="meta">
+        <div class="row"><span class="name">${fam}</span><span class="num">#${id}</span></div>
+        <div class="line2"></div>
+        <div class="row"><span class="use">${use}</span><button type="button" class="pick" id="pick-${id}" aria-pressed="false">اختيار</button></div>
+      </div>`;
+    const ff=`"${fam}", system-ui, sans-serif`;
+    card.querySelector('.word').style.cssText+=`font-family:${ff};font-weight:${wt}`;
+    card.querySelector('.line2').style.cssText+=`font-family:${ff};font-weight:${wt}`;
+    card.querySelector('.line2').textContent=LINE2;
+    card.querySelector('.pick').addEventListener('click',()=>{ picked.has(id)?picked.delete(id):picked.add(id); save(); paintPicks(); });
+    grid.appendChild(card); all.push({id,fam,card});
+  });
+  main.appendChild(sec);
+});
+
+function fit(el){ el.style.fontSize='62px'; const max=el.parentElement.clientWidth-24; if(el.scrollWidth>max) el.style.fontSize=Math.max(28,Math.floor(62*max/el.scrollWidth))+'px'; }
+function paint(){
+  const txt=document.getElementById('sample').value.trim()||'أبوك كبِر';
+  const sh=shadow();
+  all.forEach(({card})=>{
+    const st=card.querySelector('.stage'); st.className='stage '+bg;
+    const w=card.querySelector('.word');
+    // الكلمة الأخيرة بلون التمييز كما في الفيديو
+    const parts=txt.split(/\s+/); const last=parts.pop();
+    w.innerHTML=(parts.length?`<span>${esc(parts.join(' '))} </span>`:'')+`<span style="color:${ACCENT[bg]}">${esc(last)}</span>`;
+    w.style.color=COLOR[bg]; w.style.textShadow=sh; fit(w);
+  });
+}
+function esc(s){return s.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function save(){ try{localStorage.setItem('salam-fonts',JSON.stringify([...picked]))}catch(e){} }
+function summary(){ return all.filter(f=>picked.has(f.id)).map(f=>`#${f.id} ${f.fam}`) }
+function paintPicks(){
+  all.forEach(({id,card})=>{const on=picked.has(id);card.classList.toggle('picked',on);const b=card.querySelector('.pick');b.textContent=on?'مختار ✓':'اختيار';b.setAttribute('aria-pressed',on)});
+  const s=summary(); const el=document.getElementById('chosen');
+  el.innerHTML=s.length?`اختيارك (${s.length}): <b>${s.map(esc).join('، ')}</b>`:'لم تختر أي خط بعد.';
+  document.getElementById('copy').disabled=!s.length;
+}
+document.getElementById('sample').addEventListener('input',paint);
+document.querySelectorAll('#bgs button').forEach(b=>b.addEventListener('click',()=>{bg=b.dataset.bg;document.querySelectorAll('#bgs button').forEach(x=>x.setAttribute('aria-pressed',x===b));paint();}));
+document.querySelectorAll('#fxs button').forEach(b=>b.addEventListener('click',()=>{fx=b.dataset.fx;document.querySelectorAll('#fxs button').forEach(x=>x.setAttribute('aria-pressed',x===b));paint();}));
+document.getElementById('copy').addEventListener('click',()=>{
+  const text='الخطوط التي اخترتها: '+summary().join('، ');
+  const t=document.getElementById('toast');
+  navigator.clipboard.writeText(text).then(()=>{t.textContent='نُسخ. الصقه في المحادثة.'},()=>{t.textContent=text});
+});
+addEventListener('resize',()=>all.forEach(({card})=>fit(card.querySelector('.word'))));
+document.fonts.ready.then(paint);
+paint(); paintPicks();
+</script>
