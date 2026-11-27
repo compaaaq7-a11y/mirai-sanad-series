@@ -382,6 +382,9 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
           'align': method, 'scenes': out_scenes}
     if 'font' in glob:
         tl['font'] = glob['font']
+    for k in ('theme', 'accent', 'cream'):   # سمة الألوان حسب نوع الإعلان، أو لون علامة المشتري
+        if k in glob:
+            tl[k] = glob[k]
     for k in ('size', 'bubble_scale'):   # حجم النص الأساسي (الافتراضي 165) وحجم فقاعات الكوميكس للفيديو كله
         if k in glob:
             tl[k] = float(glob[k])

@@ -31,6 +31,8 @@
 
 :root{
   --red:#E3121F; --red-deep:#A8000F; --cream:#F1ECE4; --ink:#0B0405;
+  /* سمة الألوان (يضبطها المحرك من TL.theme أو TL.accent) */
+  --a1:#E3121F; --a2:#A8000F; --a3:#C4041A; --glow:#6a0b10; --glow2:#2a0507;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:#000;overflow:hidden}
@@ -39,20 +41,20 @@ html,body{background:#000;overflow:hidden}
 .layer{position:absolute;inset:0}
 
 /* ---------- الخلفيات ---------- */
-.bg-dark{background:radial-gradient(ellipse 70% 38% at 50% 30%,#6a0b10 0%,#2a0507 45%,#0B0405 80%)}
+.bg-dark{background:radial-gradient(ellipse 70% 38% at 50% 30%,var(--glow) 0%,var(--glow2) 45%,var(--ink) 80%)}
 .bg-dark .floor{position:absolute;left:-50%;right:-50%;bottom:-8%;height:52%;
   transform:perspective(700px) rotateX(72deg);transform-origin:50% 0;
-  background-image:linear-gradient(rgba(255,40,50,.55) 2px,transparent 2px),linear-gradient(90deg,rgba(255,40,50,.55) 2px,transparent 2px);
+  background-image:linear-gradient(color-mix(in srgb,var(--a1) 60%,transparent) 2px,transparent 2px),linear-gradient(90deg,color-mix(in srgb,var(--a1) 60%,transparent) 2px,transparent 2px);
   background-size:150px 150px;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 35%,#000 100%)}
-.bg-dark .horizon{position:absolute;left:0;right:0;top:57%;height:6px;background:rgba(255,40,50,.35);filter:blur(6px)}
+.bg-dark .horizon{position:absolute;left:0;right:0;top:57%;height:6px;background:color-mix(in srgb,var(--a1) 40%,transparent);filter:blur(6px)}
 
-.bg-red{background:#C8051A}
+.bg-red{background:var(--a3)}
 .bg-red .rays{position:absolute;left:-60%;top:-40%;width:220%;height:180%;
-  background:repeating-conic-gradient(from 0deg at 50% 62%,#E8202C 0deg 5deg,#C4041A 5deg 10deg)}
+  background:repeating-conic-gradient(from 0deg at 50% 62%,var(--a1) 0deg 5deg,var(--a3) 5deg 10deg)}
 .bg-red .glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 30% at 50% 60%,rgba(255,170,170,.55),transparent 70%)}
 .bg-red .floor{position:absolute;left:0;right:0;bottom:0;height:42%;
-  background:linear-gradient(to bottom,rgba(255,120,130,.75),#E03040 30%,#C40418 100%)}
+  background:linear-gradient(to bottom,color-mix(in srgb,var(--a1) 60%,white),var(--a1) 30%,var(--a3) 100%)}
 
 .bg-image{background:var(--ink)}
 .bg-image .photo{position:absolute;inset:0;background-size:cover;background-position:50% 40%}
@@ -76,7 +78,7 @@ html,body{background:#000;overflow:hidden}
 .rec .bl{left:84px;bottom:180px;border-bottom-width:6px;border-left-width:6px}
 .rec .br{right:84px;bottom:180px;border-bottom-width:6px;border-right-width:6px}
 .rec .lbl{position:absolute;left:120px;top:282px;direction:ltr}
-.rec .lbl i{display:inline-block;width:26px;height:26px;border-radius:50%;background:#E3121F;margin-right:14px;vertical-align:4px}
+.rec .lbl i{display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--a1);margin-right:14px;vertical-align:4px}
 .rec .tc{position:absolute;right:120px;top:282px;direction:ltr}
 
 .ember{position:absolute;width:6px;height:6px;border-radius:50%;background:#ff8a6a;box-shadow:0 0 10px 3px rgba(255,80,40,.7)}
@@ -90,8 +92,8 @@ html,body{background:#000;overflow:hidden}
 .w::after{content:attr(data-t);position:absolute;inset:0;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
 .c-white{color:#d8d8d8}
 .c-white::after{background-image:linear-gradient(#ffffff 0%,#f2f2f2 46%,#a9a9a9 54%,#ececec 100%)}
-.c-red{color:#d40f1d}
-.c-red::after{background-image:linear-gradient(#ff5b5b 0%,#ef1b28 46%,#b3000f 55%,#ff3a44 100%)}
+.c-red{color:var(--a1)}
+.c-red::after{background-image:linear-gradient(color-mix(in srgb,var(--a1) 65%,white) 0%,var(--a1) 46%,var(--a2) 55%,color-mix(in srgb,var(--a1) 85%,white) 100%)}
 .c-black{color:#202020}
 .c-black::after{background-image:linear-gradient(#5a5a5a 0%,#2a2a2a 46%,#0a0a0a 54%,#3a3a3a 100%)}
 .c-silver{color:#bdbdbd}
@@ -99,7 +101,7 @@ html,body{background:#000;overflow:hidden}
 
 /* ---------- المؤثرات ---------- */
 .ring{position:absolute;left:50%;width:720px;height:150px;margin-left:-360px;border-radius:50%;
-  border:10px solid #ff2a35;box-shadow:0 0 40px 10px rgba(255,30,40,.8),inset 0 0 30px rgba(255,60,60,.8)}
+  border:10px solid var(--a1);box-shadow:0 0 40px 10px color-mix(in srgb,var(--a1) 80%,transparent),inset 0 0 30px color-mix(in srgb,var(--a1) 80%,transparent)}
 .spark{position:absolute;width:5px;height:26px;border-radius:3px;background:linear-gradient(#fff3c0,#ff7a1a);box-shadow:0 0 12px #ff6a00}
 .bubble{position:absolute;left:50%;top:50%;width:520px;height:340px;margin:-170px 0 0 -260px;display:flex;align-items:center;justify-content:center}
 .bubble .shape{position:absolute;inset:0;background:#111;
@@ -115,7 +117,7 @@ html,body{background:#000;overflow:hidden}
 /* الصفحة RTL: العناصر المتحركة بـ translate تحتاج نقطة بداية صريحة من اليسار */
 .star,.conf,.spark,.ember{left:0;top:0}
 .vframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.slash{position:absolute;left:0;height:6px;width:100%;background:#ff2a35;box-shadow:0 0 24px 8px rgba(255,30,40,.85);transform-origin:100% 50%}
+.slash{position:absolute;left:0;height:6px;width:100%;background:var(--a1);box-shadow:0 0 24px 8px color-mix(in srgb,var(--a1) 85%,transparent);transform-origin:100% 50%}
 .flash{position:absolute;inset:0;background:#fff;pointer-events:none}
 
 /* ---------- العناصر (props) ---------- */
@@ -180,10 +182,27 @@ const easeInOut=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
 const easeOutBack=p=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
 function rng(seed){let s=seed>>>0||1;return()=>((s=Math.imul(s^(s>>>15),2246822519)+0x9e3779b9>>>0)%100000)/100000}
 
+/* سمات الألوان حسب نوع الإعلان: a1 لون التمييز، a2 ظله، a3 خلفية الأشعة، glow توهج الخلفية الداكنة، cream الخلفية الفاتحة */
+const THEMES={
+  classic:{a1:'#E3121F',a2:'#A8000F',a3:'#C4041A',glow:'#6a0b10',cream:'#F1ECE4'},
+  food:   {a1:'#FF7A00',a2:'#B34700',a3:'#E86A00',glow:'#6b3205',cream:'#FFF3E2'},
+  luxury: {a1:'#E2B84E',a2:'#8A6418',a3:'#B8892B',glow:'#4a3510',cream:'#F4EEE2'},
+  fashion:{a1:'#FF3D8B',a2:'#A3104F',a3:'#E0206F',glow:'#5e0a32',cream:'#FFF0F6'},
+  nature: {a1:'#22B573',a2:'#0E6B40',a3:'#18965E',glow:'#0b3d24',cream:'#EEF8F0'},
+  tech:   {a1:'#2F80ED',a2:'#123E8C',a3:'#1F66CC',glow:'#0a2452',cream:'#EEF3FB'},
+};
+function hexMix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));const A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
+const TH=Object.assign({},THEMES[(TL.theme||'classic').toLowerCase()]||THEMES.classic);
+if(TL.accent){ const a=TL.accent; Object.assign(TH,{a1:a,a2:hexMix(a,'#000000',0.45),a3:hexMix(a,'#000000',0.15),glow:hexMix(a,'#000000',0.6)}); }
+if(TL.cream) TH.cream=TL.cream;
+{ const st=document.documentElement.style;
+  st.setProperty('--a1',TH.a1); st.setProperty('--a2',TH.a2); st.setProperty('--a3',TH.a3);
+  st.setProperty('--glow',TH.glow); st.setProperty('--glow2',hexMix(TH.glow,'#0B0405',0.6)); st.setProperty('--cream',TH.cream); }
+
 /* ظل البثق ثلاثي الأبعاد حسب اللون */
 const EXT = {
   white:['#c4c4c4','#5c5c5c'], silver:['#a8a8a8','#4a4a4a'],
-  red:['#b0000e','#4a0006'], black:['#111','#000']
+  red:[TH.a2,hexMix(TH.a2,'#000000',0.6)], black:['#111','#000']
 };
 function extrude(color, px){
   const [a,b]=EXT[color]||EXT.white, n=Math.max(6,Math.round(px/11)), out=[];

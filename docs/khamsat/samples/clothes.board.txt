@@ -1,5 +1,5 @@
 # مثال لمعرض خمسات: متجر ملابس — الاسم خيالي
-@ fps=30 font=scheherazade size=165 pace=1.6 music=auto music_volume=0.45
+@ fps=30 theme=fashion font=scheherazade size=165 pace=1.6 music=auto music_volume=0.45
 [bg=red fx=ring,sparks] +*تخفيضات!*
 [bg=dark] أزياء / +*نور*
 [bg=cream fx=shake] على كل / +*القطع*
