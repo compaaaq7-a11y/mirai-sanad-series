@@ -1,0 +1,13 @@
+# حلقة كرتون #5: «سند والتنين» — تنين صغير يحرق سنداً بعطسة، يهرب ثم يعود ويصادقه. بلا كتابة.
+# الدرس: لا تحكم على أحد من شكله؛ الصداقة تبدأ بخطوة. (who = سند، who2 = التنين kind=dragon)
+@ fps=30 music=playful music_volume=0.5 whoosh_volume=0.25 hit_volume=0.25
+
+[bg=notebook ground=1660 dur=3 who="x=60>330 face=happy pose=walk ink=blue big=1.5" draw="cave@840,1555:1.4|smoke@860,1150:0.8~0.8"]
+[bg=notebook ground=1660 dur=2.8 who="x=330 face=happy>shock pose=stand ink=blue big=1.5" who2="x=930>760 face=happy pose=idle kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4=|smoke@860,1150:0.8="]
+[bg=notebook ground=1660 dur=2.6 fx=shake who="x=330 face=shock>burnt pose=stand ink=blue big=1.5" who2="x=760 face=sneeze pose=fire fire=170 kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4=|smoke@330,1020:1~1.3"]
+[bg=notebook ground=1660 dur=2.4 who="x=330>-200 face=burnt pose=run ink=blue big=1.5" who2="x=760 face=shock>sad pose=idle kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4="]
+[bg=notebook ground=1660 dur=3.2 who="x=-150>200 face=sad pose=walk ink=blue big=1.5" who2="x=760 face=cry pose=idle kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4="]
+[bg=notebook ground=1660 dur=3.2 who="x=200>380 face=happy pose=offer hold=apple ink=blue big=1.5" who2="x=760 face=cry>shock>happy pose=idle kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4=" fx=stars]
+[bg=notebook ground=1660 dur=3 who="x=300 face=happy>shock>laugh pose=stand ink=blue big=1.5" who2="x=760 face=happy pose=fire fire=90 kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4=|campfire@450,1600:1.1~1.4!"]
+[bg=notebook ground=1660 dur=3.4 who="x=250 face=happy pose=eat hold=apple ink=blue big=1.5" who2="x=760 face=laugh pose=idle kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4=|campfire@450,1600:1.1=!|heart@560,1050:0.9~0.8"]
+[bg=notebook ground=1660 dur=3.8 fx=stars who="x=300 face=laugh pose=wave ink=blue big=1.5" who2="x=760 y=1660>1380>1300 face=laugh pose=fly kind=dragon dir=-1 big=1.1 ink=blue" draw="cave@840,1555:1.4=|campfire@450,1600:1.1=!|star@200,640:0.7~0.6|star@880,560:0.7~0.9"]

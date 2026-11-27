@@ -73,6 +73,9 @@
     wind: c => `<path class="dw" d="M-150 -40 H60 C110 -40 110 -100 70 -100 C40 -100 40 -70 60 -65 M-150 10 H120 C170 10 170 70 125 70 C95 70 95 40 115 38 M-130 60 H20" stroke="#74c0fc" stroke-width="10" fill="none"/>`,
     sunface: c => `<circle class="dw" r="80" fill="#FFC531" stroke="#e67700"/>` + [...Array(12)].map((_, k) => { const a = k * 30 * D2R; return `<line class="dw" x1="${Math.cos(a) * 100}" y1="${Math.sin(a) * 100}" x2="${Math.cos(a) * 140}" y2="${Math.sin(a) * 140}" stroke="#F29B0D"/>`; }).join('') +
       `<path class="dw" d="M-38 -18 Q-26 -32 -14 -18 M14 -18 Q26 -32 38 -18 M-34 18 Q0 50 34 18" stroke="#9a4d00" fill="none"/><circle class="dw" cx="-48" cy="12" r="12" fill="#ff8fab" stroke="none"/><circle class="dw" cx="48" cy="12" r="12" fill="#ff8fab" stroke="none"/>`,
+    cave: c => `<path class="dw" d="M-260 110 C-270 -60 -170 -210 0 -215 C170 -210 270 -60 260 110Z" fill="#a8a29e" stroke="#57534e"/><path class="dw" d="M-140 110 C-150 0 -90 -100 0 -105 C90 -100 150 0 140 110Z" fill="#292524" stroke="#1c1917"/><path class="dw" d="M-200 -60 l40 -20 M150 -120 l45 10 M180 20 l40 0 M-230 40 l30 10" stroke="#57534e" fill="none"/>`,
+    smoke: c => `<circle class="dw" cx="-30" cy="20" r="34" fill="#d6d3d1" stroke="#78716c"/><circle class="dw" cx="20" cy="-10" r="40" fill="#e7e5e4" stroke="#78716c"/><circle class="dw" cx="-10" cy="-55" r="30" fill="#f5f5f4" stroke="#78716c"/>`,
+    campfire: c => `<path class="dw" d="M-90 60 L80 20 M-80 20 L90 60" stroke="#7a4b24" stroke-width="22" fill="none"/><path class="dw" d="M0 30 C-60 10 -50 -60 -20 -90 C-20 -50 0 -50 5 -70 C30 -40 55 -30 45 10 C40 30 20 35 0 30Z" fill="#ff922b" stroke="#e8590c"/><path class="dw" d="M0 28 C-25 15 -20 -20 -5 -40 C0 -20 15 -15 20 0 C22 18 12 26 0 28Z" fill="#ffd43b" stroke="#fab005"/>`,
     ball: c => `<circle class="dw" r="60" fill="#ff8c42" stroke="${c}"/><path class="dw" d="M-60 0 C-20 -25 20 -25 60 0 M0 -60 C25 -20 25 20 0 60" stroke="${c}" fill="none"/>`,
     box: c => `<path class="dw" d="M-70 -50 H70 V60 H-70Z" fill="#d9a76a" stroke="#7a4b24"/><path class="dw" d="M-70 -50 L-50 -75 H90 L70 -50 M70 60 L90 35 V-75" fill="#e8c08c" stroke="#7a4b24"/><path class="dw" d="M-15 -50 V60" stroke="#7a4b24" fill="none"/>`,
     exclaim: c => `<path class="dw" d="M0 -80 V30" stroke="#e63946" fill="none"/><circle class="dw" cy="65" r="10" fill="#e63946" stroke="#e63946"/>`,
@@ -233,6 +236,53 @@
   // موضع اليد اليمنى لحظة الإفلات في الرمي (لنقطة بداية طيران الشيء)
   function releaseHand(c) { const r = charSVG(c, 0, 'happy', 'throw', false, 0.5); return r.hand; }
 
+  /* ---------------- التنين (شخصية: kind=dragon) ----------------
+     الأصل عند القدمين على الأرض، الوجه نحو +x. الوضعيات: idle peek fire fly. الوجوه: happy sad cry shock laugh sneeze */
+  function dragonSVG(c, t, faceKind, poseKind, ph) {
+    const ink = INK[c.ink] || c.ink || INK.pencil, G = '#7bd389', GD = '#2f9e44', BEL = '#eaf7c9';
+    const fly = poseKind === 'fly', fire = poseKind === 'fire';
+    const bob = fly ? Math.sin(t * 6) * 18 : Math.sin(t * 2.5) * 3;
+    const flap = fly ? Math.sin(t * 12) * 32 : Math.sin(t * 3) * 8;
+    const legs = fly ? `<path d="M-40 -45 q-6 22 10 26 M40 -45 q-6 22 10 26" stroke="${GD}" stroke-width="16" fill="none" stroke-linecap="round"/>`
+      : `<path d="M-45 -40 V0 M45 -40 V0" stroke="${GD}" stroke-width="22" stroke-linecap="round"/><path d="M-62 0 H-28 M28 0 H62" stroke="${ink}" stroke-width="7" stroke-linecap="round"/>`;
+    const wing = `<g transform="rotate(${(-flap).toFixed(1)} -20 -170)"><path d="M-20 -170 C-60 -280 -170 -300 -210 -250 C-170 -240 -160 -215 -150 -200 C-120 -215 -95 -195 -85 -175 C-60 -190 -40 -180 -20 -170Z" fill="#a9e34b" stroke="${GD}" stroke-width="6"/></g>`;
+    const tail = `<path d="M-100 -90 C-180 -70 -230 -30 -250 -100" stroke="${GD}" stroke-width="30" fill="none" stroke-linecap="round"/><path d="M-268 -110 L-240 -150 L-228 -98Z" fill="#fab005" stroke="${ink}" stroke-width="5"/>`;
+    const spikes = [-60, -20, 20].map(x => `<path d="M${x - 14} ${-188 + Math.abs(x) * 0.25} l14 -28 l14 28Z" fill="#fab005" stroke="${ink}" stroke-width="4"/>`).join('');
+    const blink = Math.floor(t * 10) % 41 === 0;
+    let eyes, mouth = '', extra = '';
+    const E = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="${ink}" stroke-width="5"/>`;
+    switch (faceKind) {
+      case 'shock': eyes = E(122, -250, 22) + `<circle cx="126" cy="-250" r="8" fill="${ink}"/>`; mouth = `<ellipse cx="200" cy="-205" rx="14" ry="18" fill="#7a1f1f" stroke="${ink}" stroke-width="4"/>`; break;
+      case 'laugh': eyes = `<path d="M104 -250 q16 -18 32 0" stroke="${ink}" stroke-width="6" fill="none"/>`; mouth = `<path d="M165 -215 Q200 ${-170 + Math.sin(t * 25) * 6} 228 -210Z" fill="#7a1f1f" stroke="${ink}" stroke-width="4"/>`; break;
+      case 'sneeze': eyes = `<path d="M104 -262 l26 12 l-26 12" stroke="${ink}" stroke-width="6" fill="none"/>`; mouth = `<path d="M170 -212 Q205 -195 230 -214" stroke="${ink}" stroke-width="6" fill="#7a1f1f"/>`; break;
+      case 'sad': case 'cry':
+        eyes = (blink ? `<path d="M108 -248 h28" stroke="${ink}" stroke-width="5"/>` : E(122, -248, 15) + `<circle cx="124" cy="-244" r="6" fill="${ink}"/>`) + `<path d="M100 -275 L140 -266" stroke="${ink}" stroke-width="5"/>`;
+        mouth = `<path d="M172 -196 Q195 -214 218 -196" stroke="${ink}" stroke-width="5" fill="none"/>`;
+        if (faceKind === 'cry') { const y = -232 + ((t * 110) % 70); extra = `<path d="M120 ${y} q-8 13 0 18 q8 -5 0 -18Z M132 ${y + 30} q-7 11 0 15 q7 -4 0 -15Z" fill="#3a86ff"/>`; }
+        break;
+      default: eyes = blink ? `<path d="M108 -248 h28" stroke="${ink}" stroke-width="5"/>` : E(122, -248, 16) + `<circle cx="126" cy="-246" r="7" fill="${ink}"/><circle cx="129" cy="-250" r="2.5" fill="#fff"/>`;
+        mouth = `<path d="M172 -212 Q198 -192 224 -210" stroke="${ink}" stroke-width="5" fill="none"/>`;
+    }
+    let flame = '';
+    if (fire || faceKind === 'sneeze') {
+      const L = (c.fire || 260) * (fire ? 1 : 0), f1 = Math.sin(t * 30) * 12, f2 = Math.cos(t * 23) * 10;
+      if (L > 0) flame = `<path d="M228 -212 C${260 + L * 0.3} ${-270 + f1} ${228 + L * 0.75} ${-280 + f2} ${228 + L} ${-215 + f1} C${228 + L * 0.75} ${-150 + f2} ${260 + L * 0.3} ${-160 - f1} 228 -212Z" fill="#ff922b" stroke="#e8590c" stroke-width="5"/>
+        <path d="M232 -212 C${255 + L * 0.25} ${-245 + f2} ${232 + L * 0.55} ${-250 - f1} ${232 + L * 0.72} ${-214 + f2} C${232 + L * 0.55} ${-180 + f1} ${255 + L * 0.25} ${-185} 232 -212Z" fill="#ffd43b"/>`;
+    }
+    const svg = `<g transform="translate(0 ${(fly ? bob - 60 : bob * 0.3).toFixed(1)})" stroke-linejoin="round">
+      ${tail}${wing}${legs}
+      <ellipse cx="0" cy="-110" rx="112" ry="86" fill="${G}" stroke="${ink}" stroke-width="7"/>
+      <ellipse cx="28" cy="-96" rx="60" ry="56" fill="${BEL}" stroke="${GD}" stroke-width="4"/>${spikes}
+      <path d="M60 -150 C80 -190 95 -205 110 -210" stroke="${G}" stroke-width="60" stroke-linecap="round"/>
+      <circle cx="122" cy="-238" r="68" fill="${G}" stroke="${ink}" stroke-width="7"/>
+      <ellipse cx="190" cy="-214" rx="54" ry="36" fill="${G}" stroke="${ink}" stroke-width="7"/>
+      <circle cx="210" cy="-226" r="5" fill="${ink}"/><circle cx="226" cy="-222" r="5" fill="${ink}"/>
+      <path d="M92 -296 l-10 -40 l26 30 M136 -302 l6 -42 l14 38" fill="#fab005" stroke="${ink}" stroke-width="5"/>
+      <circle cx="150" cy="-200" r="13" fill="#ff8fab" opacity=".7"/>
+      ${eyes}${mouth}${extra}${flame}</g>`;
+    return { svg, head: { x: 122, y: -238 } };
+  }
+
   /* ---------------- بناء المشهد ---------------- */
   function build(s, cam, i) {
     const d = s.doodle || {}, U = ++UID;
@@ -327,7 +377,7 @@
       }
       const spin = sv ? ` rotate(${sv.toFixed(1)} 0 ${pivot.toFixed(0)})` : '';
       o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${ty.toFixed(1)})${rot}${spin} scale(${(dir * big).toFixed(2)} ${big})`);
-      const r = charSVG(c, t + k * 0.37, fk, pk, moving, prog);
+      const r = c.kind === 'dragon' ? dragonSVG(c, t + k * 0.37, fk, pk, prog) : charSVG(c, t + k * 0.37, fk, pk, moving, prog);
       o.g.innerHTML = r.svg;
       // الرمي: بعد لحظة الإفلات يطير الشيء في قوس نحو الهدف
       if (pk === 'throw' && c.hold && ICONS[c.hold]) {

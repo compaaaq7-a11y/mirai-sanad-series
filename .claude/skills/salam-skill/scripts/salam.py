@@ -450,7 +450,7 @@ def make_doodle(a):
                     c['xs'] = [float(v_) for v_ in x]     # مسار بنقاط مفتاحية
             elif k in ('y', 'rot', 'spin') and '>' in v:  # y=1660>900 صعود، spin=0>720 تدحرج
                 c[{'y': 'ys', 'rot': 'rots', 'spin': 'spins'}[k]] = [float(v_) for v_ in v.split('>')]
-            elif k in ('y', 'big', 'dir', 'walkEnd', 'rot', 'hold_s', 'bite'):
+            elif k in ('y', 'big', 'dir', 'walkEnd', 'rot', 'hold_s', 'bite', 'fire'):
                 c[k] = float(v)
             else:
                 c[k] = v   # face, pose, ink, shirt
