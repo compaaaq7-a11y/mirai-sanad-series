@@ -1,0 +1,9 @@
+# مثال لمعرض خمسات: متجر عطور — الاسم خيالي
+@ fps=30 font=scheherazade size=165 pace=1.6 music=auto music_volume=0.45
+[bg=dark fx=ring,sparks] عطرك / +*يسبقك*
+[bg=cream] عطور / +*ريحان*
+[bg=red fx=shake] عود / +*ملكي*
+[bg=dark] مسك / وورد / +*طائفي*
+[bg=camera fx=stars] ثبات / +*24 ساعة*
+[bg=red] التوصيل / +*مجاني*
+[bg=dark fx=confetti] اطلب / +*الآن*

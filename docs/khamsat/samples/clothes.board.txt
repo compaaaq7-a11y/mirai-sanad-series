@@ -1,0 +1,9 @@
+# مثال لمعرض خمسات: متجر ملابس — الاسم خيالي
+@ fps=30 font=scheherazade size=165 pace=1.6 music=auto music_volume=0.45
+[bg=red fx=ring,sparks] +*تخفيضات!*
+[bg=dark] أزياء / +*نور*
+[bg=cream fx=shake] على كل / +*القطع*
+[bg=red fx=stars] +*50٪*
+[bg=dark fx=slash] لفترة / +*محدودة*
+[bg=camera] لا / +*تفوّتها!*
+[bg=dark fx=confetti] زورونا / +*اليوم*
