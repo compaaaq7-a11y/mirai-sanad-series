@@ -34,7 +34,6 @@
       "face": "happy",
       "pose": "walk",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -79,7 +78,6 @@
       "face": "happy",
       "pose": "bend",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -131,7 +129,6 @@
       "face": "happy>shock",
       "pose": "stand",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -189,7 +186,6 @@
       "face": "angry",
       "pose": "think",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -242,7 +238,6 @@
       "face": "angry",
       "pose": "bend",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -287,7 +282,6 @@
       "face": "cry",
       "pose": "stand",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -332,7 +326,6 @@
       "face": "sad>shock",
       "pose": "think",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -389,7 +382,6 @@
       "face": "happy",
       "pose": "bend",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -457,7 +449,6 @@
       "face": "star>laugh",
       "pose": "cheer",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],

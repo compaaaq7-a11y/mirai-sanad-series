@@ -35,7 +35,6 @@
       "face": "sleep",
       "pose": "stand",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6,
       "x0": 900.0,
       "x1": 900.0,
@@ -100,7 +99,6 @@
       "face": "shock",
       "pose": "stand",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6,
       "x0": 900.0,
       "x1": 900.0,
@@ -176,7 +174,6 @@
       "face": "cry",
       "pose": "shiver",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -229,7 +226,6 @@
       "face": "laugh",
       "pose": "stand",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6,
       "x0": 900.0,
       "x1": 900.0,
@@ -285,7 +281,6 @@
       "face": "sad>shock",
       "pose": "think",
       "ink": "blue",
-      "shirt": "#2b4cd6",
       "big": 1.6
      }
     ],
@@ -342,7 +337,6 @@
       "face": "happy",
       "pose": "wave",
       "ink": "blue",
-      "shirt": "#c1121f",
       "scarf": "1",
       "big": 1.6
      }
@@ -385,7 +379,6 @@
       "face": "happy",
       "pose": "point",
       "ink": "blue",
-      "shirt": "#c1121f",
       "scarf": "1",
       "big": 1.6
      }
@@ -434,7 +427,6 @@
       "face": "laugh",
       "pose": "dance",
       "ink": "blue",
-      "shirt": "#c1121f",
       "scarf": "1",
       "big": 1.6
      }
@@ -493,7 +485,6 @@
       "face": "star>laugh",
       "pose": "cheer",
       "ink": "blue",
-      "shirt": "#c1121f",
       "scarf": "1",
       "big": 1.6
      }
