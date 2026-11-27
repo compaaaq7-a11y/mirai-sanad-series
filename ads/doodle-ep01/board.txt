@@ -1,0 +1,13 @@
+# حلقة كرتون مرسوم باليد #1: «سند والنبتة المستعجلة» — درس الصبر (قصة الفلاح المستعجل، حكمة قديمة)
+# الأسلوب: reference/doodle-cartoon.md — حبر أزرق على ورقة دفتر، شخصية بقميص أزرق، رسومات تُرسم أمامنا.
+@ fps=30 font=scheherazade music=playful music_volume=0.55 whoosh_volume=0.2 hit_volume=0.25 enter=gentle
+
+[bg=notebook ground=1660 dur=3 who="x=120>440 face=happy pose=walk ink=blue shirt=#2b4cd6 big=1.6" draw="sun@900,360:0.9"] هذا / +*سند*
+[bg=notebook ground=1660 dur=3 who="x=440 face=happy pose=bend ink=blue shirt=#2b4cd6 big=1.6" draw="seed@720,1640:1.8~0.7|sun@900,360:0.9"] زرع / +*بذرة*
+[bg=notebook ground=1660 dur=3 who="x=440 face=happy>shock pose=stand ink=blue shirt=#2b4cd6 big=1.6" draw="sprout@720,1570:1.6~0.3+|sun@900,360:0.9"] وطلعت / +*نبتة!*
+[bg=notebook ground=1660 dur=3.2 who="x=440 face=angry pose=think ink=blue shirt=#2b4cd6 big=1.6" think="flower|tree|flower" draw="sprout@720,1570:1.6"] بس هو / +*مستعجل*
+[bg=notebook ground=1660 dur=2.8 who="x=440 face=angry pose=bend ink=blue shirt=#2b4cd6 big=1.6" draw="sprout@720,1470:2.1" fx=shake] صار / +*يسحبها!*
+[bg=notebook ground=1660 dur=3 who="x=440 face=cry pose=stand ink=blue shirt=#2b4cd6 big=1.6" draw="wilted@720,1470:1.9"] و… / +*ذبلت!*
+[bg=notebook ground=1660 dur=3 who="x=440 face=sad>shock pose=think ink=blue shirt=#2b4cd6 big=1.6" draw="bulb@800,640:1.3~0.9|wilted@720,1470:1.9"] فهم / +*الدرس*
+[bg=notebook ground=1660 dur=3.5 who="x=400 face=happy pose=bend ink=blue shirt=#2b4cd6 big=1.6" draw="water@200,1570:1.1|sun@900,360:0.9~0.4|flower@760,1400:2.4~1.4+"] ماء… شمس… / +*وصبر*
+[bg=notebook ground=1660 dur=3.8 who="x=400 face=star>laugh pose=cheer ink=blue shirt=#2b4cd6 big=1.6" draw="flower@760,1400:2.4|heart@200,620:1~0.6|star@880,560:0.9~0.9" fx=stars] +*الصبر* / مفتاح الفرج

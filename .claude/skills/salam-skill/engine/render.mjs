@@ -131,7 +131,20 @@ TL.scenes.forEach(s => {
 });
 if (TL.music) {
   let music = TL.music;
-  if (music === 'calm') {
+  if (music === 'playful') {
+    // موسيقى مرحة للكرتون: نقرات أرپيجيو بنغمات خماسية (150 نبضة) + باص، بلا حقوق
+    music = path.join(work, 'bed.wav');
+    const N = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880, 698.46, 523.25, 659.25, 783.99, 1046.5, 987.77, 783.99, 659.25, 587.33];
+    const step = 0.2, sel = `mod(floor(t/${step}),${N.length})`;
+    const freq = N.map((f, k) => `eq(${sel},${k})*${f}`).join('+');
+    const pluck = `0.22*sin(2*PI*(${freq})*t)*exp(-9*mod(t,${step}))`;
+    const B = [130.81, 174.61, 196, 130.81], bsel = `mod(floor(t/0.8),4)`;
+    const bass = `0.25*sin(2*PI*(${B.map((f, k) => `eq(${bsel},${k})*${f}`).join('+')})*t)*exp(-3.5*mod(t,0.8))`;
+    const tick = `0.04*(random(0)-0.5)*exp(-70*mod(t+0.1,0.4))`;
+    execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i',
+      `aevalsrc='${pluck}+${bass}+${tick}':d=${(t1 - t0 + 1).toFixed(2)}:s=48000`,
+      '-af', `lowpass=f=6000,aecho=0.6:0.4:180:0.25,afade=t=in:d=0.3,afade=t=out:st=${Math.max(0, t1 - t0 - 1.2).toFixed(2)}:d=1.2`, music]);
+  } else if (music === 'calm') {
     // موسيقى هادئة مولّدة بلا إيقاع للمواضيع العاطفية: تآلفان يتبادلان بنعومة
     music = path.join(work, 'bed.wav');
     const env = `(0.8+0.2*sin(2*PI*0.125*t))`;

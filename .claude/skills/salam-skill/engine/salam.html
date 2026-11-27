@@ -143,6 +143,13 @@ html,body{background:#000;overflow:hidden}
 .fp svg{position:absolute;inset:0;width:100%;height:100%}
 .hg{position:absolute;left:345px;width:390px;height:650px;filter:drop-shadow(10px 18px 20px rgba(0,0,0,.45))}
 .hg svg{width:100%;height:100%;overflow:visible}
+.bg-notebook{background-color:#fbfaf5;background-image:linear-gradient(90deg,transparent 138px,rgba(230,80,80,.55) 138px 142px,transparent 142px),
+  repeating-linear-gradient(to bottom,transparent 0 62px,rgba(120,170,220,.55) 62px 64px)}
+.bg-paper{background:radial-gradient(ellipse at 50% 40%,#e8e8e5,#cfcfcb 85%)}
+.bg-sketch{background:#fdfdfb}
+.w.plain{text-shadow:none!important}
+.w.plain::after{display:none}
+.w.plain.c-black{color:#1b1b1b} .w.plain.c-red{color:var(--a1)} .w.plain.c-white{color:#1b1b1b}
 .vframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .slash{position:absolute;left:0;height:6px;width:100%;background:var(--a1);box-shadow:0 0 24px 8px color-mix(in srgb,var(--a1) 85%,transparent);transform-origin:100% 50%}
 .flash{position:absolute;inset:0;background:#fff;pointer-events:none}
@@ -194,6 +201,7 @@ html,body{background:#000;overflow:hidden}
 <body>
 <div id="stage"></div>
 <script src="timeline.js"></script>
+<script src="doodle.js"></script>
 <script>
 (function(){
 const TL = window.TIMELINE;
@@ -288,13 +296,17 @@ function build(i){
   const p=s.prop;
   if(p){ R.prop=buildProp(p,cam,R); }
 
+  // الرسوم الكرتونية المرسومة باليد (engine/doodle.js)
+  const DOODLE_BG = bg==='notebook'||bg==='paper'||bg==='sketch';
+  if(s.doodle && window.Doodle) R.dd=Doodle.build(s,cam,i);
+
   // النص
   const tb=document.createElement('div'); tb.className='tb'; cam.appendChild(tb); R.tb=tb;
-  const base = s.size || TL.size || (p||(s.stickers&&s.stickers.length)||(s.photos&&s.photos.length) ? 118 : 165);
+  const base = s.size || (DOODLE_BG ? 105 : 0) || TL.size || (p||(s.stickers&&s.stickers.length)||(s.photos&&s.photos.length) ? 118 : 165);
   const media = p || (s.stickers&&s.stickers.length) || (s.photos&&s.photos.length);   // عناصر في النصف السفلي ← النص للأعلى
-  tb.style.top = (s.y!=null ? s.y : (media ? 300 : ((bg==='image'||bg==='video') ? 1170 : 560)))+'px';
+  tb.style.top = (s.y!=null ? s.y : (DOODLE_BG ? 140 : (media ? 300 : ((bg==='image'||bg==='video') ? 1170 : 560))))+'px';
   // الانعكاس الأرضي: افتراضي على الخلفيات الأربع، ومطفأ على الصور (إلا reflect=true)
-  if((bg==='image'||bg==='video') ? s.reflect===true : s.reflect!==false) tb.classList.add('reflect');
+  if((bg==='image'||bg==='video'||DOODLE_BG) ? s.reflect===true : s.reflect!==false) tb.classList.add('reflect');
   if(bg==='image'||bg==='video'){ // على الصور والفيديو: بلا انعكاس، والوضوح بظل ناعم حول الحروف بدل تعتيم الصورة
     // النص في الثلث السفلي وينتهي قبل الحافة بـ 220px مهما كان عدد الأسطر
     if(s.y==null && !p){ const n=(s.lines||[]).length||1; tb.style.top=Math.max(900,1700-n*base*1.2)+'px'; }
@@ -303,7 +315,7 @@ function build(i){
     const ld=document.createElement('div'); ld.className='line'; tb.appendChild(ld);
     // سطر لاتيني بالكامل (مثل Opus 5.5) يُكتب من اليسار حتى لا ينعكس ترتيب كلماته
     if(!line.some(w=>/[\u0600-\u06FF]/.test(w.w))) ld.style.direction='ltr';
-    line.forEach(w=>{const e=wordEl(w,base,s.font); ld.appendChild(e); R.words.push({e,w});});
+    line.forEach(w=>{const e=wordEl(w,base,s.font); if(DOODLE_BG){e.classList.add('plain');e.style.textShadow='none';e.style.webkitTextStroke='0';} ld.appendChild(e); R.words.push({e,w});});
   });
 
   // المؤثرات
@@ -494,6 +506,7 @@ function draw(i,t){
     else { sc=1.06; const m=28*(q-0.5)*2; if(mv==='left')dx=m; if(mv==='right')dx=-m; if(mv==='up')dy=m; if(mv==='down')dy=-m; }
     R.photo.style.transformOrigin=s.focus||'50% 50%';
     R.photo.style.transform=`translate(${dx}px,${dy}px) scale(${sc})`; }
+  if(R.dd) Doodle.draw(R.dd,t,s);
   // مقطع فيديو: فريم مستخرج مسبقاً لكل لحظة (render.mjs يملأ s.frames)
   let pend=null;
   if(R.vimg&&s.frames){ const F=s.frames, lt2=(t-s.start)*(s.video_rate||1)+(s.video_from||0);

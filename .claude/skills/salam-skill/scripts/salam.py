@@ -24,8 +24,8 @@ import argparse, json, os, re, shlex, subprocess, sys, wave, shutil, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ENGINE = os.path.join(HERE, '..', 'engine')
 
-DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black', 'image': 'white', 'video': 'white'}
-ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red', 'image': 'red', 'video': 'red'}
+DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black', 'image': 'white', 'video': 'white', 'notebook': 'black', 'paper': 'black', 'sketch': 'black'}
+ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red', 'image': 'red', 'video': 'red', 'notebook': 'red', 'paper': 'red', 'sketch': 'red'}
 BG_CYCLE = ['dark', 'red', 'cream', 'dark', 'red', 'camera']
 STRIP_DISPLAY = '.،,؛;:!…'
 
@@ -348,6 +348,9 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
                 sc[k] = [os.path.relpath(os.path.join(base_dir, x), out_dir) for x in a[k].split('|') if x]
         if 'sticker_size' in a:
             sc['sticker_size'] = float(a['sticker_size'])
+        dd = make_doodle(a)
+        if dd:
+            sc['doodle'] = dd
         if 'bubble' in a:
             sc['bubble'] = a['bubble']
             for k in ('bubble_x', 'bubble_y', 'bubble_rot'):
@@ -400,7 +403,7 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
     for k in ('music', 'music_volume', 'voice_volume', 'whoosh_volume', 'hit_volume', 'sfx'):
         if k in glob:
             v = glob[k]
-            tl[k] = (v != 'no') if k == 'sfx' else (float(v) if k.endswith('volume') else v if v in ('auto', 'calm') else
+            tl[k] = (v != 'no') if k == 'sfx' else (float(v) if k.endswith('volume') else v if v in ('auto', 'calm', 'playful') else
                                                      os.path.relpath(os.path.abspath(v), os.path.dirname(os.path.abspath(out or 'x'))))
     return tl
 
@@ -426,6 +429,54 @@ def resolve_image(a, glob, board, out, i):
             print(f'  generating image for scene {i + 1}: {prompt[:60]}', file=sys.stderr)
         imagegen.generate(full, src, 1080, 1920, seed, glob.get('image_model'))
     return os.path.relpath(src, out_dir)
+
+
+def make_doodle(a):
+    """شخصيات ورسومات الكرتون: who= / who2= ، draw= ، think= ، say= (انظر reference/doodle-cartoon.md)"""
+    d = {}
+    chars = []
+    for key in ('who', 'who2', 'who3'):
+        if key not in a:
+            continue
+        c = {}
+        for tok in a[key].split():
+            if '=' not in tok:
+                continue
+            k, v = tok.split('=', 1)
+            if k == 'x':
+                x = v.split('>')
+                c['x0'] = float(x[0]); c['x1'] = float(x[-1])
+            elif k in ('y', 'big', 'dir', 'walkEnd'):
+                c[k] = float(v)
+            else:
+                c[k] = v   # face, pose, ink, shirt
+        chars.append(c)
+    if chars:
+        d['chars'] = chars
+    if a.get('draw'):
+        draws = []
+        for item in a['draw'].split('|'):
+            m = re.match(r'^(\w+)@(-?[\d.]+),(-?[\d.]+)(?::([\d.]+))?(?:~([\d.]+))?(\+)?$', item.strip())
+            if not m:
+                raise SystemExit(f'draw= غير مفهوم: {item}  (الصيغة: icon@x,y:size~delay)')
+            w = {'icon': m.group(1), 'x': float(m.group(2)), 'y': float(m.group(3))}
+            if m.group(4): w['s'] = float(m.group(4))
+            if m.group(5): w['delay'] = float(m.group(5))
+            if m.group(6): w['grow'] = True
+            draws.append(w)
+        d['draws'] = draws
+    if a.get('think'):
+        d['think'] = [x for x in a['think'].split('|') if x]
+    if a.get('say'):
+        d['say'] = a['say']
+    for k in ('say_at', 'ground'):
+        if k in a:
+            d[k] = float(a[k])
+    if a.get('ink'):
+        d['ink'] = a['ink']
+    if a.get('noground') == 'yes':
+        d['noground'] = True
+    return d
 
 
 def make_prop(a):
