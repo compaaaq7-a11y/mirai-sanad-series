@@ -104,6 +104,8 @@
      aL/aR: [عضد، ساعد نسبةً للعضد]، lL/lR: [فخذ، ساق نسبةً للفخذ] (السالب = الركبة تنثني للخلف).
      ph: تقدّم المشهد 0..1 (للحركات ذات المراحل: الرمي والأكل). */
   const sm = p => p * p * (3 - 2 * p);
+  // الجسم الملتف (curl): مركزه فوق القدمين بـ BALL_C ونصف قطره BALL_R (بوحدات الشخصية قبل big)
+  const BALL_C = 290, BALL_R = 140;
   // الإمساك: حجم الشيء في اليد، ونقطة القبض (بُعدها عن مركز الرسمة للأسفل)، وارتفاع قمته (للأكل)
   const HOLD_S = { umbrella: 0.95, umbrella_broken: 0.95, icecream: 0.62, cone: 0.62, apple: 0.5, cup: 0.5, ball: 0.45, heart: 0.45, box: 0.6, book: 0.5, flower: 0.5, coin: 0.45, can: 0.55, water: 0.5 };
   const GRIP = { umbrella: 135, umbrella_broken: 135, icecream: 60, cone: 60, cup: 10, water: 20, flower: 70, can: -10 };
@@ -314,9 +316,17 @@
       const y = c.ys ? kf(c.ys, pq) : (c.y != null ? c.y : R.ground);
       const rv = c.rots ? kf(c.rots, pq) : (c.rot || 0);
       const rot = rv ? ` rotate(${rv.toFixed(1)})` : '';   // rot=-90 : مستلقٍ (حول القدمين)
-      const sv = c.spins ? kf(c.spins, pq) : 0;          // spin=0>720 : دوران حول منتصف الجسم (تدحرج)
-      const spin = sv ? ` rotate(${sv.toFixed(1)} 0 ${(-200 * big).toFixed(0)})` : '';
-      o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})${rot}${spin} scale(${(dir * big).toFixed(2)} ${big})`);
+      let sv = c.spins ? kf(c.spins, pq) : 0, ty = y;   // spin=0>720 : دوران حول منتصف الجسم
+      let pivot = -200 * big;
+      if (pk === 'curl') {
+        // تدحرج فيزيائي: الجسم الملتف كرة نصف قطرها BALL_R، حافتها تلامس خط y دائماً (الأرض أو الكيس)،
+        // والدوران يساوي المسافة المقطوعة ÷ نصف القطر (بلا انزلاق). y هنا = خط التلامس.
+        const r = BALL_R * big, x0r = c.xs ? c.xs[0] : x0;
+        pivot = -BALL_C * big; ty = y - r + BALL_C * big;
+        if (!c.spins || c.spin === 'auto') sv = ((x - x0r) / r) * 180 / Math.PI * (dir < 0 ? -1 : 1);
+      }
+      const spin = sv ? ` rotate(${sv.toFixed(1)} 0 ${pivot.toFixed(0)})` : '';
+      o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${ty.toFixed(1)})${rot}${spin} scale(${(dir * big).toFixed(2)} ${big})`);
       const r = charSVG(c, t + k * 0.37, fk, pk, moving, prog);
       o.g.innerHTML = r.svg;
       // الرمي: بعد لحظة الإفلات يطير الشيء في قوس نحو الهدف
