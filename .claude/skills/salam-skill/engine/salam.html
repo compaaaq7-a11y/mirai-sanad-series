@@ -15,6 +15,16 @@
 @font-face{font-family:Tajawal;font-weight:500;src:url(fonts/Tajawal-500-latin.woff2) format('woff2')}
 @font-face{font-family:Tajawal;font-weight:800;src:url(fonts/Tajawal-800-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFF}
 @font-face{font-family:Tajawal;font-weight:800;src:url(fonts/Tajawal-800-latin.woff2) format('woff2')}
+@font-face{font-family:'Baloo Bhaijaan 2';font-weight:800;src:url(fonts/BalooBhaijaan2-800-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:'Baloo Bhaijaan 2';font-weight:800;src:url(fonts/BalooBhaijaan2-800-latin.woff2) format('woff2')}
+@font-face{font-family:'Marhey';font-weight:700;src:url(fonts/Marhey-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:'Marhey';font-weight:700;src:url(fonts/Marhey-700-latin.woff2) format('woff2')}
+@font-face{font-family:'Amiri';font-weight:700;src:url(fonts/Amiri-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:'Amiri';font-weight:700;src:url(fonts/Amiri-700-latin.woff2) format('woff2')}
+@font-face{font-family:'Aref Ruqaa';font-weight:700;src:url(fonts/ArefRuqaa-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:'Aref Ruqaa';font-weight:700;src:url(fonts/ArefRuqaa-700-latin.woff2) format('woff2')}
+@font-face{font-family:'Vibes';font-weight:400;src:url(fonts/Vibes-400-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:'Vibes';font-weight:400;src:url(fonts/Vibes-400-latin.woff2) format('woff2')}
 @font-face{font-family:Oswald;font-weight:600;src:url(fonts/Oswald-600-latin.woff2) format('woff2')}
 
 :root{
@@ -168,10 +178,21 @@ function extrude(color, px){
 function mix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.length===4?h[1+(i>>1)].repeat(2):h.substr(i,2),16));
   const A=p(a),B=p(b);return `rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')})`}
 
-function wordEl(w, basePx){
+/* الخطوط المختارة: font= في الستوري بورد (للفيديو كله أو لمشهد) */
+const FONTS={
+  lalezar:{f:"Lalezar",w:400,k:1},
+  baloo:{f:"'Baloo Bhaijaan 2'",w:800,k:0.92},
+  marhey:{f:"Marhey",w:700,k:0.92},
+  amiri:{f:"Amiri",w:700,k:0.95},
+  ruqaa:{f:"'Aref Ruqaa'",w:700,k:0.95},
+  vibes:{f:"Vibes",w:400,k:1.05},
+};
+function wordEl(w, basePx, font){
   const e=document.createElement('span');
-  const color=w.c||'white', px=Math.round(basePx*(w.s||1));
+  const F=FONTS[(font||TL.font||'lalezar').toLowerCase()]||FONTS.lalezar;
+  const color=w.c||'white', px=Math.round(basePx*(w.s||1)*F.k);
   e.className='w c-'+color; e.textContent=w.w; e.dataset.t=w.w;
+  e.style.fontFamily=F.f+",Lalezar,sans-serif"; e.style.fontWeight=F.w;
   e.style.fontSize=px+'px'; e.style.textShadow=extrude(color,px);
   return e;
 }
@@ -211,7 +232,9 @@ function build(i){
     tb.style.filter='drop-shadow(0 4px 10px rgba(0,0,0,.8)) drop-shadow(0 0 3px rgba(0,0,0,.7))'; }
   (s.lines||[]).forEach(line=>{
     const ld=document.createElement('div'); ld.className='line'; tb.appendChild(ld);
-    line.forEach(w=>{const e=wordEl(w,base); ld.appendChild(e); R.words.push({e,w});});
+    // سطر لاتيني بالكامل (مثل Opus 5.5) يُكتب من اليسار حتى لا ينعكس ترتيب كلماته
+    if(!line.some(w=>/[\u0600-\u06FF]/.test(w.w))) ld.style.direction='ltr';
+    line.forEach(w=>{const e=wordEl(w,base,s.font); ld.appendChild(e); R.words.push({e,w});});
   });
 
   // المؤثرات

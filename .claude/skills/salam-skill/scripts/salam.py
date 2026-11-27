@@ -331,7 +331,7 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
             sc['soft'] = True
         if a.get('cut') == 'fade' or 'xfade' in a:
             sc['xfade'] = float(a.get('xfade', 0.6))
-        for k in ('move', 'focus', 'fade'):
+        for k in ('move', 'focus', 'fade', 'font'):
             if k in a:
                 sc[k] = a[k]
         if a.get('enter') == 'gentle' or glob.get('enter') == 'gentle':
@@ -365,6 +365,8 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
     tl = {'width': 1080, 'height': 1920, 'fps': int(glob.get('fps', 30)), 'duration': round(dur, 3),
           'audio': os.path.relpath(os.path.abspath(audio), os.path.dirname(os.path.abspath(out or 'x'))) if audio else None,
           'align': method, 'scenes': out_scenes}
+    if 'font' in glob:
+        tl['font'] = glob['font']
     for k in ('music', 'music_volume', 'voice_volume', 'whoosh_volume', 'hit_volume', 'sfx'):
         if k in glob:
             v = glob[k]
