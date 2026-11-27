@@ -149,6 +149,7 @@ document.body.style.width = W+'px'; document.body.style.height = H+'px';
 
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const easeOutCubic=p=>1-Math.pow(1-p,3);
+const easeInOut=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
 const easeOutBack=p=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(p-1,3)+c1*Math.pow(p-1,2)};
 function rng(seed){let s=seed>>>0||1;return()=>((s=Math.imul(s^(s>>>15),2246822519)+0x9e3779b9>>>0)%100000)/100000}
 
@@ -200,7 +201,7 @@ function build(i){
   // النص
   const tb=document.createElement('div'); tb.className='tb'; cam.appendChild(tb); R.tb=tb;
   const base = s.size || (p ? 118 : 165);
-  tb.style.top = (s.y!=null ? s.y : (p ? 300 : 560))+'px';
+  tb.style.top = (s.y!=null ? s.y : (p ? 300 : (bg==='image' ? 1170 : 560)))+'px';
   if(s.reflect===false) tb.style.webkitBoxReflect='none';
   (s.lines||[]).forEach(line=>{
     const ld=document.createElement('div'); ld.className='line'; tb.appendChild(ld);
@@ -221,6 +222,7 @@ function build(i){
     rec.innerHTML='<div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div><div class="lbl"><i></i>REC</div><div class="tc"></div>';
     root.appendChild(rec);R.tc=rec.querySelector('.tc');R.recDot=rec.querySelector('.lbl i');}
   const fl=document.createElement('div'); fl.className='flash'; root.appendChild(fl); R.flash=fl;
+  if(s.fade==='out'){const fe=document.createElement('div');fe.className='flash';fe.style.background='#000';fe.style.opacity=0;root.appendChild(fe);R.fadeEl=fe;}
 
   stage.appendChild(root);
   // تصغير السطر إذا تجاوز عرض الإطار
@@ -264,12 +266,22 @@ function buildProp(p,cam,R){
 }
 
 /* ---------- رسم لحظة t ---------- */
-let current=-1;
+let shown=new Set();
 function seek(t){
   let i=TL.scenes.findIndex(s=>t>=s.start&&t<s.end);
   if(i<0) i = t<TL.scenes[0].start?0:TL.scenes.length-1;
+  const s=TL.scenes[i], want=new Set([i]);
+  // تلاشٍ متقاطع: المشهد السابق يبقى تحت الجديد خلال xfade ثانية
+  const xf=s.xfade||0, inX=xf>0&&i>0&&(t-s.start)<xf;
+  if(inX) want.add(i-1);
+  shown.forEach(k=>{ if(!want.has(k)) built[k].root.style.display='none'; });
+  if(inX){ draw(i-1,t); const P=built[i-1].root; P.style.display='block'; P.style.zIndex=0; P.style.opacity=1; }
+  draw(i,t); const C=built[i].root; C.style.display='block'; C.style.zIndex=1;
+  C.style.opacity = inX ? easeOutCubic(clamp((t-s.start)/xf)) : 1;
+  shown=want;
+}
+function draw(i,t){
   const R=build(i), s=R.s;
-  if(current!==i){ if(current>=0&&built[current]) built[current].root.style.display='none'; R.root.style.display='block'; current=i; }
   const lt=t-s.start, dur=s.end-s.start, prog=clamp(lt/dur);
 
   // دخول المشهد: ضربة زووم + ضبابية حركة (whip)
@@ -285,19 +297,28 @@ function seek(t){
   R.words.forEach(({e,w},k)=>{
     const d=t-w.t;
     if(d<0){e.style.opacity=0;return;}
-    const p=clamp(d/0.2), eb=easeOutBack(p);
-    const sc = 1.75-0.75*eb, bl=12*(1-easeOutCubic(p));
-    const ty = -50*(1-eb) + Math.sin((t+k)*1.3)*3;
-    e.style.opacity=clamp(d/0.06);
+    const g=s.gentle||TL.gentle;   // دخول هادئ للمواضيع العاطفية
+    const p=clamp(d/(g?0.5:0.2)), eb=g?easeOutCubic(p):easeOutBack(p);
+    const sc = g?1.12-0.12*eb:1.75-0.75*eb, bl=(g?8:12)*(1-easeOutCubic(p));
+    const ty = (g?30:-50)*(1-eb) + Math.sin((t+k)*1.3)*(g?1.5:3);
+    e.style.opacity=clamp(d/(g?0.35:0.06));
     e.style.transform=`translateY(${ty}px) scale(${sc})`;
     e.style.filter=bl>.3?`blur(${bl}px)`:'none';
   });
 
   // الخلفيات المتحركة
   if(R.rays) R.rays.style.transform=`rotate(${t*4}deg)`;
-  if(R.photo){ const k=(i*37)%4; // حركة كين بيرنز: زوم بطيء مع انزياح باتجاه يتغير من مشهد لآخر
-    const dx=[1,-1,0,0][k]*18*prog, dy=[0,0,1,-1][k]*18*prog;
-    R.photo.style.transform=`translate(${dx}px,${dy}px) scale(${1.02+0.10*prog})`; }
+  if(R.photo){ // حركة الكاميرا على الصورة: push pull left right up down still (أو كين بيرنز تلقائي)
+    const a=s.kb_start??s.start, b=s.kb_end??s.end, q=easeInOut(clamp((t-a)/(b-a)));
+    const mv=s.move||['push','left','push','right','up'][(i*37)%5];
+    let sc=1.04, dx=0, dy=0;
+    if(mv==='push') sc=1.03+0.14*q; else if(mv==='pull') sc=1.17-0.14*q;
+    else if(mv==='still') sc=1.03+0.03*q;
+    else { sc=1.10; const m=60*(q-0.5)*2; if(mv==='left')dx=m; if(mv==='right')dx=-m; if(mv==='up')dy=m; if(mv==='down')dy=-m; }
+    R.photo.style.transformOrigin=s.focus||'50% 50%';
+    R.photo.style.transform=`translate(${dx}px,${dy}px) scale(${sc})`; }
+  // تلاشٍ إلى الأسود في نهاية المشهد: fade=out
+  if(R.fadeEl){ const f=s.fade_len||1.4; R.fadeEl.style.opacity=clamp((t-(s.end-f))/f); }
   R.embers.forEach(m=>{const y=((m.y - t*m.v)%1920+1920)%1920;
     m.e.style.transform=`translate(${m.x+Math.sin(t*1.5+m.x)*20}px,${y}px) scale(${m.sz})`;m.e.style.opacity=m.a*(0.6+0.4*Math.sin(t*6+m.x));});
   if(R.tc){const f=Math.floor(t*30)%30, ss=Math.floor(t); R.tc.textContent=`00:00:${String(ss).padStart(2,'0')}:${String(f).padStart(2,'0')}`;

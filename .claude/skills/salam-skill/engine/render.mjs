@@ -106,7 +106,17 @@ if (!flag('no-sfx') && TL.sfx !== false) {
 }
 if (TL.music) {
   let music = TL.music;
-  if (music === 'auto') {
+  if (music === 'calm') {
+    // موسيقى هادئة مولّدة بلا إيقاع للمواضيع العاطفية: تآلفان يتبادلان بنعومة
+    music = path.join(work, 'bed.wav');
+    const env = `(0.8+0.2*sin(2*PI*0.125*t))`;
+    const ch = (a, b, c) => `(0.07*sin(2*PI*${a}*t)+0.05*sin(2*PI*${b}*t)+0.035*sin(2*PI*${c}*t))`;
+    const w = `(0.5+0.5*cos(2*PI*t/16))`; // انتقال ناعم بين تآلفين كل 8 ثوانٍ
+    const pad = `(${ch(110, 130.81, 164.81)}*${w}+${ch(87.31, 130.81, 174.61)}*(1-${w}))`;
+    execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i',
+      `aevalsrc='${pad}*${env}':d=${(t1 - t0 + 1).toFixed(2)}:s=48000`,
+      '-af', `lowpass=f=2500,aecho=0.8:0.7:120|240:0.3|0.2,afade=t=in:d=1.5,afade=t=out:st=${Math.max(0, t1 - t0 - 2).toFixed(2)}:d=2`, music]);
+  } else if (music === 'auto') {
     // موسيقى خلفية مولّدة: نبض بيس 100bpm + وسادة هادئة (بدون إنترنت أو حقوق)
     music = path.join(work, 'bed.wav');
     const b = 0.6; // طول النبضة بالثواني

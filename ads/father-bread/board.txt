@@ -1,0 +1,21 @@
+# إعلان: "خبز المساء" — أب عراقي يتعب بصمت، وابنته تقرّب له الكرسي
+# فكرة المستخدم: 5 مشاهد (30 ثانية) + تعليق بالفصحى يظهر نصاً على الشاشة (بدون صوت)
+# أسلوب salam-skill بنسخة هادئة: صور مولّدة، تلاشٍ بين المشاهد، دخول نص هادئ، موسيقى هادئة
+@ fps=30 enter=gentle sfx=no music=calm music_volume=0.7 seed=21 image_style="cinematic realism, film still, natural light, muted warm colors, shallow depth of field, photorealistic, no text"
+
+# 0–5ث: يخرج قبل الفجر وابنته نائمة — اقتراب بطيء بينما يغلق الباب برفق
+[bg=image dur=5 move=push prompt="A middle-aged Iraqi father with graying temples and a short dark beard, wearing a faded blue work shirt, quietly closing the door of his modest home before dawn, his young daughter asleep on a mattress in the background, dim blue pre-dawn light"] كان أبي / يخرج قبل / أن نستيقظ،
+
+# 5–11ث: يحمل صندوقاً ثقيلاً في الورشة — الكاميرا تتبعه من الجانب
+[bg=image dur=6 move=left cut=fade prompt="A middle-aged Iraqi father with graying temples and a short dark beard, wearing a faded blue work shirt, carrying a heavy cardboard box across a dusty workshop, morning light through high windows, side view"] ويعود / وفي يده / +*خبز المساء.*
+
+# 11–17ث: يجلس وحده متعباً — ثابتة تقترب منه (صورة مختارة من عدة محاولات توليد)
+[bg=image dur=6 move=push focus="50% 62%" cut=fade image=images/scene3-tired.jpg] لم يخبرنا / كم أتعبه / +*قلبه.*
+
+# 17–24ث: يعود ويضع كيس الخبز على الطاولة — تتبع الكيس حتى يستقر
+[bg=image dur=3.5 move=down cut=fade prompt="A middle-aged Iraqi father with graying temples and a short dark beard, wearing a faded blue work shirt, returning at dusk and placing a paper bag of fresh bread on the family table, warm kitchen light, his young daughter looking up at him"] وفي تلك الليلة / حين رأيت يده / +*ترتجف*
+[bg=image dur=3.5 cut=soft prompt="A middle-aged Iraqi father with graying temples and a short dark beard, wearing a faded blue work shirt, returning at dusk and placing a paper bag of fresh bread on the family table, warm kitchen light, his young daughter looking up at him"] وهو يضع الخبز / على الطاولة
+
+# 24–30ث: ابنته تجلس بجانبه على مائدة الخبز — اقتراب هادئ ثم تلاشي الصورة (صورة مختارة)
+[bg=image dur=3 move=push focus="50% 65%" cut=fade image=images/scene5-together.jpg] قرّبتُ له الكرسي / وقلتُ:
+[bg=image dur=4.5 cut=soft fade=out image=images/scene5-together.jpg] +*اجلس يا أبي.* / *سأبقى معك.*

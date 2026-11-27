@@ -250,18 +250,31 @@ def align_tokens(spoken, words, wav):
 # ---------------------------------------------------------------- timeline
 def pace_times(scenes, wps):
     """بدون صوت: توقيت بإيقاع الإلقاء المرجعي (كلمات/ثانية) مع نَفَس قصير عند كل قطع."""
-    t, avg = 0.35, None
+    t, avg = (0.0 if all('dur' in s['attrs'] for s in scenes) else 0.35), None
     toks = [x for s in scenes for x in s['tokens'] if not x.get('newline') and x['spoken']]
     avg = sum(nchars(x['say']) for x in toks) / max(1, len(toks))
     for s in scenes:
-        for x in s['tokens']:
-            if x.get('newline') or not x['spoken']:
-                continue
+        words = [x for x in s['tokens'] if not x.get('newline') and x['spoken']]
+        if 'dur' in s['attrs']:
+            # مشهد بمدة محددة: الكلمات تتوزع داخلها (بداية بعد 0.4ث، ونهاية قبل آخر 0.8ث)
+            d = float(s['attrs']['dur'])
+            s['_start'] = t
+            span = max(0.3, d - 1.2)
+            w8 = [0.55 + 0.45 * nchars(x['say']) / avg for x in words]
+            acc = 0
+            for x, w in zip(words, w8):
+                x['t'] = round(t + 0.4 + span * acc / max(1e-9, sum(w8)), 3)
+                acc += w
+            t += d
+            continue
+        for x in words:
             x['t'] = round(t, 3)
             t += (0.55 + 0.45 * nchars(x['say']) / avg) / wps
             if x['say'][-1:] in '.؟?!':
                 t += 0.12
         t += 0.12
+    if all('dur' in s['attrs'] for s in scenes):
+        return t
     return t + 0.9
 
 
@@ -304,7 +317,7 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
                 cur.append({'w': t['w'], 't': t['t'], 'c': t['c'], **({'s': t['s']} if t['s'] != 1 else {})})
         if cur:
             lines.append(cur)
-        sc = {'start': round(max(0.0, first - 0.08), 3), 'bg': a['bg'], 'lines': lines, '_last': last_t}
+        sc = {'start': round(s['_start'], 3) if '_start' in s else round(max(0.0, first - 0.08), 3), 'bg': a['bg'], 'lines': lines, '_last': last_t}
         if a['bg'] == 'image':
             sc['image'] = resolve_image(a, glob, board, out, i)
             if a.get('tint'):
@@ -314,8 +327,15 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
         for k in ('y', 'size', 'push', 'tilt'):
             if k in a:
                 sc[k] = float(a[k])
-        if a.get('cut') == 'soft':
+        if a.get('cut') in ('soft', 'fade'):
             sc['soft'] = True
+        if a.get('cut') == 'fade' or 'xfade' in a:
+            sc['xfade'] = float(a.get('xfade', 0.6))
+        for k in ('move', 'focus', 'fade'):
+            if k in a:
+                sc[k] = a[k]
+        if a.get('enter') == 'gentle' or glob.get('enter') == 'gentle':
+            sc['gentle'] = True
         if a.get('reflect') == 'no':
             sc['reflect'] = False
         if a.get('prop'):
@@ -329,13 +349,26 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
         p = sc.get('prop')
         if p and p['type'] == 'chat' and 'type_from' not in p:
             p['type_from'], p['type_to'] = sc['start'] + 0.25, max(sc['start'] + 0.6, sc['end'] - 0.25)
+    # نفس الصورة عبر قطع ناعم: حركة الكاميرا تستمر بلا قفزة
+    g = 0
+    while g < len(out_scenes):
+        h = g
+        while (h + 1 < len(out_scenes) and out_scenes[h + 1].get('image') and out_scenes[h + 1].get('image') == out_scenes[g].get('image')
+               and out_scenes[h + 1].get('soft') and not out_scenes[h + 1].get('xfade')):
+            h += 1
+        if h > g:
+            for k in range(g, h + 1):
+                out_scenes[k]['kb_start'], out_scenes[k]['kb_end'] = out_scenes[g]['start'], out_scenes[h]['end']
+                if 'move' in out_scenes[g]:
+                    out_scenes[k].setdefault('move', out_scenes[g]['move'])
+        g = h + 1
     tl = {'width': 1080, 'height': 1920, 'fps': int(glob.get('fps', 30)), 'duration': round(dur, 3),
           'audio': os.path.relpath(os.path.abspath(audio), os.path.dirname(os.path.abspath(out or 'x'))) if audio else None,
           'align': method, 'scenes': out_scenes}
     for k in ('music', 'music_volume', 'voice_volume', 'whoosh_volume', 'hit_volume', 'sfx'):
         if k in glob:
             v = glob[k]
-            tl[k] = (v != 'no') if k == 'sfx' else (float(v) if k.endswith('volume') else v if v == 'auto' else
+            tl[k] = (v != 'no') if k == 'sfx' else (float(v) if k.endswith('volume') else v if v in ('auto', 'calm') else
                                                      os.path.relpath(os.path.abspath(v), os.path.dirname(os.path.abspath(out or 'x'))))
     return tl
 

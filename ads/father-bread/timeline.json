@@ -1,0 +1,329 @@
+{
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "duration": 31.5,
+ "audio": null,
+ "align": "pace 2.3 w/s (no audio)",
+ "scenes": [
+  {
+   "start": 0.0,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "كان",
+      "t": 0.4,
+      "c": "white"
+     },
+     {
+      "w": "أبي",
+      "t": 0.983,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "يخرج",
+      "t": 1.567,
+      "c": "white"
+     },
+     {
+      "w": "قبل",
+      "t": 2.225,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "أن",
+      "t": 2.809,
+      "c": "white"
+     },
+     {
+      "w": "نستيقظ",
+      "t": 3.317,
+      "c": "white"
+     }
+    ]
+   ],
+   "image": "images/e837be1b4f3f6b4a.jpg",
+   "move": "push",
+   "gentle": true,
+   "end": 5.0
+  },
+  {
+   "start": 5.0,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "ويعود",
+      "t": 5.4,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "وفي",
+      "t": 6.469,
+      "c": "white"
+     },
+     {
+      "w": "يده",
+      "t": 7.32,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "خبز",
+      "t": 8.171,
+      "c": "red",
+      "s": 1.35
+     },
+     {
+      "w": "المساء",
+      "t": 9.022,
+      "c": "red"
+     }
+    ]
+   ],
+   "image": "images/fceae51e24fbc0cb.jpg",
+   "soft": true,
+   "xfade": 0.6,
+   "move": "left",
+   "gentle": true,
+   "end": 11.0
+  },
+  {
+   "start": 11.0,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "لم",
+      "t": 11.4,
+      "c": "white"
+     },
+     {
+      "w": "يخبرنا",
+      "t": 12.159,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "كم",
+      "t": 13.365,
+      "c": "white"
+     },
+     {
+      "w": "أتعبه",
+      "t": 14.124,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "قلبه",
+      "t": 15.218,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "image": "images/scene3-tired.jpg",
+   "soft": true,
+   "xfade": 0.6,
+   "move": "push",
+   "focus": "50% 62%",
+   "gentle": true,
+   "end": 17.0
+  },
+  {
+   "start": 17.0,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "وفي",
+      "t": 17.4,
+      "c": "white"
+     },
+     {
+      "w": "تلك",
+      "t": 17.696,
+      "c": "white"
+     },
+     {
+      "w": "الليلة",
+      "t": 17.992,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "حين",
+      "t": 18.402,
+      "c": "white"
+     },
+     {
+      "w": "رأيت",
+      "t": 18.698,
+      "c": "white"
+     },
+     {
+      "w": "يده",
+      "t": 19.032,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "ترتجف",
+      "t": 19.328,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "image": "images/adc1a168275bc253.jpg",
+   "soft": true,
+   "xfade": 0.6,
+   "move": "down",
+   "gentle": true,
+   "end": 20.5,
+   "kb_start": 17.0,
+   "kb_end": 24.0
+  },
+  {
+   "start": 20.5,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "وهو",
+      "t": 20.9,
+      "c": "white"
+     },
+     {
+      "w": "يضع",
+      "t": 21.299,
+      "c": "white"
+     },
+     {
+      "w": "الخبز",
+      "t": 21.697,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "على",
+      "t": 22.198,
+      "c": "white"
+     },
+     {
+      "w": "الطاولة",
+      "t": 22.597,
+      "c": "white"
+     }
+    ]
+   ],
+   "image": "images/adc1a168275bc253.jpg",
+   "soft": true,
+   "gentle": true,
+   "end": 24.0,
+   "kb_start": 17.0,
+   "kb_end": 24.0,
+   "move": "down"
+  },
+  {
+   "start": 24.0,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "قرّبتُ",
+      "t": 24.4,
+      "c": "white"
+     },
+     {
+      "w": "له",
+      "t": 24.909,
+      "c": "white"
+     },
+     {
+      "w": "الكرسي",
+      "t": 25.229,
+      "c": "white"
+     }
+    ],
+    [
+     {
+      "w": "وقلتُ",
+      "t": 25.738,
+      "c": "white"
+     }
+    ]
+   ],
+   "image": "images/scene5-together.jpg",
+   "soft": true,
+   "xfade": 0.6,
+   "move": "push",
+   "focus": "50% 65%",
+   "gentle": true,
+   "end": 27.0,
+   "kb_start": 24.0,
+   "kb_end": 31.5
+  },
+  {
+   "start": 27.0,
+   "bg": "image",
+   "lines": [
+    [
+     {
+      "w": "اجلس",
+      "t": 27.4,
+      "c": "red",
+      "s": 1.35
+     },
+     {
+      "w": "يا",
+      "t": 28.108,
+      "c": "red"
+     },
+     {
+      "w": "أبي",
+      "t": 28.656,
+      "c": "red"
+     }
+    ],
+    [
+     {
+      "w": "سأبقى",
+      "t": 29.283,
+      "c": "red"
+     },
+     {
+      "w": "معك",
+      "t": 30.072,
+      "c": "red"
+     }
+    ]
+   ],
+   "image": "images/scene5-together.jpg",
+   "soft": true,
+   "fade": "out",
+   "gentle": true,
+   "end": 31.5,
+   "kb_start": 24.0,
+   "kb_end": 31.5,
+   "move": "push"
+  }
+ ],
+ "music": "calm",
+ "music_volume": 0.7,
+ "sfx": false
+}
