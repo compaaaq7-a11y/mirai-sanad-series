@@ -441,6 +441,8 @@ def make_prop(a):
                 p[k] = a[k]
         if any(k.startswith('dm_') for k in a):
             p['dm'] = {k[3:]: v for k, v in a.items() if k.startswith('dm_')}
+    elif t in ('fingerprint', 'hourglass'):
+        pass   # مرسومان بالكود في المحرك؛ يكفي prop_y للموضع
     elif t == 'bubbles':
         p['msgs'] = a.get('msgs', '')
     elif t == 'window':

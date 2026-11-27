@@ -138,6 +138,11 @@ html,body{background:#000;overflow:hidden}
   box-shadow:0 8px 18px rgba(0,0,0,.18);direction:rtl}
 .bub.in{left:110px;background:#fff;color:#1b1b1b;border-bottom-left-radius:8px}
 .bub.out{right:110px;background:var(--a3);color:#fff;border-bottom-right-radius:8px}
+.fp{position:absolute;left:290px;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,#2a1a0e,#120a06 70%);box-shadow:0 0 0 12px #c9a24a,0 0 0 16px #7a5a1c,0 30px 60px rgba(0,0,0,.5),0 0 90px color-mix(in srgb,#e2b84e 45%,transparent)}
+.fp svg{position:absolute;inset:0;width:100%;height:100%}
+.hg{position:absolute;left:345px;width:390px;height:650px;filter:drop-shadow(10px 18px 20px rgba(0,0,0,.45))}
+.hg svg{width:100%;height:100%;overflow:visible}
 .vframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .slash{position:absolute;left:0;height:6px;width:100%;background:var(--a1);box-shadow:0 0 24px 8px color-mix(in srgb,var(--a1) 85%,transparent);transform-origin:100% 50%}
 .flash{position:absolute;inset:0;background:#fff;pointer-events:none}
@@ -351,6 +356,7 @@ function build(i){
   built[i]=R; return R;
 }
 
+let UID=0;   // معرّفات SVG فريدة لكل مشهد
 function buildProp(p,cam,R){
   const y = p.y!=null?p.y:(p.type==='phone'?640:760);
   if(p.type==='chat'){
@@ -383,6 +389,39 @@ function buildProp(p,cam,R){
     else body=`<div class="msg">${p.text||''}</div>`;
     e.innerHTML=`<div class="tbar"><span>${p.title||'Window.exe'}</span><i><b>_</b><b>□</b><b>×</b></i></div><div class="body">${body}</div>`;
     cam.appendChild(e); return {e,p,timerEl:e.querySelector('.big')};
+  }
+  if(p.type==='fingerprint'){
+    const U=++UID;
+    // بصمة ذهبية مرسومة بالكود: حلقات بيضوية متكسّرة تظهر تدريجياً من المركز
+    const e=document.createElement('div'); e.className='fp'; e.style.top=(p.y!=null?p.y:900)+'px';
+    const r=rng(97), NS='http://www.w3.org/2000/svg';
+    let g=`<defs><linearGradient id="fpg${U}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1c2"/><stop offset=".5" stop-color="#e2b84e"/><stop offset="1" stop-color="#9a7224"/></linearGradient>
+      <clipPath id="fpc${U}"><circle cx="250" cy="250" r="0"/></clipPath></defs><g clip-path="url(#fpc${U})" fill="none" stroke="url(#fpg${U})" stroke-linecap="round">`;
+    for(let k=0;k<15;k++){const rx=12+k*14.5, ry=17+k*15.5, rot=-8+k*1.1, L=2*Math.PI*Math.sqrt((rx*rx+ry*ry)/2);
+      const segs=[];let acc=0;while(acc<L){const on=L*(0.18+r()*0.5),off=4+r()*18;segs.push(on.toFixed(1),off.toFixed(1));acc+=on+off;}
+      g+=`<ellipse cx="250" cy="${262-k*1.2}" rx="${rx}" ry="${ry}" transform="rotate(${rot} 250 250)" stroke-width="${6-k*0.15}" stroke-dasharray="${segs.join(' ')}" stroke-dashoffset="${(r()*L).toFixed(1)}"/>`;}
+    g+=`<path d="M238 250 q12 -26 24 0 q-12 18 -24 0" stroke-width="6"/></g>`;
+    e.innerHTML=`<svg viewBox="0 0 500 500">${g}</svg>`; cam.appendChild(e);
+    return {e,p,fpClip:e.querySelector('#fpc'+U+' circle')};
+  }
+  if(p.type==='hourglass'){
+    const U=++UID;
+    // ساعة رملية: رمل الأعلى ينقص وكومة الأسفل تكبر خلال المشهد، مع خيط رمل ينساب
+    const e=document.createElement('div'); e.className='hg'; e.style.top=(p.y!=null?p.y:880)+'px';
+    e.innerHTML=`<svg viewBox="0 0 300 500"><defs>
+      <linearGradient id="hgw${U}" x1="0" x2="1"><stop offset="0" stop-color="#5a3a1a"/><stop offset=".5" stop-color="#c9a24a"/><stop offset="1" stop-color="#5a3a1a"/></linearGradient>
+      <linearGradient id="hgs${U}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2cf7a"/><stop offset="1" stop-color="#c28a2c"/></linearGradient>
+      <clipPath id="hgtop${U}"><path d="M60 50 C60 150 135 200 145 245 L155 245 C165 200 240 150 240 50 Z"/></clipPath>
+      <clipPath id="hgbot${U}"><path d="M145 255 C135 300 60 350 60 450 L240 450 C240 350 165 300 155 255 Z"/></clipPath></defs>
+      <path d="M60 50 C60 150 135 200 145 250 C135 300 60 350 60 450 L240 450 C240 350 165 300 155 250 C165 200 240 150 240 50 Z" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.75)" stroke-width="5"/>
+      <rect class="st" x="0" y="0" width="300" height="0" fill="url(#hgs${U})" clip-path="url(#hgtop${U})"/>
+      <path class="sb" d="" fill="url(#hgs${U})" clip-path="url(#hgbot${U})"/>
+      <rect class="stream" x="148" y="245" width="4" height="200" fill="#e2b84e"/>
+      <rect x="20" y="20" width="260" height="34" rx="8" fill="url(#hgw${U})"/><rect x="20" y="446" width="260" height="34" rx="8" fill="url(#hgw${U})"/>
+      <rect x="34" y="54" width="14" height="392" rx="5" fill="url(#hgw${U})"/><rect x="252" y="54" width="14" height="392" rx="5" fill="url(#hgw${U})"/>
+      <path d="M85 70 C90 140 120 180 135 215" stroke="rgba(255,255,255,.55)" stroke-width="6" fill="none" stroke-linecap="round"/></svg>`;
+    cam.appendChild(e);
+    return {e,p,hgTop:e.querySelector('.st'),hgBot:e.querySelector('.sb'),hgStream:e.querySelector('.stream')};
   }
   if(p.type==='bubbles'){
     const e=document.createElement('div'); e.className='layer'; cam.appendChild(e);
@@ -505,6 +544,12 @@ function draw(i,t){
       P.ctext.style.fontWeight=t<a?500:800;}
     if(P.timerEl&&P.p.countdown){const tot=+P.p.countdown,left=Math.max(0,tot*(1-clamp((t-pin)/Math.max(.1,s.end-pin))));
       const m=Math.floor(left/60),sec=Math.floor(left%60);P.timerEl.textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+    if(P.fpClip){const q=easeOutCubic(clamp((t-pin-0.2)/Math.max(0.4,(s.end-pin)*0.7)));
+      P.fpClip.setAttribute('r',(10+q*250).toFixed(1)); P.e.style.filter=`brightness(${0.9+0.25*Math.sin(t*3)})`;}
+    if(P.hgTop){const q=clamp((t-pin-0.2)/Math.max(0.4,(s.end-pin)-0.4));
+      const topY=60+q*185; P.hgTop.setAttribute('y',topY.toFixed(1)); P.hgTop.setAttribute('height',(250-topY).toFixed(1));
+      const h=8+q*140; P.hgBot.setAttribute('d',`M50 450 L250 450 L250 ${450-h*0.35} Q150 ${450-h*1.25} 50 ${450-h*0.35} Z`);
+      P.hgStream.style.opacity=q<1?0.9:0; P.hgStream.setAttribute('height',(205-h*0.9).toFixed(1));}
     if(P.bubbles){const n=P.bubbles.length, span=Math.max(0.5,(s.end-pin)-0.6);
       P.e.style.opacity=1; P.e.style.transform='none';
       P.bubbles.forEach((b,k)=>{const d=t-(pin+0.2+k*span/n),p=easeOutBack(clamp(d/0.3));

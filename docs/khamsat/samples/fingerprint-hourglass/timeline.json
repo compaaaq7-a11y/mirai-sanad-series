@@ -1,0 +1,99 @@
+{
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "duration": 10.5,
+ "audio": null,
+ "align": "pace 1.8 w/s (no audio)",
+ "scenes": [
+  {
+   "start": 0.0,
+   "bg": "red",
+   "lines": [
+    [
+     {
+      "w": "بس",
+      "t": 0.4,
+      "c": "silver"
+     },
+     {
+      "w": "ما",
+      "t": 1.095,
+      "c": "silver",
+      "box": true
+     },
+     {
+      "w": "تنسى",
+      "t": 1.789,
+      "c": "silver",
+      "box": true
+     }
+    ]
+   ],
+   "prop": {
+    "type": "fingerprint"
+   },
+   "end": 3.5
+  },
+  {
+   "start": 3.5,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "ريحة",
+      "t": 3.9,
+      "c": "black"
+     },
+     {
+      "w": "حلوة",
+      "t": 4.798,
+      "c": "black"
+     }
+    ],
+    [
+     {
+      "w": "وتروح",
+      "t": 5.696,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "prop": {
+    "type": "hourglass"
+   },
+   "end": 7.5
+  },
+  {
+   "start": 7.5,
+   "bg": "red",
+   "lines": [
+    [
+     {
+      "w": "أثرك",
+      "t": 7.9,
+      "c": "silver"
+     }
+    ],
+    [
+     {
+      "w": "يبقى",
+      "t": 8.8,
+      "c": "black",
+      "s": 1.35
+     }
+    ]
+   ],
+   "prop": {
+    "type": "fingerprint"
+   },
+   "end": 10.5
+  }
+ ],
+ "font": "scheherazade",
+ "theme": "oud",
+ "size": 130.0,
+ "music": "auto",
+ "music_volume": 0.4
+}

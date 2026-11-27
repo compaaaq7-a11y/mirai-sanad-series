@@ -1,0 +1,4 @@
+@ fps=30 theme=oud font=scheherazade size=130 pace=1.8 music=auto music_volume=0.4
+[bg=red dur=3.5 prop=fingerprint] بس =ما= =تنسى=
+[bg=cream dur=4 prop=hourglass] ريحة حلوة / +*وتروح*
+[bg=red dur=3 prop=fingerprint] أثرك / +*يبقى*
