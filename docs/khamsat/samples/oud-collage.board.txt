@@ -1,0 +1,8 @@
+@ fps=30 theme=oud font=scheherazade size=140 pace=1.8 music=auto music_volume=0.4 handle="@misk.store"
+[bg=red fx=ring] تدري وش / +*يوصل قبلك؟*
+[bg=cream] الناس / +*تنسى*
+[bg=red] بس =ما= =تنسى=
+[bg=cream] وأغلب العطور =اليوم= / +*تشبه بعض*
+[bg=red prop=window title="Timer.exe" timer="51:00" countdown=51 prop_y=900] ريحة حلوة / وتروح =بعد=
+[bg=cream fx=stars] عطر / +*مِسْـــك*
+[bg=red prop=window title="Instagram.exe" text="اطلب الحين ←" prop_y=900] اطلبه / +*الحيـــن*

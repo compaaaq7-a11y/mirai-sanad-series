@@ -81,6 +81,9 @@ def tokenize(text, bg):
             while w[:1] in '+-':
                 size *= 1.35 if w[0] == '+' else 0.7
                 w = w[1:]
+            box = False
+            if len(w) > 1 and w.startswith('='):   # =كلمة= : الكلمة داخل مستطيل ملوّن كالختم
+                box, w = True, w.replace('=', '')
             # تمييز يمتد على عدة كلمات: *كلمة كلمة*
             if w.startswith('*'):
                 accent, w = True, w[1:]
@@ -94,7 +97,7 @@ def tokenize(text, bg):
                 continue
             shown = w.strip(STRIP_DISPLAY)
             toks.append({'w': shown, 'say': w, 'spoken': not shown_only, 'part': pi, 'spoken_only': spoken_only, 'shown': not spoken_only and bool(shown),
-                         'c': ACCENT_COLOR[bg] if accent else DEFAULT_COLOR[bg], 's': round(size, 3)})
+                         'c': ACCENT_COLOR[bg] if accent else DEFAULT_COLOR[bg], 's': round(size, 3), 'box': box})
     return toks
 
 
@@ -314,7 +317,7 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
                 grp = [x['t'] for x in toks if x.get('part') == t['part'] - 1 and x.get('spoken_only') and 't' in x]
                 t['t'] = min(grp) if grp else last_t
             if t['shown']:
-                cur.append({'w': t['w'], 't': t['t'], 'c': t['c'], **({'s': t['s']} if t['s'] != 1 else {})})
+                cur.append({'w': t['w'], 't': t['t'], 'c': t['c'], **({'s': t['s']} if t['s'] != 1 else {}), **({'box': True} if t.get('box') else {})})
         if cur:
             lines.append(cur)
         sc = {'start': round(s['_start'], 3) if '_start' in s else round(max(0.0, first - 0.08), 3), 'bg': a['bg'], 'lines': lines, '_last': last_t}
@@ -382,7 +385,7 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
           'align': method, 'scenes': out_scenes}
     if 'font' in glob:
         tl['font'] = glob['font']
-    for k in ('theme', 'accent', 'cream'):   # سمة الألوان حسب نوع الإعلان، أو لون علامة المشتري
+    for k in ('theme', 'accent', 'cream', 'handle'):   # سمة الألوان حسب نوع الإعلان، أو لون علامة المشتري
         if k in glob:
             tl[k] = glob[k]
     for k in ('size', 'bubble_scale'):   # حجم النص الأساسي (الافتراضي 165) وحجم فقاعات الكوميكس للفيديو كله
@@ -432,6 +435,12 @@ def make_prop(a):
                 p[k] = a[k]
         if any(k.startswith('dm_') for k in a):
             p['dm'] = {k[3:]: v for k, v in a.items() if k.startswith('dm_')}
+    elif t == 'window':
+        for k in ('title', 'text', 'timer', 'countdown'):
+            if k in a:
+                p[k] = a[k]
+        if 'image' in a:
+            p['image'] = a['image']   # يُحوَّل لمسار مطلق في render.mjs
     elif t == 'cards':
         p['items'] = a.get('items', '').split('|')
     if 'prop_y' in a:

@@ -116,6 +116,20 @@ html,body{background:#000;overflow:hidden}
   -webkit-mask-image:radial-gradient(circle at 50% 50%,transparent 32%,#000 62%)}
 /* الصفحة RTL: العناصر المتحركة بـ translate تحتاج نقطة بداية صريحة من اليسار */
 .star,.conf,.spark,.ember{left:0;top:0}
+.w.boxed{background:var(--a3);color:#fff!important;text-shadow:none!important;padding:.02em .35em .12em;border-radius:6px;
+  box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.w.boxed::after{display:none}
+.win{position:absolute;left:150px;width:780px;background:#fff;border:3px solid #1b1b1b;box-shadow:12px 14px 0 rgba(0,0,0,.35);font-family:Tajawal}
+.win .tbar{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;direction:ltr;
+  background:linear-gradient(90deg,var(--a2),color-mix(in srgb,var(--a1) 55%,#2a4d9c));color:#fff;font:700 28px Tajawal,sans-serif}
+.win .tbar i{font-style:normal;display:inline-flex;gap:10px}
+.win .tbar i b{width:34px;height:30px;background:#d9d9d9;border:2px solid #fff;color:#111;font-size:20px;display:flex;align-items:center;justify-content:center}
+.win .body{padding:34px;display:flex;align-items:center;justify-content:center;min-height:300px;color:#111;text-align:center}
+.win .big{font:800 150px Tajawal,sans-serif;direction:ltr;letter-spacing:2px}
+.win img{max-width:100%;max-height:640px;display:block}
+.win .msg{font:800 52px Tajawal,sans-serif;line-height:1.4}
+.handle{position:absolute;left:48px;top:56px;font:800 30px Tajawal,sans-serif;color:var(--a2);direction:ltr;opacity:.85;
+  background:color-mix(in srgb,var(--cream) 80%,transparent);padding:6px 16px;border-radius:30px;z-index:5}
 .vframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .slash{position:absolute;left:0;height:6px;width:100%;background:var(--a1);box-shadow:0 0 24px 8px color-mix(in srgb,var(--a1) 85%,transparent);transform-origin:100% 50%}
 .flash{position:absolute;inset:0;background:#fff;pointer-events:none}
@@ -190,6 +204,7 @@ const THEMES={
   fashion:{a1:'#FF3D8B',a2:'#A3104F',a3:'#E0206F',glow:'#5e0a32',cream:'#FFF0F6'},
   nature: {a1:'#22B573',a2:'#0E6B40',a3:'#18965E',glow:'#0b3d24',cream:'#EEF8F0'},
   tech:   {a1:'#2F80ED',a2:'#123E8C',a3:'#1F66CC',glow:'#0a2452',cream:'#EEF3FB'},
+  oud:    {a1:'#8E2A2E',a2:'#5A1215',a3:'#6E1A1E',glow:'#4a1013',cream:'#E8E0D3'},
 };
 function hexMix(a,b,t){const p=h=>[1,3,5].map(i=>parseInt(h.substr(i,2),16));const A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')}
 const TH=Object.assign({},THEMES[(TL.theme||'classic').toLowerCase()]||THEMES.classic);
@@ -227,11 +242,12 @@ function wordEl(w, basePx, font){
   const e=document.createElement('span');
   const F=FONTS[(font||TL.font||'lalezar').toLowerCase()]||FONTS.lalezar;
   const color=w.c||'white', px=Math.round(basePx*(w.s||1)*F.k);
-  e.className='w c-'+color; e.textContent=w.w; e.dataset.t=w.w;
+  e.className='w c-'+color+(w.box?' boxed':''); e.textContent=w.w; e.dataset.t=w.w;
   e.style.fontFamily=F.f+",Lalezar,sans-serif"; e.style.fontWeight=F.w;
-  if(F.stroke){ const sc={white:'#f4f4f4',silver:'#d9d9d9',red:'#E3121F',black:'#1d1d1d'}[color]||'#f4f4f4'; // تسميك الحروف بلونها نفسه
+  if(w.box){ e.style.textShadow='none'; }
+  else if(F.stroke){ const sc={white:'#f4f4f4',silver:'#d9d9d9',red:'#E3121F',black:'#1d1d1d'}[color]||'#f4f4f4'; // تسميك الحروف بلونها نفسه
     e.style.webkitTextStroke=(px*F.stroke).toFixed(1)+'px '+sc; e.style.paintOrder='stroke fill'; }
-  e.style.fontSize=px+'px'; e.style.textShadow=extrude(color,px);
+  e.style.fontSize=px+'px'; if(!w.box) e.style.textShadow=extrude(color,px);
   return e;
 }
 
@@ -299,13 +315,17 @@ function build(i){
   if(bg==='camera'){const rec=document.createElement('div');rec.className='rec';
     rec.innerHTML='<div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div><div class="lbl"><i></i>REC</div><div class="tc"></div>';
     root.appendChild(rec);R.tc=rec.querySelector('.tc');R.recDot=rec.querySelector('.lbl i');}
+  if(TL.handle){const h=document.createElement('div');h.className='handle';h.textContent=TL.handle;root.appendChild(h);}
   const fl=document.createElement('div'); fl.className='flash'; root.appendChild(fl); R.flash=fl;
   if(s.fade==='out'){const fe=document.createElement('div');fe.className='flash';fe.style.background='#000';fe.style.opacity=0;root.appendChild(fe);R.fadeEl=fe;}
 
   stage.appendChild(root);
   // تصغير السطر إذا تجاوز عرض الإطار
   root.style.display='block';
-  tb.querySelectorAll('.line').forEach(ld=>{const ww=ld.scrollWidth; if(ww>980){ld.style.transform=`scale(${980/ww})`;}});
+  // عرض السطر = مجموع عرض كلماته (scrollWidth لا يحسب الفيضان في RTL ولا في السطر المتوسّط)
+  tb.querySelectorAll('.line').forEach(ld=>{const ww=[...ld.children].reduce((a,c)=>{const cs=getComputedStyle(c);
+      return a+c.offsetWidth+parseFloat(cs.marginLeft)+parseFloat(cs.marginRight);},0);
+    if(ww>980){ld.style.transform=`scale(${980/ww})`;}});
   root.style.display='none';
   built[i]=R; return R;
 }
@@ -333,6 +353,15 @@ function buildProp(p,cam,R){
     if(p.dm&&p.dm.hero){const im=e.querySelector('.dm .img');im.appendChild(wordEl({w:p.dm.hero,c:'white'},110));}
     cam.appendChild(e);
     return {e,p,ctext:e.querySelector('.ctext'),sheet:e.querySelector('.sheet'),dm:e.querySelector('.dm')};
+  }
+  if(p.type==='window'){
+    const e=document.createElement('div'); e.className='win'; e.style.top=(p.y!=null?p.y:760)+'px';
+    let body='';
+    if(p.image) body=`<img src="${p.image}">`;
+    else if(p.timer) body=`<div class="big">${p.timer}</div>`;
+    else body=`<div class="msg">${p.text||''}</div>`;
+    e.innerHTML=`<div class="tbar"><span>${p.title||'Window.exe'}</span><i><b>_</b><b>□</b><b>×</b></i></div><div class="body">${body}</div>`;
+    cam.appendChild(e); return {e,p,timerEl:e.querySelector('.big')};
   }
   if(p.type==='cards'){
     const e=document.createElement('div'); e.className='cards'; e.style.top=y+'px';
@@ -442,6 +471,8 @@ function draw(i,t){
     if(P.ctext){const txt=P.p.comment||'',a=P.p.comment_at??s.start+.3;
       P.ctext.textContent=t<a?'أضف تعليق...':txt.slice(0,Math.round(txt.length*clamp((t-a)/.4)));
       P.ctext.style.fontWeight=t<a?500:800;}
+    if(P.timerEl&&P.p.countdown){const tot=+P.p.countdown,left=Math.max(0,tot*(1-clamp((t-pin)/Math.max(.1,s.end-pin))));
+      const m=Math.floor(left/60),sec=Math.floor(left%60);P.timerEl.textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
     if(P.cards){P.cards.forEach((c,k)=>{const d2=t-(pin+k*.12),p2=easeOutBack(clamp(d2/.3));
       c.style.opacity=clamp(d2/.08);c.style.transform=`translateY(${(1-p2)*200}px) rotateY(${(k-1.5)*-8}deg)`;});}
   }

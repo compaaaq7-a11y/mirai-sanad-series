@@ -36,6 +36,7 @@ const t1 = parseFloat(opt('to', TL.duration));
 const work = fs.mkdtempSync(path.join(os.tmpdir(), 'salam-'));
 fs.cpSync(here, work, { recursive: true, filter: s => !s.endsWith('.mjs') });
 TL.scenes.forEach(s => { if (s.image && !/^(https?|file|data):/.test(s.image)) s.image = 'file://' + path.resolve(tlDir, s.image); });
+TL.scenes.forEach(s => { if (s.prop && s.prop.image && !/^(https?|file|data):/.test(s.prop.image)) s.prop.image = 'file://' + path.resolve(tlDir, s.prop.image); });
 // مقاطع الفيديو: Chromium المضمّن لا يشغّل H.264، فنستخرج الفريمات مسبقاً بـ ffmpeg
 TL.scenes.forEach((s, i) => {
   if (!s.video) return;
