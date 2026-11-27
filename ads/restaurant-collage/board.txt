@@ -1,0 +1,13 @@
+# إعلان كولاج فاخر لمطعم (لهجة عراقية) — اسم المطعم «ديوان الكرم» خيالي، للمعرض والأمثلة
+# ألوان نحاسية دافئة + بيج. الصور عامة ومولّدة مجاناً؛ مع زبون حقيقي تُستبدل بصور أطباقه ومكانه.
+@ fps=30 accent=#A0521F cream=#F3E8D8 font=scheherazade size=140 pace=1.7 music=auto music_volume=0.45 handle="@diwan.alkaram"
+
+[bg=cream photos=img/hall.jpg|img/tannour.jpg|img/table.jpg] تدري شنو / +*يجمع العائلة؟*
+[bg=dark prop=bubbles msgs="وين نتعشى الليلة؟|نفس المكان كل مرة؟|أريد شي يفرّحنا…|عرفت وين!" prop_y=820] سفرة / +*وحدة*
+[bg=cream fx=shake] وأغلب المطاعم =اليوم= / +*طعمها واحد*
+[bg=dark stickers=img/masgouf.png fx=ring] مسكوف / +*على الحطب*
+[bg=cream photos=img/tannour.jpg|img/table.jpg] خبز =تنور= / +*وسفرة بيتية*
+[bg=dark prop=hourglass prop_y=900] نطبخ / +*على مهل*
+[bg=cream stickers=img/dallah.png|img/istikan.png] وختامها / +*چاي وكهوة*
+[bg=dark prop=fingerprint] طعم / +*ما ينـــسى*
+[bg=cream prop=window title="Reservation.exe" text="احجز طاولتك ←" prop_y=980 fx=stars] ديوان / +*الكرم*

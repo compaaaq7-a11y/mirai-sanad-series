@@ -339,7 +339,7 @@ function build(i){
   R.pol=[]; (s.photos||[]).forEach((src,k,arr)=>{const d=document.createElement('div');d.className='pol';
     const w=arr.length>2?360:440,h=w*1.05; d.style.width=w+'px'; d.style.height=(h+74)+'px';
     d.innerHTML='<img>'; d.querySelector('img').src=src; fx.appendChild(d);
-    const r=rng(i*13+k*7); const cx=arr.length===1?540:180+k*(720/Math.max(1,arr.length-1)), cy=1180+(r()-0.5)*160;
+    const r=rng(i*13+k*7); const cx=arr.length===1?540:(arr.length===2?320+k*440:260+k*(560/(arr.length-1))), cy=1180+(r()-0.5)*160;   // داخل الإطار دائماً
     R.pol.push({e:d,at:s.start+0.2+k*0.3,x:cx-w/2,y:cy-h/2,rot:(r()-0.5)*18});});
   if(TL.handle){const h=document.createElement('div');h.className='handle';h.textContent=TL.handle;root.appendChild(h);}
   const fl=document.createElement('div'); fl.className='flash'; root.appendChild(fl); R.flash=fl;
