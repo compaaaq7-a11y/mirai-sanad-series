@@ -1,0 +1,5 @@
+@ fps=30 theme=oud font=scheherazade size=130 pace=1.8 music=auto music_volume=0.4 handle="@misk.store"
+[bg=cream dur=3 photos=majlis.jpg] يوصل قبلك / +*للمجلس؟*
+[bg=red dur=4 prop=bubbles msgs="السلام عليكم|هلا والله، كيف الحال؟|بخير، عساك طيب|الله يحييك" prop_y=820] الناس / +*تنسى*
+[bg=cream dur=3 stickers=oudbox.png] نعتّق / +*العود* / =سنين=
+[bg=red dur=3 stickers=bottle.png|oudbox.png] عطر / +*مِسْـــك*

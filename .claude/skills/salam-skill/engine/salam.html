@@ -130,6 +130,14 @@ html,body{background:#000;overflow:hidden}
 .win .msg{font:800 52px Tajawal,sans-serif;line-height:1.4}
 .handle{position:absolute;left:48px;top:56px;font:800 30px Tajawal,sans-serif;color:var(--a2);direction:ltr;opacity:.85;
   background:color-mix(in srgb,var(--cream) 80%,transparent);padding:6px 16px;border-radius:30px;z-index:5}
+.stk{position:absolute;left:0;top:0;transform-origin:50% 50%;
+  filter:drop-shadow(5px 0 0 #fff) drop-shadow(-5px 0 0 #fff) drop-shadow(0 5px 0 #fff) drop-shadow(0 -5px 0 #fff) drop-shadow(10px 16px 18px rgba(0,0,0,.45))}
+.pol{position:absolute;left:0;top:0;background:#fbf8f1;padding:16px 16px 58px;box-shadow:8px 12px 22px rgba(0,0,0,.4);transform-origin:50% 50%}
+.pol img{display:block;width:100%;height:100%;object-fit:cover;filter:sepia(.55) contrast(1.05) saturate(.85)}
+.bub{position:absolute;max-width:640px;padding:22px 30px;border-radius:30px;font:800 40px Tajawal,sans-serif;line-height:1.45;
+  box-shadow:0 8px 18px rgba(0,0,0,.18);direction:rtl}
+.bub.in{left:110px;background:#fff;color:#1b1b1b;border-bottom-left-radius:8px}
+.bub.out{right:110px;background:var(--a3);color:#fff;border-bottom-right-radius:8px}
 .vframe{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .slash{position:absolute;left:0;height:6px;width:100%;background:var(--a1);box-shadow:0 0 24px 8px color-mix(in srgb,var(--a1) 85%,transparent);transform-origin:100% 50%}
 .flash{position:absolute;inset:0;background:#fff;pointer-events:none}
@@ -277,8 +285,9 @@ function build(i){
 
   // النص
   const tb=document.createElement('div'); tb.className='tb'; cam.appendChild(tb); R.tb=tb;
-  const base = s.size || TL.size || (p ? 118 : 165);
-  tb.style.top = (s.y!=null ? s.y : (p ? 300 : ((bg==='image'||bg==='video') ? 1170 : 560)))+'px';
+  const base = s.size || TL.size || (p||(s.stickers&&s.stickers.length)||(s.photos&&s.photos.length) ? 118 : 165);
+  const media = p || (s.stickers&&s.stickers.length) || (s.photos&&s.photos.length);   // عناصر في النصف السفلي ← النص للأعلى
+  tb.style.top = (s.y!=null ? s.y : (media ? 300 : ((bg==='image'||bg==='video') ? 1170 : 560)))+'px';
   // الانعكاس الأرضي: افتراضي على الخلفيات الأربع، ومطفأ على الصور (إلا reflect=true)
   if((bg==='image'||bg==='video') ? s.reflect===true : s.reflect!==false) tb.classList.add('reflect');
   if(bg==='image'||bg==='video'){ // على الصور والفيديو: بلا انعكاس، والوضوح بظل ناعم حول الحروف بدل تعتيم الصورة
@@ -315,6 +324,18 @@ function build(i){
   if(bg==='camera'){const rec=document.createElement('div');rec.className='rec';
     rec.innerHTML='<div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div><div class="lbl"><i></i>REC</div><div class="tc"></div>';
     root.appendChild(rec);R.tc=rec.querySelector('.tc');R.recDot=rec.querySelector('.lbl i');}
+  // ملصقات مقصوصة (PNG شفاف) بحدّ أبيض، وصور قديمة بإطار أبيض
+  const LAY={1:[[540,1250,0]],2:[[330,1250,-7],[760,1300,6]],3:[[290,1230,-8],[790,1210,7],[540,1480,-2]]};
+  R.stk=[]; (s.stickers||[]).forEach((src,k,arr)=>{const im=document.createElement('img');im.className='stk';im.src=src;
+    // الحجم بأطول ضلع (الصور الطويلة لا تغطي النص)، والموضع بمركز الملصق
+    const sz=(s.sticker_size||(arr.length>1?460:620)); im.style.maxWidth=sz+'px'; im.style.maxHeight=sz+'px';
+    const [x,y,rot]=(LAY[arr.length]||LAY[3])[k%3];
+    fx.appendChild(im); R.stk.push({e:im,at:s.start+0.15+k*0.25,x,y:y+40,rot,ph:k*1.7});});
+  R.pol=[]; (s.photos||[]).forEach((src,k,arr)=>{const d=document.createElement('div');d.className='pol';
+    const w=arr.length>2?360:440,h=w*1.05; d.style.width=w+'px'; d.style.height=(h+74)+'px';
+    d.innerHTML='<img>'; d.querySelector('img').src=src; fx.appendChild(d);
+    const r=rng(i*13+k*7); const cx=arr.length===1?540:180+k*(720/Math.max(1,arr.length-1)), cy=1180+(r()-0.5)*160;
+    R.pol.push({e:d,at:s.start+0.2+k*0.3,x:cx-w/2,y:cy-h/2,rot:(r()-0.5)*18});});
   if(TL.handle){const h=document.createElement('div');h.className='handle';h.textContent=TL.handle;root.appendChild(h);}
   const fl=document.createElement('div'); fl.className='flash'; root.appendChild(fl); R.flash=fl;
   if(s.fade==='out'){const fe=document.createElement('div');fe.className='flash';fe.style.background='#000';fe.style.opacity=0;root.appendChild(fe);R.fadeEl=fe;}
@@ -362,6 +383,13 @@ function buildProp(p,cam,R){
     else body=`<div class="msg">${p.text||''}</div>`;
     e.innerHTML=`<div class="tbar"><span>${p.title||'Window.exe'}</span><i><b>_</b><b>□</b><b>×</b></i></div><div class="body">${body}</div>`;
     cam.appendChild(e); return {e,p,timerEl:e.querySelector('.big')};
+  }
+  if(p.type==='bubbles'){
+    const e=document.createElement('div'); e.className='layer'; cam.appendChild(e);
+    const msgs=(p.msgs||'').split('|').filter(Boolean), y0=p.y!=null?p.y:880, items=[];
+    msgs.forEach((m,k)=>{const b=document.createElement('div');b.className='bub '+(k%2?'out':'in');b.textContent=m;
+      b.style.top=(y0+k*150)+'px'; e.appendChild(b); items.push(b);});
+    return {e,p,bubbles:items};
   }
   if(p.type==='cards'){
     const e=document.createElement('div'); e.className='cards'; e.style.top=y+'px';
@@ -440,6 +468,10 @@ function draw(i,t){
   if(R.conf) R.conf.forEach(c=>{const d=t-c.at; if(d<0){c.e.style.opacity=0;return;}
     const y=-60+c.v*d, x=c.x+Math.sin(d*3+c.ph)*c.sw; c.e.style.opacity=y>1950?0:1;
     c.e.style.transform=`translate(${x}px,${y}px) rotate(${c.rot*d}deg) rotateX(${d*400+c.ph*60}deg)`;});
+  R.stk&&R.stk.forEach(o=>{const d=t-o.at; if(d<0){o.e.style.opacity=0;return;} const p=easeOutBack(clamp(d/0.35));
+    o.e.style.opacity=clamp(d/0.08); o.e.style.transform=`translate(${o.x}px,${o.y+Math.sin(t*1.6+o.ph)*10}px) translate(-50%,-50%) rotate(${o.rot*(1+0.6*(1-p))}deg) scale(${0.3+0.7*p})`;});
+  R.pol&&R.pol.forEach(o=>{const d=t-o.at; if(d<0){o.e.style.opacity=0;return;} const p=easeOutCubic(clamp(d/0.35));
+    o.e.style.opacity=clamp(d/0.1); o.e.style.transform=`translate(${o.x}px,${o.y-180*(1-p)}px) rotate(${o.rot+(1-p)*25}deg) scale(${1.25-0.25*p})`;});
   if(R.speed){const d=t-R.speed.at; R.speed.e.style.opacity=d<0?0:(0.6+0.25*Math.sin(t*40)); R.speed.e.style.transform=`rotate(${Math.floor(t*12)*7}deg)`;}
   // تلاشٍ إلى الأسود في نهاية المشهد: fade=out
   if(R.fadeEl){ const f=s.fade_len||1.4; R.fadeEl.style.opacity=clamp((t-(s.end-f))/f); }
@@ -473,6 +505,11 @@ function draw(i,t){
       P.ctext.style.fontWeight=t<a?500:800;}
     if(P.timerEl&&P.p.countdown){const tot=+P.p.countdown,left=Math.max(0,tot*(1-clamp((t-pin)/Math.max(.1,s.end-pin))));
       const m=Math.floor(left/60),sec=Math.floor(left%60);P.timerEl.textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+    if(P.bubbles){const n=P.bubbles.length, span=Math.max(0.5,(s.end-pin)-0.6);
+      P.e.style.opacity=1; P.e.style.transform='none';
+      P.bubbles.forEach((b,k)=>{const d=t-(pin+0.2+k*span/n),p=easeOutBack(clamp(d/0.3));
+        b.style.opacity=d<0?0:clamp(d/0.08); b.style.transform=`translateY(${(1-p)*40}px) scale(${0.6+0.4*p})`;
+        b.style.transformOrigin=(k%2?'100%':'0%')+' 100%';});}
     if(P.cards){P.cards.forEach((c,k)=>{const d2=t-(pin+k*.12),p2=easeOutBack(clamp(d2/.3));
       c.style.opacity=clamp(d2/.08);c.style.transform=`translateY(${(1-p2)*200}px) rotateY(${(k-1.5)*-8}deg)`;});}
   }
@@ -480,7 +517,7 @@ function draw(i,t){
 }
 window.seek=seek;
 // انتظار الخطوط وكل صور الخلفيات قبل أول فريم
-const imgs=[...new Set(TL.scenes.filter(s=>s.image).map(s=>s.image))].map(u=>{const im=new Image();im.src=u;return im.decode().catch(()=>console.error('image failed: '+u));});
+const imgs=[...new Set(TL.scenes.flatMap(s=>[s.image,...(s.stickers||[]),...(s.photos||[]),s.prop&&s.prop.image].filter(Boolean)))].map(u=>{const im=new Image();im.src=u;return im.decode().catch(()=>console.error('image failed: '+u));});
 window.engineReady=Promise.all([document.fonts.ready,...imgs]).then(()=>{seek(0);return true;});
 
 if(new URLSearchParams(location.search).has('preview')){

@@ -342,6 +342,12 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
                     sc[k] = float(a[k])
             if a.get('video_loop') == 'no':
                 sc['video_loop'] = False
+        base_dir, out_dir = os.path.dirname(os.path.abspath(board)), os.path.dirname(os.path.abspath(out or board))
+        for k in ('stickers', 'photos'):   # قوائم صور مفصولة بـ |
+            if a.get(k):
+                sc[k] = [os.path.relpath(os.path.join(base_dir, x), out_dir) for x in a[k].split('|') if x]
+        if 'sticker_size' in a:
+            sc['sticker_size'] = float(a['sticker_size'])
         if 'bubble' in a:
             sc['bubble'] = a['bubble']
             for k in ('bubble_x', 'bubble_y', 'bubble_rot'):
@@ -435,6 +441,8 @@ def make_prop(a):
                 p[k] = a[k]
         if any(k.startswith('dm_') for k in a):
             p['dm'] = {k[3:]: v for k, v in a.items() if k.startswith('dm_')}
+    elif t == 'bubbles':
+        p['msgs'] = a.get('msgs', '')
     elif t == 'window':
         for k in ('title', 'text', 'timer', 'countdown'):
             if k in a:

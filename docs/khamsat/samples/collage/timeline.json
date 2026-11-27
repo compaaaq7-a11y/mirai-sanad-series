@@ -1,0 +1,132 @@
+{
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "duration": 13.0,
+ "audio": null,
+ "align": "pace 1.8 w/s (no audio)",
+ "scenes": [
+  {
+   "start": 0.0,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "يوصل",
+      "t": 0.4,
+      "c": "black"
+     },
+     {
+      "w": "قبلك",
+      "t": 0.945,
+      "c": "black"
+     }
+    ],
+    [
+     {
+      "w": "للمجلس؟",
+      "t": 1.491,
+      "c": "red",
+      "s": 1.35
+     }
+    ]
+   ],
+   "photos": [
+    "majlis.jpg"
+   ],
+   "end": 3.0
+  },
+  {
+   "start": 3.0,
+   "bg": "red",
+   "lines": [
+    [
+     {
+      "w": "الناس",
+      "t": 3.4,
+      "c": "silver"
+     }
+    ],
+    [
+     {
+      "w": "تنسى",
+      "t": 4.867,
+      "c": "black",
+      "s": 1.35
+     }
+    ]
+   ],
+   "prop": {
+    "type": "bubbles",
+    "msgs": "السلام عليكم|هلا والله، كيف الحال؟|بخير، عساك طيب|الله يحييك",
+    "y": 820.0
+   },
+   "end": 7.0
+  },
+  {
+   "start": 7.0,
+   "bg": "cream",
+   "lines": [
+    [
+     {
+      "w": "نعتّق",
+      "t": 7.4,
+      "c": "black"
+     }
+    ],
+    [
+     {
+      "w": "العود",
+      "t": 8.019,
+      "c": "red",
+      "s": 1.35
+     }
+    ],
+    [
+     {
+      "w": "سنين",
+      "t": 8.638,
+      "c": "black",
+      "box": true
+     }
+    ]
+   ],
+   "stickers": [
+    "oudbox.png"
+   ],
+   "end": 10.0
+  },
+  {
+   "start": 10.0,
+   "bg": "red",
+   "lines": [
+    [
+     {
+      "w": "عطر",
+      "t": 10.4,
+      "c": "silver"
+     }
+    ],
+    [
+     {
+      "w": "مِسْـــك",
+      "t": 11.104,
+      "c": "black",
+      "s": 1.35
+     }
+    ]
+   ],
+   "stickers": [
+    "bottle.png",
+    "oudbox.png"
+   ],
+   "end": 13.0
+  }
+ ],
+ "font": "scheherazade",
+ "theme": "oud",
+ "handle": "@misk.store",
+ "size": 130.0,
+ "music": "auto",
+ "music_volume": 0.4
+}
