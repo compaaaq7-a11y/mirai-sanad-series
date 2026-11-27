@@ -42,6 +42,14 @@ html,body{background:#000;overflow:hidden}
 .bg-red .floor{position:absolute;left:0;right:0;bottom:0;height:42%;
   background:linear-gradient(to bottom,rgba(255,120,130,.75),#E03040 30%,#C40418 100%)}
 
+.bg-image{background:var(--ink)}
+.bg-image .photo{position:absolute;inset:-3%;background-size:cover;background-position:50% 40%}
+.bg-image .tint{position:absolute;inset:0;background:
+  radial-gradient(ellipse 80% 45% at 50% 30%,rgba(227,18,31,.22),transparent 70%),
+  linear-gradient(to bottom,rgba(11,4,5,.70) 0%,rgba(11,4,5,.25) 30%,rgba(11,4,5,.30) 55%,rgba(11,4,5,.92) 100%)}
+.bg-image.tint-red .photo{filter:grayscale(1) contrast(1.15) brightness(.9)}
+.bg-image.tint-red .tint{background:linear-gradient(to bottom,rgba(200,5,26,.55),rgba(120,0,12,.75));mix-blend-mode:multiply}
+.bg-image.tint-none .tint{background:linear-gradient(to bottom,rgba(0,0,0,.35),transparent 30%,transparent 70%,rgba(0,0,0,.6))}
 .bg-cream,.bg-camera{background:var(--cream)}
 .bg-cream .rings,.bg-camera .rings{position:absolute;inset:0;
   background:repeating-radial-gradient(circle at 62% 38%,transparent 0 58px,rgba(0,0,0,.055) 58px 60px)}
@@ -180,6 +188,9 @@ function build(i){
       R.embers.push({e,x:r()*1080,y:r()*1920,v:40+r()*120,a:.3+r()*.7,sz:.5+r()*1.2});} }
   if(bg==='red'){ bgl.innerHTML='<div class="rays"></div><div class="glow"></div><div class="floor"></div>'; R.rays=bgl.querySelector('.rays'); }
   if(bg==='cream'||bg==='camera'){ bgl.innerHTML='<div class="rings"></div><div class="floor"></div><div class="grain"></div>'; }
+  if(bg==='image'){ if(s.tint) bgl.classList.add('tint-'+s.tint);
+    bgl.innerHTML='<div class="photo"></div><div class="tint"></div>';
+    R.photo=bgl.querySelector('.photo'); R.photo.style.backgroundImage=`url("${s.image}")`; }
   const cam=document.createElement('div'); cam.className='cam'; root.appendChild(cam); R.cam=cam;
 
   // العنصر المرافق
@@ -284,6 +295,9 @@ function seek(t){
 
   // الخلفيات المتحركة
   if(R.rays) R.rays.style.transform=`rotate(${t*4}deg)`;
+  if(R.photo){ const k=(i*37)%4; // حركة كين بيرنز: زوم بطيء مع انزياح باتجاه يتغير من مشهد لآخر
+    const dx=[1,-1,0,0][k]*18*prog, dy=[0,0,1,-1][k]*18*prog;
+    R.photo.style.transform=`translate(${dx}px,${dy}px) scale(${1.02+0.10*prog})`; }
   R.embers.forEach(m=>{const y=((m.y - t*m.v)%1920+1920)%1920;
     m.e.style.transform=`translate(${m.x+Math.sin(t*1.5+m.x)*20}px,${y}px) scale(${m.sz})`;m.e.style.opacity=m.a*(0.6+0.4*Math.sin(t*6+m.x));});
   if(R.tc){const f=Math.floor(t*30)%30, ss=Math.floor(t); R.tc.textContent=`00:00:${String(ss).padStart(2,'0')}:${String(f).padStart(2,'0')}`;
@@ -317,7 +331,9 @@ function seek(t){
   }
 }
 window.seek=seek;
-window.engineReady=document.fonts.ready.then(()=>{seek(0);return true;});
+// انتظار الخطوط وكل صور الخلفيات قبل أول فريم
+const imgs=[...new Set(TL.scenes.filter(s=>s.image).map(s=>s.image))].map(u=>{const im=new Image();im.src=u;return im.decode().catch(()=>console.error('image failed: '+u));});
+window.engineReady=Promise.all([document.fonts.ready,...imgs]).then(()=>{seek(0);return true;});
 
 if(new URLSearchParams(location.search).has('preview')){
   const t0=performance.now(); const loop=()=>{seek(((performance.now()-t0)/1000)%TL.duration);requestAnimationFrame(loop)};

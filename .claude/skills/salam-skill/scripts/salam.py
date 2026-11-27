@@ -16,6 +16,7 @@
   +كلمة   = أكبر 35%     -كلمة = أصغر 30%
   /       = سطر جديد داخل نفس المشهد
   {نص}    = يُنطق ولا يُكتب على الشاشة      <نص> = يُكتب ولا يُنطق
+  [bg=image prompt="old father drinking coffee"] خلفية صورة مولّدة مجاناً (أو image=ملف.jpg)
   الأسطر التي تبدأ بـ # تعليقات. وتُضبط الإعدادات العامة بسطر مثل:  @ music=bgm.mp3 music_volume=0.1
 """
 import argparse, json, os, re, shlex, subprocess, sys, wave, shutil, tempfile
@@ -23,8 +24,8 @@ import argparse, json, os, re, shlex, subprocess, sys, wave, shutil, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ENGINE = os.path.join(HERE, '..', 'engine')
 
-DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black'}
-ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red'}
+DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black', 'image': 'white'}
+ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red', 'image': 'red'}
 BG_CYCLE = ['dark', 'red', 'cream', 'dark', 'red', 'camera']
 STRIP_DISPLAY = '.،,؛;:!…'
 
@@ -46,7 +47,9 @@ def parse_board(path):
         scenes.append({'attrs': attrs, 'text': line})
     for i, s in enumerate(scenes):
         s['attrs'].setdefault('bg', BG_CYCLE[i % len(BG_CYCLE)])
-        s['tokens'] = tokenize(s['text'], s['attrs']['bg'])
+        a = s['attrs']
+        # صورة بصبغة حمراء تُعامل ألوانها مثل الخلفية الحمراء (تمييز أسود)
+        s['tokens'] = tokenize(s['text'], 'red' if a['bg'] == 'image' and a.get('tint') == 'red' else a['bg'])
     return scenes, glob
 
 
@@ -302,6 +305,10 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
         if cur:
             lines.append(cur)
         sc = {'start': round(max(0.0, first - 0.08), 3), 'bg': a['bg'], 'lines': lines, '_last': last_t}
+        if a['bg'] == 'image':
+            sc['image'] = resolve_image(a, glob, board, out, i)
+            if a.get('tint'):
+                sc['tint'] = a['tint']
         if a.get('fx'):
             sc['fx'] = [f for f in a['fx'].split(',') if f]
         for k in ('y', 'size', 'push', 'tilt'):
@@ -331,6 +338,29 @@ def make_timeline(board, audio, words_path=None, out=None, pace=2.3):
             tl[k] = (v != 'no') if k == 'sfx' else (float(v) if k.endswith('volume') else v if v == 'auto' else
                                                      os.path.relpath(os.path.abspath(v), os.path.dirname(os.path.abspath(out or 'x'))))
     return tl
+
+
+def resolve_image(a, glob, board, out, i):
+    """خلفية صورة: image=ملف موجود، أو prompt=وصف يُولَّد مجاناً (Pollinations) ويُحفظ في images/ بجانب الستوري بورد."""
+    out_dir = os.path.dirname(os.path.abspath(out or board))
+    if a.get('image'):
+        src = os.path.join(os.path.dirname(os.path.abspath(board)), a['image'])
+    else:
+        prompt = a.get('prompt')
+        if not prompt:
+            raise SystemExit(f'scene {i + 1}: bg=image needs image=path or prompt="..."')
+        style = glob.get('image_style', 'cinematic, dramatic warm light, shallow depth of field, photorealistic, vertical 9:16, no text')
+        full = f'{prompt}, {style}'
+        sys.path.insert(0, HERE)
+        import imagegen
+        img_dir = os.path.join(os.path.dirname(os.path.abspath(board)), 'images')
+        os.makedirs(img_dir, exist_ok=True)
+        seed = int(a.get('seed', glob.get('seed', 7)))
+        src = os.path.join(img_dir, imagegen.cache_name(full, 1080, 1920, seed, glob.get('image_model')))
+        if not os.path.exists(src):
+            print(f'  generating image for scene {i + 1}: {prompt[:60]}', file=sys.stderr)
+        imagegen.generate(full, src, 1080, 1920, seed, glob.get('image_model'))
+    return os.path.relpath(src, out_dir)
 
 
 def make_prop(a):

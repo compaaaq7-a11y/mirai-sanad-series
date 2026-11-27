@@ -35,6 +35,7 @@ const t1 = parseFloat(opt('to', TL.duration));
 // مجلد عمل: نسخة من المحرك + timeline.js
 const work = fs.mkdtempSync(path.join(os.tmpdir(), 'salam-'));
 fs.cpSync(here, work, { recursive: true, filter: s => !s.endsWith('.mjs') });
+TL.scenes.forEach(s => { if (s.image && !/^(https?|file|data):/.test(s.image)) s.image = 'file://' + path.resolve(tlDir, s.image); });
 fs.writeFileSync(path.join(work, 'timeline.js'), 'window.TIMELINE=' + JSON.stringify(TL) + ';');
 
 const browser = await chromium.launch();
