@@ -446,7 +446,7 @@ def make_doodle(a):
             if k == 'x':
                 x = v.split('>')
                 c['x0'] = float(x[0]); c['x1'] = float(x[-1])
-            elif k in ('y', 'big', 'dir', 'walkEnd'):
+            elif k in ('y', 'big', 'dir', 'walkEnd', 'rot'):
                 c[k] = float(v)
             else:
                 c[k] = v   # face, pose, ink, shirt
@@ -456,13 +456,16 @@ def make_doodle(a):
     if a.get('draw'):
         draws = []
         for item in a['draw'].split('|'):
-            m = re.match(r'^(\w+)@(-?[\d.]+),(-?[\d.]+)(?::([\d.]+))?(?:~([\d.]+))?(\+)?$', item.strip())
+            m = re.match(r'^(\w+)@(-?[\d.]+),(-?[\d.]+)(?::([\d.]+))?(?:~([\d.]+))?([+^!]*)$', item.strip())
             if not m:
                 raise SystemExit(f'draw= غير مفهوم: {item}  (الصيغة: icon@x,y:size~delay)')
             w = {'icon': m.group(1), 'x': float(m.group(2)), 'y': float(m.group(3))}
             if m.group(4): w['s'] = float(m.group(4))
             if m.group(5): w['delay'] = float(m.group(5))
-            if m.group(6): w['grow'] = True
+            fl = m.group(6) or ''
+            if '+' in fl: w['grow'] = True      # تنمو من صغيرة
+            if '^' in fl: w['front'] = True     # أمام الشخصية
+            if '!' in fl: w['wiggle'] = True    # تهتز
             draws.append(w)
         d['draws'] = draws
     if a.get('think'):

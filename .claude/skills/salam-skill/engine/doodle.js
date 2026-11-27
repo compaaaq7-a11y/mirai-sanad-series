@@ -41,6 +41,12 @@
     tree: c => `<path class="dw" d="M-15 100 V20 M15 100 V20" stroke="#7a4b24" fill="none"/><path class="dw" d="M0 30 C-90 40 -100 -40 -50 -55 C-50 -110 50 -110 50 -55 C100 -40 90 40 0 30Z" fill="#6cc36b" stroke="#2e8b3e"/>`,
     zzz: c => `<path class="dw" d="M-40 20 H-10 L-40 50 H-10 M0 -20 H30 L0 10 H30 M40 -60 H65 L40 -35 H65" stroke="${c}" fill="none"/>`,
     question: c => `<path class="dw" d="M-30 -45 C-30 -95 50 -95 45 -45 C42 -15 5 -10 5 20 V35" stroke="${c}" fill="none"/><circle class="dw" cy="65" r="8" fill="${c}" stroke="${c}"/>`,
+    bed: c => `<path class="dw" d="M-190 60 V-90 M190 60 V-40" stroke="#7a4b24" stroke-width="14" fill="none"/><rect class="dw" x="-190" y="-10" width="380" height="45" rx="8" fill="#c8915b" stroke="#7a4b24"/><path class="dw" d="M-175 -10 C-175 -45 -120 -50 -105 -20" fill="#ffffff" stroke="${c}"/>`,
+    blanket: c => `<path class="dw" d="M-150 -40 C-60 -75 60 -70 175 -45 L178 30 L-150 30Z" fill="#ff8fab" stroke="#c9184a"/><path d="M-110 -20 h40 M-30 -25 h40 M60 -22 h40" stroke="#c9184a" stroke-width="4" fill="none" class="dw"/>`,
+    snow: c => [0, 60, 120].map(a => `<path class="dw" d="M0 -60 V60 M-14 -46 L0 -32 L14 -46 M-14 46 L0 32 L14 46" transform="rotate(${a})" stroke="#5aa9e6" fill="none"/>`).join(''),
+    alarm: c => `<circle class="dw" r="62" fill="#ffffff" stroke="${c}"/><path class="dw" d="M0 0 V-38 M0 0 L26 14" stroke="${c}" fill="none"/><path class="dw" d="M-70 -50 C-80 -80 -50 -95 -30 -70 M70 -50 C80 -80 50 -95 30 -70" fill="#e63946" stroke="${c}"/><path class="dw" d="M-40 55 L-55 80 M40 55 L55 80" stroke="${c}" fill="none"/>`,
+    cup: c => `<path class="dw" d="M-55 -20 H55 L45 75 H-45Z" fill="#ffffff" stroke="${c}"/><path class="dw" d="M55 0 C95 0 95 50 50 50" fill="none" stroke="${c}"/><path class="dw" d="M-50 -8 H50 L47 15 H-47Z" fill="#8b5a2b" stroke="none"/><path class="dw" d="M-25 -40 C-40 -60 -10 -75 -25 -100 M5 -40 C-10 -60 20 -75 5 -100 M35 -40 C20 -60 50 -75 35 -100" stroke="#9aa5b1" fill="none"/>`,
+    scarf: c => `<path class="dw" d="M-60 -20 C-20 0 20 0 60 -20 L60 10 C20 30 -20 30 -60 10Z" fill="#e63946" stroke="#9d0208"/><path class="dw" d="M30 10 L40 90 L65 85 L55 5" fill="#e63946" stroke="#9d0208"/><path d="M-40 -5 v18 M-15 2 v18 M10 2 v18" stroke="#ffffff" stroke-width="5" fill="none" class="dw"/>`,
     exclaim: c => `<path class="dw" d="M0 -80 V30" stroke="#e63946" fill="none"/><circle class="dw" cy="65" r="10" fill="#e63946" stroke="#e63946"/>`,
   };
 
@@ -107,6 +113,8 @@
       <path d="${limb(0, hipY, P.lL[0], P.lL[1], 62, 60)}" stroke="${body}" stroke-width="9" fill="none"/>
       <path d="${limb(0, hipY, P.lR[0], P.lR[1], 62, 60)}" stroke="${body}" stroke-width="9" fill="none"/>
       <path d="M0 ${hipY} L${nx.toFixed(1)} ${ny.toFixed(1)}" stroke="${body}" stroke-width="9"/>${shirt}
+      ${c.scarf ? `<g transform="translate(${nx.toFixed(1)} ${(ny + 6).toFixed(1)})"><path d="M-46 -12 C-15 6 15 6 46 -12 L46 14 C15 30 -15 30 -46 14Z" fill="#e63946" stroke="#9d0208" stroke-width="5"/>
+        <path d="M18 14 L${26 + Math.sin(t * 6) * 6} 80 L${46 + Math.sin(t * 6) * 6} 76 L38 10" fill="#e63946" stroke="#9d0208" stroke-width="5"/></g>` : ''}
       <path d="${limb(nx, ny + 15, P.aL[0], P.aL[1], 52, 50)}" stroke="${body}" stroke-width="8" fill="none"/>
       <path d="${limb(nx, ny + 15, P.aR[0], P.aR[1], 52, 50)}" stroke="${body}" stroke-width="8" fill="none"/>
       <g transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)}) rotate(${P.lean * 0.4})">
@@ -130,7 +138,7 @@
       <g filter="url(#boil${U})">
         ${d.noground ? '' : `<path d="M40 ${ground + 6} C300 ${ground - 4} 700 ${ground + 10} 1040 ${ground}" stroke="${gink}" stroke-width="5" fill="none" stroke-linecap="round" opacity=".55"/>
         <path d="M120 ${ground + 40} h60 M560 ${ground + 30} h90 M860 ${ground + 46} h50" stroke="${gink}" stroke-width="3" opacity=".3" stroke-linecap="round"/>`}
-        <g class="draws"></g><g class="chars"></g><g class="think"></g></g>`;
+        <g class="draws"></g><g class="chars"></g><g class="front"></g><g class="think"></g></g>`;
     cam.appendChild(svg);
     const R = { svg, turb: svg.querySelector('feTurbulence'), draws: [], chars: [], d, ground };
     // الرسومات
@@ -140,7 +148,7 @@
       const g = document.createElementNS(NS, 'g');
       g.innerHTML = fn(gink);
       g.querySelectorAll('.dw').forEach(p => { p.setAttribute('pathLength', '1'); p.setAttribute('stroke-width', p.getAttribute('stroke-width') || '7'); p.style.strokeDasharray = '1 1'; p.style.strokeDashoffset = '1'; p.dataset.fill = p.getAttribute('fill') || 'none'; });
-      dg.appendChild(g);
+      (w.front ? svg.querySelector('.front') : dg).appendChild(g);   // ^ : أمام الشخصية (البطانية فوق الجسم)
       R.draws.push({ g, w, paths: [...g.querySelectorAll('.dw')], at: s.start + (w.delay || 0) + 0.15 + k * 0.12 });
     });
     // الشخصيات
@@ -176,7 +184,8 @@
     R.draws.forEach(o => {
       const dur = 0.9 * (o.w.speed || 1), p = clamp((t - o.at) / dur), n = o.paths.length;
       const sc = (o.w.s || 1) * (o.w.grow ? (0.2 + 0.8 * eoc(clamp((t - o.at) / (dur * 1.6)))) : 1);
-      o.g.setAttribute('transform', `translate(${o.w.x} ${o.w.y}) scale(${sc.toFixed(3)})`);
+      const wig = o.w.wiggle ? ` rotate(${(Math.sin(t * 40) * 12).toFixed(1)}) translate(${(Math.sin(t * 55) * 6).toFixed(1)} 0)` : '';   // ! : اهتزاز (منبّه يرن)
+      o.g.setAttribute('transform', `translate(${o.w.x} ${o.w.y}) scale(${sc.toFixed(3)})${wig}`);
       o.paths.forEach((pth, k) => { const q = clamp(p * n - k); pth.style.strokeDashoffset = String(1 - q);
         const f = pth.dataset.fill; pth.style.fillOpacity = f === 'none' ? 0 : clamp((p - 0.75) / 0.25); });
     });
@@ -188,9 +197,10 @@
       const moving = mv && q < 0.999;
       const fk = seqAt(c.face, s, t), pk = seqAt(c.pose, s, t);
       const dir = c.dir != null ? c.dir : (x1 < x0 ? -1 : 1), big = c.big || 1, y = c.y != null ? c.y : R.ground;
-      o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y}) scale(${(dir * big).toFixed(2)} ${big})`);
+      const rot = c.rot ? ` rotate(${c.rot})` : '';   // rot=-90 : مستلقٍ (في الفراش)
+      o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y})${rot} scale(${(dir * big).toFixed(2)} ${big})`);
       o.g.innerHTML = charSVG(c, t + k * 0.37, fk, pk, moving);
-      if (k === 0) headPos = { x, y: y - 335 * big };
+      if (k === 0) headPos = c.rot ? { x: x + Math.sin(-c.rot * D2R) * -335 * big, y: y - Math.cos(c.rot * D2R) * 335 * big } : { x, y: y - 335 * big };
     });
     // فقاعة التفكير تظهر ثم تنفجر
     if (R.think && headPos) {

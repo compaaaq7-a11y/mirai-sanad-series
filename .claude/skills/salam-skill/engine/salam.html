@@ -332,6 +332,9 @@ function build(i){
     if(name==='confetti'){const r=rng(i*71+5),C=['#E3121F','#FFD43B','#2BB673','#2F80ED','#FF7AB6','#FFFFFF'];R.conf=[];
       for(let k=0;k<90;k++){const e=document.createElement('div');e.className='conf';e.style.background=C[k%C.length];fx.appendChild(e);
       R.conf.push({e,at:at+r()*0.8,x:r()*1080,v:420+r()*520,sw:30+r()*60,rot:r()*720-360,ph:r()*6});}}
+    if(name==='snow'){const r=rng(i*29+3);R.snow=[];for(let k=0;k<70;k++){const e=document.createElement('div');
+      const sz=8+r()*18;e.style.cssText=`position:absolute;left:0;top:0;width:${sz}px;height:${sz}px;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(255,255,255,.9);opacity:.9`;
+      fx.appendChild(e);R.snow.push({e,x:r()*1080,y:r()*1920,v:60+r()*120,sw:20+r()*40,ph:r()*6});}}
     if(name==='speed'){const e=document.createElement('div');e.className='speed';fx.insertBefore(e,fx.firstChild);R.speed={e,at};}
   });
   if(s.bubble){const b=document.createElement('div');b.className='bubble';
@@ -524,6 +527,7 @@ function draw(i,t){
     o.e.style.opacity=clamp(d/0.08); o.e.style.transform=`translate(${o.x}px,${o.y+Math.sin(t*1.6+o.ph)*10}px) translate(-50%,-50%) rotate(${o.rot*(1+0.6*(1-p))}deg) scale(${0.3+0.7*p})`;});
   R.pol&&R.pol.forEach(o=>{const d=t-o.at; if(d<0){o.e.style.opacity=0;return;} const p=easeOutCubic(clamp(d/0.35));
     o.e.style.opacity=clamp(d/0.1); o.e.style.transform=`translate(${o.x}px,${o.y-180*(1-p)}px) rotate(${o.rot+(1-p)*25}deg) scale(${1.25-0.25*p})`;});
+  if(R.snow) R.snow.forEach(f=>{const y=((f.y+t*f.v)%2000)-40;f.e.style.transform=`translate(${f.x+Math.sin(t*1.3+f.ph)*f.sw}px,${y}px)`;});
   if(R.speed){const d=t-R.speed.at; R.speed.e.style.opacity=d<0?0:(0.6+0.25*Math.sin(t*40)); R.speed.e.style.transform=`rotate(${Math.floor(t*12)*7}deg)`;}
   // تلاشٍ إلى الأسود في نهاية المشهد: fade=out
   if(R.fadeEl){ const f=s.fade_len||1.4; R.fadeEl.style.opacity=clamp((t-(s.end-f))/f); }
