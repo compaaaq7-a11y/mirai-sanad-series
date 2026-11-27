@@ -1,0 +1,13 @@
+# حلقة كرتون #3: «آخر آيس كريم» — سند يجري للعربة قبل نفاد الكمية… ودرس المشاركة. بلا كتابة.
+# الشخصيات: who = سند، who2 = البائع خلف العربة، who3 = صديق.
+@ fps=30 music=playful music_volume=0.55 whoosh_volume=0.2 hit_volume=0.25
+
+[bg=notebook ground=1660 dur=3.2 who="x=300 face=sad pose=stand ink=blue big=1.5" think="icecream" draw="sun@860,430:1.3|drops@330,1020:0.6~0.6"]
+[bg=notebook ground=1660 dur=2.8 who="x=260 face=shock>star pose=stand ink=blue big=1.5" who2="x=830 dir=-1 face=happy ink=blue big=1.35 pose=wave" draw="cart@830,1470:1.3^|icecream@745,1385:0.42^|icecream@915,1385:0.42^"]
+[bg=notebook ground=1660 dur=3 who="x=-120>230 face=shock pose=run ink=blue big=1.5" who2="x=830 dir=-1 face=happy ink=blue big=1.35 pose=offer hold=icecream" who3="x=560 face=happy pose=stand ink=blue big=1.2" draw="cart@830,1470:1.3^=|icecream@745,1385:0.42^="]
+[bg=notebook ground=1660 dur=3 who="x=230>520 face=angry pose=run ink=blue big=1.5" who2="x=830 dir=-1 face=happy ink=blue big=1.35 pose=stand" who3="x=560>-150 face=laugh pose=hold hold=icecream ink=blue big=1.2" draw="cart@830,1470:1.3^=|icecream@745,1385:0.42^="]
+[bg=notebook ground=1660 dur=3 who="x=520 face=star pose=stand ink=blue big=1.5" who2="x=830 dir=-1 face=happy ink=blue big=1.35 pose=offer hold=icecream" draw="cart@830,1470:1.3^="]
+[bg=notebook ground=1660 dur=2.6 who="x=520 face=laugh pose=hold hold=icecream ink=blue big=1.5" who2="x=830 dir=-1 face=happy ink=blue big=1.35 pose=wave" draw="cart@830,1470:1.3^=" fx=stars]
+[bg=notebook ground=1660 dur=3 who="x=520 face=shock>cry pose=hold hold=cone ink=blue big=1.5" draw="splat@690,1650:1.1~0.2|cart@830,1470:1.3^=" fx=shake]
+[bg=notebook ground=1660 dur=3.2 who="x=560 dir=-1 face=cry>star pose=stand ink=blue big=1.5" who3="x=-120>300 face=happy pose=offer hold=icecream ink=blue big=1.2" draw="splat@740,1650:1.1="]
+[bg=notebook ground=1660 dur=3.8 who="x=600 dir=-1 face=happy pose=eat hold=icecream ink=blue big=1.5" who3="x=330 face=laugh pose=eat hold=icecream ink=blue big=1.2" draw="heart@470,820:1~0.5|star@200,700:0.6~0.9|star@820,640:0.6~1.1" fx=stars]

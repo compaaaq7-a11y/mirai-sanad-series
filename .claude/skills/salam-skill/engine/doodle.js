@@ -49,6 +49,22 @@
     scarf: c => `<path class="dw" d="M-60 -20 C-20 0 20 0 60 -20 L60 10 C20 30 -20 30 -60 10Z" fill="#e63946" stroke="#9d0208"/><path class="dw" d="M30 10 L40 90 L65 85 L55 5" fill="#e63946" stroke="#9d0208"/><path d="M-40 -5 v18 M-15 2 v18 M10 2 v18" stroke="#ffffff" stroke-width="5" fill="none" class="dw"/>`,
     can: c => `<path class="dw" d="M-70 -40 H30 L40 60 H-80Z" fill="#5cc46b" stroke="#2e8b3e"/><path class="dw" d="M30 -10 L110 -60 L118 -48 L40 15" fill="#5cc46b" stroke="#2e8b3e"/><path class="dw" d="M-70 -30 C-120 -40 -120 40 -78 40" fill="none" stroke="#2e8b3e"/><path class="dw" d="M-50 -40 C-45 -80 15 -80 20 -40" fill="none" stroke="#2e8b3e"/>`,
     drops: c => [[-30, 0], [0, 30], [30, 5], [-12, 60], [18, 75]].map(([x, y]) => `<path class="dw" d="M${x} ${y - 16} C${x - 10} ${y} ${x - 8} ${y + 10} ${x} ${y + 10} C${x + 8} ${y + 10} ${x + 10} ${y} ${x} ${y - 16}Z" fill="#3a86ff" stroke="#1d5fd1" stroke-width="3"/>`).join(''),
+    icecream: (c, bite = 0) => { const k = (1 - 0.55 * bite).toFixed(3);   // bite: 0..1 الكرات تصغر أثناء الأكل
+      return `<path class="dw" d="M-44 -8 L0 120 L44 -8Z" fill="#e2a85a" stroke="#9a5d22"/>
+      <path class="dw" d="M-32 20 L22 -8 M-20 52 L36 22 M-8 86 L26 64 M32 20 L-22 -8 M20 52 L-36 22 M8 86 L-26 64" stroke="#9a5d22" stroke-width="4" fill="none"/>
+      <g transform="translate(0 -6) scale(${k}) translate(0 6)">
+      <path class="dw" d="M-50 -6 C-66 -40 -40 -74 0 -70 C40 -74 66 -40 50 -6 C30 8 -30 8 -50 -6Z" fill="#fff1e6" stroke="#c9a27a"/>
+      <path class="dw" d="M-40 -62 C-56 -96 -24 -130 6 -124 C40 -128 58 -96 42 -62 C24 -52 -22 -52 -40 -62Z" fill="#ff8fab" stroke="#d63f6b"/>
+      <path class="dw" d="M-30 -58 C-30 -44 -22 -40 -22 -30 C-22 -22 -12 -22 -12 -32 C-12 -44 -6 -50 -4 -56" fill="#ff8fab" stroke="#d63f6b" stroke-width="4"/>
+      <circle class="dw" cx="10" cy="-132" r="12" fill="#e63946" stroke="#9d0208"/><path class="dw" d="M12 -142 C16 -156 26 -162 34 -164" stroke="#2e6b2e" stroke-width="4" fill="none"/></g>`; },
+    cone: c => `<path class="dw" d="M-34 -10 L0 90 L34 -10Z" fill="#e8b46a" stroke="#a0662a"/><path class="dw" d="M-22 10 L22 10 M-14 35 L14 35" stroke="#a0662a" fill="none"/>`,
+    splat: c => `<path class="dw" d="M-90 10 C-100 -15 -60 -30 -40 -18 C-30 -40 10 -42 20 -22 C45 -38 85 -25 80 0 C110 8 95 30 70 28 C40 40 -20 38 -50 30 C-80 34 -100 24 -90 10Z" fill="#ffb3c6" stroke="#e05780"/><circle class="dw" cx="-10" cy="-30" r="9" fill="#e63946" stroke="#9d0208"/>`,
+    cart: c => `<path class="dw" d="M0 -40 V-230" stroke="${c}" fill="none"/><path class="dw" d="M-150 -220 C-100 -300 100 -300 150 -220 Z" fill="#ff8fab" stroke="#c9184a"/><path class="dw" d="M-150 -220 Q-112 -200 -75 -220 Q-37 -200 0 -220 Q37 -200 75 -220 Q112 -200 150 -220" fill="#ffffff" stroke="#c9184a"/>
+      <rect class="dw" x="-150" y="-40" width="300" height="130" rx="14" fill="#9ed8ff" stroke="${c}"/><path class="dw" d="M-150 -40 H150" stroke="${c}" stroke-width="12" fill="none"/>
+      <path class="dw" d="M-30 0 L-15 50 L0 0Z M-40 0 C-45 -20 -10 -25 -15 0 M5 0 C0 -20 35 -25 30 0" fill="#ffffff" stroke="#c9184a"/>
+      <circle class="dw" cx="-95" cy="115" r="30" fill="#ffffff" stroke="${c}"/><circle class="dw" cx="95" cy="115" r="30" fill="#ffffff" stroke="${c}"/>`,
+    ball: c => `<circle class="dw" r="60" fill="#ff8c42" stroke="${c}"/><path class="dw" d="M-60 0 C-20 -25 20 -25 60 0 M0 -60 C25 -20 25 20 0 60" stroke="${c}" fill="none"/>`,
+    box: c => `<path class="dw" d="M-70 -50 H70 V60 H-70Z" fill="#d9a76a" stroke="#7a4b24"/><path class="dw" d="M-70 -50 L-50 -75 H90 L70 -50 M70 60 L90 35 V-75" fill="#e8c08c" stroke="#7a4b24"/><path class="dw" d="M-15 -50 V60" stroke="#7a4b24" fill="none"/>`,
     exclaim: c => `<path class="dw" d="M0 -80 V30" stroke="#e63946" fill="none"/><circle class="dw" cy="65" r="10" fill="#e63946" stroke="#e63946"/>`,
   };
 
@@ -67,64 +83,131 @@
       case 'cry': { const y = 10 + ((t * 120) % 60); return face('sad', ink, t) + `<path d="M-26 ${y} q-6 10 0 14 q6 -4 0 -14Z M26 ${y} q-6 10 0 14 q6 -4 0 -14Z" fill="#3a86ff"/>`; }
       case 'wink': return `${dot(-24)}<path d="M12 -8 Q24 -20 36 -8" stroke="${ink}" stroke-width="5" fill="none"/><path d="M-24 18 Q0 40 24 18" stroke="${ink}" stroke-width="5" fill="none"/>`;
       case 'burnt': return `<circle cx="-24" cy="-8" r="9" fill="#fff"/><circle cx="24" cy="-8" r="9" fill="#fff"/>${blink ? '' : '<circle cx="-24" cy="-8" r="3" fill="#000"/><circle cx="24" cy="-8" r="3" fill="#000"/>'}`;
+      case 'lick': return `<path d="M-36 -6 Q-24 -20 -12 -6 M12 -6 Q24 -20 36 -6" stroke="${ink}" stroke-width="5" fill="none"/><path d="M10 18 Q34 22 44 32 Q30 46 8 38Z" fill="#7a1f1f" stroke="${ink}" stroke-width="4"/><path d="M30 30 q${18 + Math.sin(t * 14) * 6} -4 ${22 + Math.sin(t * 14) * 6} 10 q-12 10 -22 0Z" fill="#ff6b8b" stroke="${ink}" stroke-width="3"/><circle cx="-40" cy="22" r="10" fill="#ffb3c1" opacity=".7"/>`;
+      case 'chew': return `${dot(-24)}${dot(24)}<ellipse cx="6" cy="26" rx="${16 + Math.sin(t * 20) * 6}" ry="${8 + Math.sin(t * 20) * 5}" fill="#7a1f1f" stroke="${ink}" stroke-width="4"/><circle cx="-40" cy="20" r="10" fill="#ffb3c1" opacity=".7"/><circle cx="40" cy="20" r="10" fill="#ffb3c1" opacity=".7"/>`;
       default: return `${dot(-24)}${dot(24)}<path d="M-26 16 Q0 44 26 16" stroke="${ink}" stroke-width="5" fill="none"/>`; // happy
     }
   }
 
-  /* ---------------- الوضعيات: زوايا الأطراف (درجات من الاتجاه للأسفل) ---------------- */
-  function pose(kind, t, moving) {
-    // aL/aR: [عضد، ساعد]، lL/lR: [فخذ، ساق]، lean: ميل الجذع، y: رفع الجسم، sway: إزاحة جانبية
-    const P = { aL: [18, 8], aR: [-18, -8], lL: [8, 0], lR: [-8, 0], lean: 0, y: 0, sway: 0 };
-    const w = Math.sin(t * (kind === 'run' ? 14 : 9));
+  /* ---------------- الوضعيات ----------------
+     الزوايا بالدرجات: 0 = للأسفل، +90 = للأمام (اتجاه وجه الشخصية)، -90 = للخلف، 180 = للأعلى.
+     aL/aR: [عضد، ساعد نسبةً للعضد]، lL/lR: [فخذ، ساق نسبةً للفخذ] (السالب = الركبة تنثني للخلف).
+     ph: تقدّم المشهد 0..1 (للحركات ذات المراحل: الرمي والأكل). */
+  const sm = p => p * p * (3 - 2 * p);
+  // الإمساك: حجم الشيء في اليد، ونقطة القبض (بُعدها عن مركز الرسمة للأسفل)، وارتفاع قمته (للأكل)
+  const HOLD_S = { icecream: 0.62, cone: 0.62, apple: 0.5, cup: 0.5, ball: 0.45, heart: 0.45, box: 0.6, book: 0.5, flower: 0.5, coin: 0.45, can: 0.55, water: 0.5 };
+  const GRIP = { icecream: 60, cone: 60, cup: 10, water: 20, flower: 70, can: -10 };
+  const TOP = { icecream: 100, cone: 0, apple: 50, cup: 30, water: 50 };
+  const lerp = (a, b, p) => a + (b - a) * p;
+  function pose(kind, t, moving, ph) {
+    const P = { aL: [14, 8], aR: [-14, -8], lL: [6, -3], lR: [-6, -3], lean: 0, y: 0, sway: 0, fx: {} };
+    if (moving && (kind === 'stand' || !kind)) kind = 'walk';
     switch (kind) {
-      case 'walk': case 'run': {
-        const A = kind === 'run' ? 42 : 26;
-        P.lL = [A * w, A * 0.5 * Math.max(0, -w) + 5]; P.lR = [-A * w, A * 0.5 * Math.max(0, w) + 5];
-        P.aL = [-A * 0.9 * w + 10, -20]; P.aR = [A * 0.9 * w - 10, 20];
-        P.y = -Math.abs(Math.cos(t * (kind === 'run' ? 14 : 9))) * (kind === 'run' ? 14 : 7); P.lean = kind === 'run' ? 12 : 3; break; }
-      case 'jump': { const j = Math.abs(Math.sin(t * 5)); P.y = -j * 140; P.aL = [160, 10]; P.aR = [-160, -10]; P.lL = [25 - j * 10, -50 * (1 - j)]; P.lR = [-25 + j * 10, 50 * (1 - j)]; break; }
-      case 'wave': P.aR = [-140 + Math.sin(t * 10) * 18, -30 + Math.sin(t * 10) * 25]; break;
+      case 'walk': {   // خطوة هادئة: ذراع عكس الساق، ركبة الساق الخلفية تنثني، اهتزاز خفيف
+        const w = Math.sin(t * 7);
+        P.lL = [26 * w, -(8 + 34 * Math.max(0, -w))]; P.lR = [-26 * w, -(8 + 34 * Math.max(0, w))];
+        P.aL = [-24 * w, 18]; P.aR = [24 * w, 18];
+        P.y = -Math.abs(Math.cos(t * 7)) * 9; P.lean = 4; P.fx.walk = true; break; }
+      case 'run': {    // جري: ميل للأمام، مرفقان بزاوية قائمة، خطوة واسعة وركبة عالية، خطوط سرعة وغبار
+        const w = Math.sin(t * 13);
+        P.lL = [48 * w, -(18 + 80 * Math.max(0, -w))]; P.lR = [-48 * w, -(18 + 80 * Math.max(0, w))];
+        P.aL = [-50 * w, 100]; P.aR = [50 * w, 100];
+        P.y = -Math.abs(Math.cos(t * 13)) * 24; P.lean = 17; P.fx.run = w; break; }
+      case 'jump': { const j = Math.abs(Math.sin(t * 5)); P.y = -j * 150; P.aL = [160, 10]; P.aR = [-160, -10]; P.lL = [35 - j * 10, -60 * (1 - j)]; P.lR = [-15 + j * 10, -60 * (1 - j)]; break; }
+      case 'wave': case 'greet': {   // تحية: اليد مرفوعة تتحرك يميناً ويساراً مع خطوط حركة
+        P.aR = [128, Math.sin(t * 11) * 40 + 10]; P.aL = [10, 6]; P.fx.wave = true; break; }
       case 'cheer': P.aL = [150 + Math.sin(t * 12) * 15, 10]; P.aR = [-150 - Math.sin(t * 12) * 15, -10]; P.y = -Math.abs(Math.sin(t * 6)) * 30; break;
-      case 'shiver': P.sway = Math.sin(t * 70) * 5; P.aL = [-35, -120]; P.aR = [35, 120]; P.lL = [3, 0]; P.lR = [-3, 0]; break;
-      case 'bend': P.lean = 70; P.aL = [-10, 0]; P.aR = [-25, 0]; P.lL = [10, 0]; P.lR = [-5, 0]; break;
+      case 'shiver': P.sway = Math.sin(t * 70) * 5; P.aL = [-35, -120]; P.aR = [35, 120]; P.lL = [3, -4]; P.lR = [-3, -4]; break;
+      case 'bend': P.lean = 70; P.aL = [-10, 0]; P.aR = [-25, 0]; P.lL = [10, -6]; P.lR = [-5, -6]; break;
       case 'sit': P.y = 95; P.lL = [95, -90]; P.lR = [85, -80]; P.aL = [30, 40]; P.aR = [-20, -50]; break;
-      case 'dance': { const d = Math.sin(t * 8); P.sway = d * 25; P.aL = [90 + d * 60, 40]; P.aR = [-90 + d * 60, -40]; P.lL = [15 + d * 15, 10]; P.lR = [-15 + d * 15, 10]; P.y = -Math.abs(d) * 12; P.lean = d * 8; break; }
+      case 'dance': { const d = Math.sin(t * 8); P.sway = d * 25; P.aL = [90 + d * 60, 40]; P.aR = [-90 + d * 60, -40]; P.lL = [15 + d * 15, -10]; P.lR = [-15 + d * 15, -10]; P.y = -Math.abs(d) * 12; P.lean = d * 8; break; }
       case 'think': P.aR = [-35, -150]; P.aL = [25, 70]; break;
-      case 'point': P.aR = [95, -10]; P.aL = [15, 10]; break;   // الذراع للأمام باتجاه وجه الشخصية
+      case 'point': P.aR = [95, -10]; P.aL = [15, 10]; break;
+      case 'hold': P.aR = [40, 60]; P.aL = [12, 8]; P.fx.hand = true; break;            // يمسك الشيء أمام صدره
+      case 'offer': case 'give': P.aR = [88, 4]; P.aL = [12, 8]; P.fx.hand = true; break;  // يقدّم: ذراع ممدودة والشيء في الكف
+      case 'carry': P.aR = [55, 50]; P.aL = [65, 40]; P.lean = -4; P.fx.hand = true; break; // يحمل بيديه الاثنتين
+      case 'eat': case 'drink': {   // يرفع الشيء إلى فمه ويعيده مراراً
+        const u = (t % 1.3) / 1.3, k = u < 0.25 ? sm(u / 0.25) : u < 0.6 ? 1 : u < 0.85 ? 1 - sm((u - 0.6) / 0.25) : 0;
+        P.aR = [lerp(40, 112, k), lerp(60, 108, k)]; P.aL = [12, 8]; P.lean = -3 * k; P.fx.hand = true; P.fx.eat = k; break; }
+      case 'clap': { const k = (Math.sin(t * 14) + 1) / 2; P.aL = [80, -15 + 30 * k]; P.aR = [100, 15 - 30 * k]; P.fx.clap = k; break; }
+      case 'throw': {   // رمي: تحضير للخلف ← قذف سريع للأمام ← متابعة
+        const p = ph == null ? (t % 2) / 2 : ph;
+        let up, lo, ln;
+        if (p < 0.45) { const k = sm(p / 0.45); up = lerp(35, -150, k); lo = lerp(20, -20, k); ln = lerp(0, -10, k); }
+        else if (p < 0.55) { const k = sm((p - 0.45) / 0.1); up = lerp(-150, 125, k); lo = lerp(-20, 10, k); ln = lerp(-10, 16, k); P.fx.swing = true; }
+        else { const k = sm((p - 0.55) / 0.45); up = lerp(125, 55, k); lo = lerp(10, 20, k); ln = lerp(16, 6, k); }
+        P.aR = [up, lo]; P.aL = [-20, 10]; P.lean = ln; P.lL = [18, -6]; P.lR = [-14, -10];
+        P.fx.hand = p < 0.5; P.fx.thrown = p >= 0.5; break; }
     }
-    if (moving && kind === 'stand') return pose('walk', t, true);
+    // المشي مع الإمساك: سيقان المشي + وضعية اليد كما هي (يمشي حاملاً الشيء أو مقدّماً إياه)
+    if (moving && ['hold', 'offer', 'give', 'carry', 'eat', 'drink', 'wave', 'greet', 'point'].includes(kind)) {
+      const W = pose('walk', t, true, ph); P.lL = W.lL; P.lR = W.lR; P.y = W.y; P.lean = Math.max(P.lean, 3);
+    }
     return P;
   }
 
   function limb(x, y, a1, a2, L1, L2) {
     const x1 = x + Math.sin(a1 * D2R) * L1, y1 = y + Math.cos(a1 * D2R) * L1;
     const x2 = x1 + Math.sin((a1 + a2) * D2R) * L2, y2 = y1 + Math.cos((a1 + a2) * D2R) * L2;
-    return `M${x} ${y} L${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`;
+    return { d: `M${x} ${y} L${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`, ex: x2, ey: y2, a: a1 + a2 };
   }
+  const foot = (L, body) => { const a = (L.a + 90) * D2R;   // القدم تشير للأمام عمودياً على الساق
+    return `<path d="M${L.ex.toFixed(1)} ${L.ey.toFixed(1)} l${(Math.sin(a) * 26).toFixed(1)} ${(Math.cos(a) * 26).toFixed(1)}" stroke="${body}" stroke-width="9" fill="none"/>`; };
+  const hand = (A, body, burnt) => `<circle cx="${A.ex.toFixed(1)}" cy="${A.ey.toFixed(1)}" r="11" fill="${burnt ? '#111' : '#fff'}" stroke="${body}" stroke-width="6"/>`;
 
-  function charSVG(c, t, faceKind, poseKind, moving) {
+  function charSVG(c, t, faceKind, poseKind, moving, ph) {
     const ink = INK[c.ink] || c.ink || INK.pencil;
-    const P = pose(poseKind, t, moving);
+    const P = pose(poseKind, t, moving, ph);
     const burnt = faceKind === 'burnt', body = burnt ? '#111' : ink;
     const hipY = -120, neckY = -255, headY = -335, R = 70;
     // الجذع يميل حول الورك
     const lx = Math.sin(P.lean * D2R) * (hipY - neckY), ly = Math.cos(P.lean * D2R) * (hipY - neckY);
     const nx = lx, ny = hipY - ly, hx = Math.sin(P.lean * D2R) * (hipY - headY), hy = hipY - Math.cos(P.lean * D2R) * (hipY - headY);
     const shirt = c.shirt ? `<path d="M${nx - 28} ${ny + 8} L${-26} ${hipY + 6} L26 ${hipY + 6} L${nx + 28} ${ny + 8}Z" fill="${c.shirt}" stroke="${body}" stroke-width="7" stroke-linejoin="round"/>` : '';
-    return `<g transform="translate(${P.sway} ${P.y})" stroke-linecap="round" stroke-linejoin="round">
-      <path d="${limb(0, hipY, P.lL[0], P.lL[1], 62, 60)}" stroke="${body}" stroke-width="9" fill="none"/>
-      <path d="${limb(0, hipY, P.lR[0], P.lR[1], 62, 60)}" stroke="${body}" stroke-width="9" fill="none"/>
+    const LL = limb(0, hipY, P.lL[0], P.lL[1], 62, 60), LR = limb(0, hipY, P.lR[0], P.lR[1], 62, 60);
+    const AL = limb(nx, ny + 15, P.aL[0], P.aL[1], 52, 50), AR = limb(nx, ny + 15, P.aR[0], P.aR[1], 52, 50);
+    let extra = '', front = '';
+    if (P.fx.run != null) {   // خطوط سرعة خلف الجسم + غبار عند القدم الخلفية
+      const fl = 0.55 + 0.45 * Math.sin(t * 40);
+      extra += [[-300, 0], [-220, 30], [-150, -20]].map(([y, dx], k) => `<path d="M${-110 + dx} ${y} h${-(110 + k * 30)}" stroke="${body}" stroke-width="6" opacity="${(fl * (0.7 - k * 0.15)).toFixed(2)}"/>`).join('');
+      const u = (t * 13 / Math.PI) % 1;
+      extra += `<g opacity="${(1 - u).toFixed(2)}" fill="#fff" stroke="${body}" stroke-width="4"><circle cx="${-70 - u * 60}" cy="${-8 - u * 20}" r="${10 + u * 16}"/><circle cx="${-110 - u * 70}" cy="${-4 - u * 10}" r="${7 + u * 10}"/></g>`;
+    }
+    if (P.fx.wave) {   // خطوط حركة حول اليد المحيّية
+      const o = Math.sin(t * 11) * 0.5 + 0.5;
+      front += `<g stroke="${body}" stroke-width="5" fill="none" opacity="${(0.4 + 0.5 * o).toFixed(2)}"><path d="M${AR.ex - 38} ${AR.ey - 20} q-14 20 0 40"/><path d="M${AR.ex + 38} ${AR.ey - 20} q14 20 0 40"/><path d="M${AR.ex - 56} ${AR.ey - 30} q-18 30 0 60"/></g>`;
+    }
+    if (P.fx.swing) front += `<g stroke="${body}" stroke-width="6" fill="none" opacity=".6"><path d="M${nx - 60} ${ny - 120} Q${nx + 60} ${ny - 190} ${nx + 150} ${ny - 40}"/><path d="M${nx - 30} ${ny - 80} Q${nx + 50} ${ny - 140} ${nx + 120} ${ny - 20}"/></g>`;
+    if (P.fx.clap > 0.85) front += `<g stroke="${body}" stroke-width="5" opacity=".7"><path d="M${AR.ex + 30} ${AR.ey - 30} l20 -18 M${AR.ex + 36} ${AR.ey} h26 M${AR.ex + 30} ${AR.ey + 30} l20 18"/></g>`;
+    // الشيء المُمسك: يُرسم قبل الكف فتبدو اليد قابضة عليه، وعند الأكل يصعد إلى الفم
+    let held = '', grip = '';
+    if (c.hold && P.fx.hand !== false && !(P.fx.thrown) && ICONS[c.hold]) {
+      const hs = c.hold_s || HOLD_S[c.hold] || 0.5, G = (GRIP[c.hold] || 0) * hs;
+      let ox = 0, oy = -G;
+      if (P.fx.eat != null) {   // الفم أمام الوجه: نقرّب قمة الشيء منه تدريجياً
+        const mx = hx + 52, my = hy + 22, top = (TOP[c.hold] || 60) * hs;
+        ox = lerp(0, mx - AR.ex, P.fx.eat); oy = lerp(-G, my - AR.ey + top * 0.55, P.fx.eat);
+      }
+      held = `<g transform="translate(${(AR.ex + ox).toFixed(1)} ${(AR.ey + oy).toFixed(1)}) scale(${hs})">${ICONS[c.hold](ink, c.bite != null ? c.bite : (P.fx.eat != null ? clamp((ph || 0) * 0.95) : 0))}</g>`;
+      grip = `<path d="M${(AR.ex - 9).toFixed(1)} ${(AR.ey - 6).toFixed(1)} q9 -7 18 0 M${(AR.ex - 9).toFixed(1)} ${(AR.ey + 3).toFixed(1)} q9 -7 18 0" stroke="${body}" stroke-width="3.5" fill="none"/>`;
+    }
+    const svg = `<g transform="translate(${P.sway} ${P.y})" stroke-linecap="round" stroke-linejoin="round">${extra}
+      <path d="${LL.d}" stroke="${body}" stroke-width="9" fill="none"/>${foot(LL, body)}
+      <path d="${LR.d}" stroke="${body}" stroke-width="9" fill="none"/>${foot(LR, body)}
       <path d="M0 ${hipY} L${nx.toFixed(1)} ${ny.toFixed(1)}" stroke="${body}" stroke-width="9"/>${shirt}
       ${c.scarf ? `<g transform="translate(${nx.toFixed(1)} ${(ny + 6).toFixed(1)})"><path d="M-46 -12 C-15 6 15 6 46 -12 L46 14 C15 30 -15 30 -46 14Z" fill="#e63946" stroke="#9d0208" stroke-width="5"/>
         <path d="M18 14 L${26 + Math.sin(t * 6) * 6} 80 L${46 + Math.sin(t * 6) * 6} 76 L38 10" fill="#e63946" stroke="#9d0208" stroke-width="5"/></g>` : ''}
-      <path d="${limb(nx, ny + 15, P.aL[0], P.aL[1], 52, 50)}" stroke="${body}" stroke-width="8" fill="none"/>
-      <path d="${limb(nx, ny + 15, P.aR[0], P.aR[1], 52, 50)}" stroke="${body}" stroke-width="8" fill="none"/>
+      <path d="${AL.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AL, body, burnt)}
       <g transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)}) rotate(${P.lean * 0.4})">
         <circle r="${R}" fill="${burnt ? '#111' : '#fff'}" stroke="${body}" stroke-width="7"/>
         <path d="M-10 -68 q-6 -22 -2 -30 M4 -70 q2 -24 10 -30 M16 -66 q10 -16 20 -18" stroke="${body}" stroke-width="5" fill="none"/>
-        ${face(faceKind, burnt ? '#fff' : ink, t)}
-      </g></g>`;
+        ${face(P.fx.eat > 0.6 ? (c.hold === 'icecream' ? 'lick' : 'chew') : faceKind, burnt ? '#fff' : ink, t)}
+      </g>
+      ${held}<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt)}${grip}${front}</g>`;
+    return { svg, hand: { x: AR.ex + P.sway, y: AR.ey + P.y } };
   }
+  // موضع اليد اليمنى لحظة الإفلات في الرمي (لنقطة بداية طيران الشيء)
+  function releaseHand(c) { const r = charSVG(c, 0, 'happy', 'throw', false, 0.5); return r.hand; }
 
   /* ---------------- بناء المشهد ---------------- */
   function build(s, cam, i) {
@@ -184,7 +267,7 @@
     const prog = clamp((t - s.start) / Math.max(0.1, s.end - s.start));
     // الرسومات: خط بعد خط ثم اللون
     R.draws.forEach(o => {
-      const dur = 0.9 * (o.w.speed || 1), p = clamp((t - o.at) / dur), n = o.paths.length;
+      const dur = 0.9 * (o.w.speed || 1), p = o.w.instant ? 1 : clamp((t - o.at) / dur), n = o.paths.length;   // = : موجودة من قبل، تظهر فوراً
       const sc = (o.w.s || 1) * (o.w.grow ? (0.2 + 0.8 * eoc(clamp((t - o.at) / (dur * 1.6)))) : 1);
       const fall = o.w.icon === 'drops' ? ` translate(0 ${(((t * 1.4) % 1) * 70).toFixed(1)})` : '';   // قطرات تنزل باستمرار
       const wig = o.w.wiggle ? ` rotate(${(Math.sin(t * 40) * 12).toFixed(1)}) translate(${(Math.sin(t * 55) * 6).toFixed(1)} 0)` : '';   // ! : اهتزاز (منبّه يرن)
@@ -203,7 +286,19 @@
       const dir = c.dir != null ? c.dir : (x1 < x0 ? -1 : 1), big = c.big || 1, y = c.y != null ? c.y : R.ground;
       const rot = c.rot ? ` rotate(${c.rot})` : '';   // rot=-90 : مستلقٍ (في الفراش)
       o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y})${rot} scale(${(dir * big).toFixed(2)} ${big})`);
-      o.g.innerHTML = charSVG(c, t + k * 0.37, fk, pk, moving);
+      const r = charSVG(c, t + k * 0.37, fk, pk, moving, prog);
+      o.g.innerHTML = r.svg;
+      // الرمي: بعد لحظة الإفلات يطير الشيء في قوس نحو الهدف
+      if (pk === 'throw' && c.hold && ICONS[c.hold]) {
+        if (!o.fly) { o.fly = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(o.fly); o.fly.innerHTML = ICONS[c.hold](INK[c.ink] || INK.pencil); }
+        const rel = releaseHand(c), sx = x + dir * big * rel.x, sy = y + big * rel.y;
+        const [tx, ty] = (c.to || '').split(',').map(Number);
+        const ex = isFinite(tx) ? tx : sx + dir * 520, ey = isFinite(ty) ? ty : y - 60;
+        const q = clamp((prog - 0.5) / 0.4);
+        o.fly.setAttribute('opacity', prog < 0.5 ? 0 : 1);
+        const fx2 = sx + (ex - sx) * q, fy2 = sy + (ey - sy) * q - Math.sin(q * Math.PI) * 320;
+        o.fly.setAttribute('transform', `translate(${fx2.toFixed(1)} ${fy2.toFixed(1)}) rotate(${(q * 540 * dir).toFixed(0)}) scale(${((c.hold_s || 0.45) * big).toFixed(2)})`);
+      } else if (o.fly) o.fly.setAttribute('opacity', 0);
       if (k === 0) headPos = c.rot ? { x: x + Math.sin(-c.rot * D2R) * -335 * big, y: y - Math.cos(c.rot * D2R) * 335 * big } : { x, y: y - 335 * big };
     });
     // فقاعة التفكير تظهر ثم تنفجر

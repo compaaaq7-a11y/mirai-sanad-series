@@ -61,7 +61,8 @@
       "icon": "sun",
       "x": 900.0,
       "y": 360.0,
-      "s": 0.9
+      "s": 0.9,
+      "instant": true
      }
     ],
     "ground": 1660.0
@@ -97,7 +98,8 @@
       "icon": "sun",
       "x": 900.0,
       "y": 360.0,
-      "s": 0.9
+      "s": 0.9,
+      "instant": true
      }
     ],
     "ground": 1660.0
@@ -125,7 +127,8 @@
       "icon": "sprout",
       "x": 720.0,
       "y": 1570.0,
-      "s": 1.6
+      "s": 1.6,
+      "instant": true
      }
     ],
     "think": [
@@ -224,7 +227,8 @@
       "icon": "wilted",
       "x": 720.0,
       "y": 1470.0,
-      "s": 1.9
+      "s": 1.9,
+      "instant": true
      }
     ],
     "ground": 1660.0
@@ -305,7 +309,8 @@
       "icon": "flower",
       "x": 800.0,
       "y": 1400.0,
-      "s": 2.4
+      "s": 2.4,
+      "instant": true
      },
      {
       "icon": "heart",
