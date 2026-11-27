@@ -24,8 +24,8 @@ import argparse, json, os, re, shlex, subprocess, sys, wave, shutil, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ENGINE = os.path.join(HERE, '..', 'engine')
 
-DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black', 'image': 'white', 'video': 'white', 'notebook': 'black', 'paper': 'black', 'sketch': 'black'}
-ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red', 'image': 'red', 'video': 'red', 'notebook': 'red', 'paper': 'red', 'sketch': 'red'}
+DEFAULT_COLOR = {'dark': 'white', 'red': 'silver', 'cream': 'black', 'camera': 'black', 'image': 'white', 'video': 'white', 'notebook': 'black', 'paper': 'black', 'sketch': 'black', 'sky': 'black'}
+ACCENT_COLOR = {'dark': 'red', 'red': 'black', 'cream': 'red', 'camera': 'red', 'image': 'red', 'video': 'red', 'notebook': 'red', 'paper': 'red', 'sketch': 'red', 'sky': 'red'}
 BG_CYCLE = ['dark', 'red', 'cream', 'dark', 'red', 'camera']
 STRIP_DISPLAY = '.،,؛;:!…'
 
@@ -446,6 +446,10 @@ def make_doodle(a):
             if k == 'x':
                 x = v.split('>')
                 c['x0'] = float(x[0]); c['x1'] = float(x[-1])
+                if len(x) > 2:
+                    c['xs'] = [float(v_) for v_ in x]     # مسار بنقاط مفتاحية
+            elif k in ('y', 'rot', 'spin') and '>' in v:  # y=1660>900 صعود، spin=0>720 تدحرج
+                c[{'y': 'ys', 'rot': 'rots', 'spin': 'spins'}[k]] = [float(v_) for v_ in v.split('>')]
             elif k in ('y', 'big', 'dir', 'walkEnd', 'rot', 'hold_s', 'bite'):
                 c[k] = float(v)
             else:

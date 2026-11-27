@@ -63,6 +63,16 @@
       <rect class="dw" x="-150" y="-40" width="300" height="130" rx="14" fill="#9ed8ff" stroke="${c}"/><path class="dw" d="M-150 -40 H150" stroke="${c}" stroke-width="12" fill="none"/>
       <path class="dw" d="M-30 0 L-15 50 L0 0Z M-40 0 C-45 -20 -10 -25 -15 0 M5 0 C0 -20 35 -25 30 0" fill="#ffffff" stroke="#c9184a"/>
       <circle class="dw" cx="-95" cy="115" r="30" fill="#ffffff" stroke="${c}"/><circle class="dw" cx="95" cy="115" r="30" fill="#ffffff" stroke="${c}"/>`,
+    umbrella: c => `<path class="dw" d="M0 -20 V140 C0 165 -32 165 -32 140" stroke="${c}" stroke-width="9" fill="none"/><path class="dw" d="M-170 -20 C-150 -150 150 -150 170 -20 Q127 -45 85 -20 Q42 -45 0 -20 Q-42 -45 -85 -20 Q-127 -45 -170 -20Z" fill="#4dabf7" stroke="#1864ab"/><path class="dw" d="M0 -128 C-40 -100 -70 -60 -85 -20 M0 -128 C40 -100 70 -60 85 -20" stroke="#1864ab" fill="none"/>`,
+    umbrella_broken: c => `<path class="dw" d="M0 -20 V140 C0 165 -32 165 -32 140" stroke="${c}" stroke-width="9" fill="none"/><path class="dw" d="M0 -20 L-120 -150 L-60 -90 L-40 -170 L0 -70 L45 -175 L55 -85 L130 -140 L0 -20Z" fill="#4dabf7" stroke="#1864ab"/><path class="dw" d="M0 -20 L-120 -150 M0 -20 L-40 -170 M0 -20 L45 -175 M0 -20 L130 -140" stroke="#1864ab" fill="none"/>`,
+    airbag: c => `<path class="dw" d="M-230 85 C-250 -60 -140 -150 0 -152 C140 -150 250 -60 230 85 Z" fill="#ffd43b" stroke="#c92a2a"/>
+      <path class="dw" d="M-150 85 C-170 -20 -110 -110 -55 -140 C-90 -60 -100 20 -85 85Z M85 85 C100 20 90 -60 55 -140 C110 -110 170 -20 150 85Z" fill="#ff6b6b" stroke="#c92a2a"/>
+      <path class="dw" d="M-15 -150 C-20 -60 -20 20 -12 85 M15 -150 C20 -60 20 20 12 85" stroke="#c92a2a" fill="none"/>
+      <path class="dw" d="M-120 -80 C-100 -115 -60 -132 -20 -136" stroke="#ffffff" stroke-width="14" fill="none" opacity=".85"/>
+      <path class="dw" d="M-240 85 H240 V102 H-240Z" fill="#c92a2a" stroke="#862e2e"/><path class="dw" d="M200 40 h28 v-18 h14 v40 h-14 v-10 h-28Z" fill="#adb5bd" stroke="#495057"/>`,
+    wind: c => `<path class="dw" d="M-150 -40 H60 C110 -40 110 -100 70 -100 C40 -100 40 -70 60 -65 M-150 10 H120 C170 10 170 70 125 70 C95 70 95 40 115 38 M-130 60 H20" stroke="#74c0fc" stroke-width="10" fill="none"/>`,
+    sunface: c => `<circle class="dw" r="80" fill="#FFC531" stroke="#e67700"/>` + [...Array(12)].map((_, k) => { const a = k * 30 * D2R; return `<line class="dw" x1="${Math.cos(a) * 100}" y1="${Math.sin(a) * 100}" x2="${Math.cos(a) * 140}" y2="${Math.sin(a) * 140}" stroke="#F29B0D"/>`; }).join('') +
+      `<path class="dw" d="M-38 -18 Q-26 -32 -14 -18 M14 -18 Q26 -32 38 -18 M-34 18 Q0 50 34 18" stroke="#9a4d00" fill="none"/><circle class="dw" cx="-48" cy="12" r="12" fill="#ff8fab" stroke="none"/><circle class="dw" cx="48" cy="12" r="12" fill="#ff8fab" stroke="none"/>`,
     ball: c => `<circle class="dw" r="60" fill="#ff8c42" stroke="${c}"/><path class="dw" d="M-60 0 C-20 -25 20 -25 60 0 M0 -60 C25 -20 25 20 0 60" stroke="${c}" fill="none"/>`,
     box: c => `<path class="dw" d="M-70 -50 H70 V60 H-70Z" fill="#d9a76a" stroke="#7a4b24"/><path class="dw" d="M-70 -50 L-50 -75 H90 L70 -50 M70 60 L90 35 V-75" fill="#e8c08c" stroke="#7a4b24"/><path class="dw" d="M-15 -50 V60" stroke="#7a4b24" fill="none"/>`,
     exclaim: c => `<path class="dw" d="M0 -80 V30" stroke="#e63946" fill="none"/><circle class="dw" cy="65" r="10" fill="#e63946" stroke="#e63946"/>`,
@@ -95,8 +105,8 @@
      ph: تقدّم المشهد 0..1 (للحركات ذات المراحل: الرمي والأكل). */
   const sm = p => p * p * (3 - 2 * p);
   // الإمساك: حجم الشيء في اليد، ونقطة القبض (بُعدها عن مركز الرسمة للأسفل)، وارتفاع قمته (للأكل)
-  const HOLD_S = { icecream: 0.62, cone: 0.62, apple: 0.5, cup: 0.5, ball: 0.45, heart: 0.45, box: 0.6, book: 0.5, flower: 0.5, coin: 0.45, can: 0.55, water: 0.5 };
-  const GRIP = { icecream: 60, cone: 60, cup: 10, water: 20, flower: 70, can: -10 };
+  const HOLD_S = { umbrella: 0.95, umbrella_broken: 0.95, icecream: 0.62, cone: 0.62, apple: 0.5, cup: 0.5, ball: 0.45, heart: 0.45, box: 0.6, book: 0.5, flower: 0.5, coin: 0.45, can: 0.55, water: 0.5 };
+  const GRIP = { umbrella: 135, umbrella_broken: 135, icecream: 60, cone: 60, cup: 10, water: 20, flower: 70, can: -10 };
   const TOP = { icecream: 100, cone: 0, apple: 50, cup: 30, water: 50 };
   const lerp = (a, b, p) => a + (b - a) * p;
   function pose(kind, t, moving, ph) {
@@ -130,6 +140,14 @@
         const u = (t % 1.3) / 1.3, k = u < 0.25 ? sm(u / 0.25) : u < 0.6 ? 1 : u < 0.85 ? 1 - sm((u - 0.6) / 0.25) : 0;
         P.aR = [lerp(40, 112, k), lerp(60, 108, k)]; P.aL = [12, 8]; P.lean = -3 * k; P.fx.hand = true; P.fx.eat = k; break; }
       case 'clap': { const k = (Math.sin(t * 14) + 1) / 2; P.aL = [80, -15 + 30 * k]; P.aR = [100, 15 - 30 * k]; P.fx.clap = k; break; }
+      case 'umbrella': {   // يمسك المظلة فوق رأسه (مع المشي تُضاف السيقان تلقائياً)
+        P.aR = [172 + Math.sin(t * 3) * 3, -6]; P.aL = [14, 8]; P.fx.hand = true; break; }
+      case 'dangle': {     // معلّق في الهواء بالمظلة: ذراع للأعلى، ساقان تتأرجحان
+        const d = Math.sin(t * 5); P.aR = [176, 0]; P.aL = [120 + d * 25, 20]; P.lL = [18 + d * 22, -25 - d * 10]; P.lR = [-14 - d * 22, -20 + d * 10]; P.fx.hand = true; break; }
+      case 'fall': {       // سقوط سريع: ذراعان تلوّحان للأعلى، ساقان متباعدتان، خطوط سرعة فوقه
+        const d = Math.sin(t * 16); P.aL = [150 + d * 25, 30]; P.aR = [-150 - d * 25, -30]; P.lL = [35, -40 + d * 15]; P.lR = [-30, -30 - d * 15]; P.fx.fall = true; break; }
+      case 'curl':         // ملتف ككرة (للتدحرج): ركبتان للصدر، ذراعان تحضنان
+        P.lL = [150, -150]; P.lR = [140, -140]; P.aL = [60, 90]; P.aR = [80, 80]; P.lean = 25; P.y = -40; break;
       case 'throw': {   // رمي: تحضير للخلف ← قذف سريع للأمام ← متابعة
         const p = ph == null ? (t % 2) / 2 : ph;
         let up, lo, ln;
@@ -172,6 +190,10 @@
       extra += [[-300, 0], [-220, 30], [-150, -20]].map(([y, dx], k) => `<path d="M${-110 + dx} ${y} h${-(110 + k * 30)}" stroke="${body}" stroke-width="6" opacity="${(fl * (0.7 - k * 0.15)).toFixed(2)}"/>`).join('');
       const u = (t * 13 / Math.PI) % 1;
       extra += `<g opacity="${(1 - u).toFixed(2)}" fill="#fff" stroke="${body}" stroke-width="4"><circle cx="${-70 - u * 60}" cy="${-8 - u * 20}" r="${10 + u * 16}"/><circle cx="${-110 - u * 70}" cy="${-4 - u * 10}" r="${7 + u * 10}"/></g>`;
+    }
+    if (P.fx.fall) {   // خطوط سرعة عمودية فوق الرأس
+      const fl = 0.5 + 0.5 * Math.sin(t * 45);
+      extra += [-60, -10, 45].map((x, k) => `<path d="M${x} ${-440 - k * 20} v${-(120 + k * 40)}" stroke="${body}" stroke-width="6" opacity="${(fl * (0.75 - k * 0.15)).toFixed(2)}"/>`).join('');
     }
     if (P.fx.wave) {   // خطوط حركة حول اليد المحيّية
       const o = Math.sin(t * 11) * 0.5 + 0.5;
@@ -260,6 +282,9 @@
   }
   const TL_FONT = () => { const f = (window.TIMELINE && window.TIMELINE.font) || ''; return ({ scheherazade: "'Scheherazade New'", amiri: 'Amiri', baloo: "'Baloo Bhaijaan 2'", marhey: 'Marhey', ruqaa: "'Aref Ruqaa'", vibes: 'Vibes' })[f] || 'Lalezar'; };
 
+  // مسار بنقاط مفتاحية: [a,b,c] يُستوفى بالتساوي خلال 0..1 (ناعم)
+  const kf = (arr, q) => { if (!arr || !arr.length) return null; if (arr.length === 1) return arr[0];
+    const f = clamp(q) * (arr.length - 1), i = Math.min(arr.length - 2, Math.floor(f)), u = f - i; return arr[i] + (arr[i + 1] - arr[i]) * sm(u); };
   const seqAt = (list, s, t) => { const a = (list || 'happy').split('>'); const k = Math.min(a.length - 1, Math.floor(clamp((t - s.start) / (s.end - s.start), 0, 0.9999) * a.length)); return a[k]; };
 
   function draw(R, t, s) {
@@ -280,12 +305,18 @@
     let headPos = null;
     R.chars.forEach((o, k) => {
       const c = o.c, x0 = c.x0 != null ? c.x0 : 540, x1 = c.x1 != null ? c.x1 : x0;
-      const mv = Math.abs(x1 - x0) > 2, q = mv ? eoc(clamp(prog / (c.walkEnd || 0.85))) : 0, x = x0 + (x1 - x0) * q;
-      const moving = mv && q < 0.999;
+      const mv = Math.abs(x1 - x0) > 2, q = mv ? eoc(clamp(prog / (c.walkEnd || 0.85))) : 0;
+      const pq = clamp(prog / (c.walkEnd || 1));   // تقدّم المسار (للصعود والسقوط والدوران)
+      const x = c.xs ? kf(c.xs, pq) : x0 + (x1 - x0) * q;
+      const moving = mv && q < 0.999 && !c.ys;
       const fk = seqAt(c.face, s, t), pk = seqAt(c.pose, s, t);
-      const dir = c.dir != null ? c.dir : (x1 < x0 ? -1 : 1), big = c.big || 1, y = c.y != null ? c.y : R.ground;
-      const rot = c.rot ? ` rotate(${c.rot})` : '';   // rot=-90 : مستلقٍ (في الفراش)
-      o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y})${rot} scale(${(dir * big).toFixed(2)} ${big})`);
+      const dir = c.dir != null ? c.dir : (x1 < x0 ? -1 : 1), big = c.big || 1;
+      const y = c.ys ? kf(c.ys, pq) : (c.y != null ? c.y : R.ground);
+      const rv = c.rots ? kf(c.rots, pq) : (c.rot || 0);
+      const rot = rv ? ` rotate(${rv.toFixed(1)})` : '';   // rot=-90 : مستلقٍ (حول القدمين)
+      const sv = c.spins ? kf(c.spins, pq) : 0;          // spin=0>720 : دوران حول منتصف الجسم (تدحرج)
+      const spin = sv ? ` rotate(${sv.toFixed(1)} 0 ${(-200 * big).toFixed(0)})` : '';
+      o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})${rot}${spin} scale(${(dir * big).toFixed(2)} ${big})`);
       const r = charSVG(c, t + k * 0.37, fk, pk, moving, prog);
       o.g.innerHTML = r.svg;
       // الرمي: بعد لحظة الإفلات يطير الشيء في قوس نحو الهدف
@@ -300,6 +331,16 @@
         o.fly.setAttribute('transform', `translate(${fx2.toFixed(1)} ${fy2.toFixed(1)}) rotate(${(q * 540 * dir).toFixed(0)}) scale(${((c.hold_s || 0.45) * big).toFixed(2)})`);
       } else if (o.fly) o.fly.setAttribute('opacity', 0);
       if (k === 0) headPos = c.rot ? { x: x + Math.sin(-c.rot * D2R) * -335 * big, y: y - Math.cos(c.rot * D2R) * 335 * big } : { x, y: y - 335 * big };
+    });
+    // الكيس الهوائي ينضغط حين تهبط عليه الشخصية ثم يرتد (يُحسب من موضع القدمين)
+    if (R.chars.length) R.draws.forEach(o => {
+      if (o.w.icon !== 'airbag') return;
+      const sc = o.w.s || 1, top = o.w.y - 150 * sc, ch = R.chars[0].g.transform.baseVal.consolidate();
+      if (!ch) return;
+      const fy = ch.matrix.f, fx = ch.matrix.e, near = Math.abs(fx - o.w.x) < 230 * sc;
+      const sq = near ? clamp(1 - Math.abs(fy - (top + 70 * sc)) / (90 * sc)) * 0.28 : 0;
+      const base = o.w.y + 85 * sc;
+      o.g.setAttribute('transform', `translate(${o.w.x} ${base}) scale(${(sc * (1 + sq * 0.55)).toFixed(3)} ${(sc * (1 - sq)).toFixed(3)}) translate(0 ${-85})`);
     });
     // فقاعة التفكير تظهر ثم تنفجر
     if (R.think && headPos) {
