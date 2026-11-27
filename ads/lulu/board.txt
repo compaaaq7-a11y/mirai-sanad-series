@@ -1,7 +1,7 @@
 # قصة «لولو والتفاحة» — طفلة تأكل التفاح وتشرب الحليب وترقص على الموسيقى (30 ثانية)
 # كل المشاهد من صورة البطلة (OpenArt Kling 3 Omni) ومقطع الرقص (OpenArt Vivix W1) لثبات الشخصية.
-# الموسيقى: موسيقى مقطع الرقص نفسه تتكرر. الخط: Vibes (اختيار المستخدم، رقم 28).
-@ fps=30 font=vibes size=105 bubble_scale=0.65 enter=gentle music=clips/lulu-music.m4a music_volume=0.9 whoosh_volume=0.25 hit_volume=0.3
+# الموسيقى: موسيقى مقطع الرقص نفسه تتكرر. الخط: Scheherazade New (اختيار المستخدم، رقم 18).
+@ fps=30 font=scheherazade size=105 bubble_scale=0.65 enter=gentle music=clips/lulu-music.m4a music_volume=0.9 whoosh_volume=0.25 hit_volume=0.3
 
 [bg=image image=images/lulu-hero.jpg dur=3.5 move=push focus="55% 45%" fx=stars] هذه / +*لولو!*
 [bg=video video=clips/lulu-dance.mp4 video_from=0 video_rate=0.45 video_volume=0 video_loop=no dur=4 bubble="قرمش!" bubble_y=330 bubble_at=0.7 fx=shake] تحب / +*التفاح!*

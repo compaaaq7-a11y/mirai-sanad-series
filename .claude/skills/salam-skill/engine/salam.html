@@ -25,6 +25,8 @@
 @font-face{font-family:'Aref Ruqaa';font-weight:700;src:url(fonts/ArefRuqaa-700-latin.woff2) format('woff2')}
 @font-face{font-family:'Vibes';font-weight:400;src:url(fonts/Vibes-400-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
 @font-face{font-family:'Vibes';font-weight:400;src:url(fonts/Vibes-400-latin.woff2) format('woff2')}
+@font-face{font-family:'Scheherazade New';font-weight:700;src:url(fonts/ScheherazadeNew-700-arabic.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E}
+@font-face{font-family:'Scheherazade New';font-weight:700;src:url(fonts/ScheherazadeNew-700-latin.woff2) format('woff2')}
 @font-face{font-family:Oswald;font-weight:600;src:url(fonts/Oswald-600-latin.woff2) format('woff2')}
 
 :root{
@@ -199,7 +201,8 @@ const FONTS={
   marhey:{f:"Marhey",w:700,k:0.92},
   amiri:{f:"Amiri",w:700,k:0.95},
   ruqaa:{f:"'Aref Ruqaa'",w:700,k:0.95},
-  vibes:{f:"Vibes",w:400,k:1.1,stroke:0.07},   // خط رفيع: يُسمَّك بلونه نفسه حتى يُقرأ
+  vibes:{f:"Vibes",w:400,k:1.1,stroke:0.07},
+  scheherazade:{f:"'Scheherazade New'",w:700,k:1.05},   // خط رفيع: يُسمَّك بلونه نفسه حتى يُقرأ
 };
 function wordEl(w, basePx, font){
   const e=document.createElement('span');

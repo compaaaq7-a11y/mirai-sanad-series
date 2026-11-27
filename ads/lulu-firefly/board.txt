@@ -1,0 +1,12 @@
+# قصة «لولو والتفاحة» — نسخة صور Adobe Firefly (30 ثانية)
+# الصور يولّدها المستخدم في firefly.adobe.com بالأوامر في ads/lulu/firefly-prompts.md، ثم تُسحب عبر موصل Adobe إلى images/
+# الخط: Scheherazade New (اختيار المستخدم، رقم 18) بحجم صغير لا يشوّش على الصورة.
+@ fps=30 font=scheherazade size=105 bubble_scale=0.65 enter=gentle music=../lulu/clips/lulu-music.m4a music_volume=0.9 whoosh_volume=0.25 hit_volume=0.3
+
+[bg=image image=images/1-wake.jpg dur=4 move=push fx=stars] صباح الخير / +*يا لولو!*
+[bg=image image=images/2-apple.jpg dur=4.5 move=push focus="50% 40%" bubble="قرمش!" bubble_y=330 bubble_at=0.6 fx=shake] تحب / +*التفاح!*
+[bg=image image=images/3-milk.jpg dur=4.5 move=push focus="50% 38%" fx=stars] وتشرب / +*الحليب!*
+[bg=image image=images/4-energy.jpg dur=2.5 move=pull fx=stars,shake,ring] +*طاقة!*
+[bg=image image=images/5-dance1.jpg dur=4 move=left fx=speed bubble="ههههه!" bubble_y=330 bubble_at=0.4] وترقص / +*على الموسيقى!*
+[bg=image image=images/6-dance2.jpg dur=4 move=right fx=shake] حركات / +*مضحكة!*
+[bg=image image=images/7-finale.jpg dur=6.5 move=pull fx=confetti fade=out] كل يوم / +*تفاحة وحليب!*
