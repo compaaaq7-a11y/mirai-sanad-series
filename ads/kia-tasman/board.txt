@@ -1,0 +1,15 @@
+# إعلان معرض سيارات: كيا تاسمان 2026 (لهجة عراقية) — ليس إعلاناً رسمياً من كيا، ولا يستخدم شعارها
+# الأرقام للتحقق من المعرض قبل النشر (قوة السحب 3500 كغم حسب المواصفات المعلنة)
+# بلا صور سيارة: المولّد المجاني لا يرسم التاسمان الحقيقية؛ مع صور المعرض الحقيقية ← stickers=
+@ fps=30 theme=classic font=scheherazade pace=1.8 music=auto music_volume=0.5 handle="@showroom"
+
+[bg=dark fx=ring,sparks] +*جاهز؟*
+[bg=red fx=shake] للطريق / +*الصعـــب*
+[bg=camera] كيا / +*تاسمان* / 2026
+[bg=dark fx=slash] أول / +*بيك أب* / من كيا
+[bg=cream] قوة / +*تسحب* / حتى =3500= كغم
+[bg=red fx=speed] رمل… / طين… / +*جبل!*
+[bg=dark] من جوّا / +*راحة* / وشاشات ذكية
+[bg=cream fx=shake] للشغل / +*وللعائلة*
+[bg=red fx=stars] متوفرة / +*هسه* / بمعرضنا
+[bg=dark fx=confetti prop=window title="Booking.exe" text="احجز تجربة قيادة" prop_y=1000] احجز / +*تجربتك!*
