@@ -481,15 +481,31 @@
     if (BS.y == null) { const d = sceneAt(t).doodle || {}; BS.y = (d.ground != null ? d.ground : 1560) - BS.r; }
     return BS;
   }
+  // كرة قدم واقعية: بيضاء بخماسيات سوداء (نمط تيلستار)، ظل كروي وخطوط خياطة، ولمعة ثابتة لا تدور
+  function soccerBall(r, u) {
+    const pent = (cx, cy, rr, rot) => 'M' + [0, 1, 2, 3, 4].map(k => { const a = (rot + k * 72 - 90) * D2R; return `${(cx + Math.cos(a) * rr).toFixed(1)} ${(cy + Math.sin(a) * rr).toFixed(1)}`; }).join(' L') + 'Z';
+    const pr = r * 0.34, outer = [0, 1, 2, 3, 4].map(k => { const a = (k * 72 + 36 - 90) * D2R; return [Math.cos(a) * r * 0.9, Math.sin(a) * r * 0.9, k * 72 + 36]; });
+    const vtx = [0, 1, 2, 3, 4].map(k => { const a = (k * 72 - 90) * D2R; return [Math.cos(a) * pr, Math.sin(a) * pr, Math.cos(a) * r * 1.05, Math.sin(a) * r * 1.05]; });
+    return `<defs><radialGradient id="bs${u}" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eef0f2"/><stop offset="1" stop-color="#9aa1a8"/></radialGradient>
+      <clipPath id="bc${u}"><circle r="${r}"/></clipPath></defs>
+      <circle r="${r}" fill="url(#bs${u})"/>
+      <g clip-path="url(#bc${u})">
+        <path d="${pent(0, 0, pr, 0)}" fill="#1b1b1b"/>
+        ${outer.map(([x, y, rot]) => `<path d="${pent(x, y, pr * 1.05, rot + 180)}" fill="#1b1b1b"/>`).join('')}
+        <path d="${vtx.map(([x, y, X, Y]) => `M${x.toFixed(1)} ${y.toFixed(1)} L${X.toFixed(1)} ${Y.toFixed(1)}`).join(' ')}" stroke="#6c737a" stroke-width="2.2" fill="none"/>
+        <circle r="${r}" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="${(r * 0.25).toFixed(1)}" transform="translate(${(r * 0.08).toFixed(1)} ${(r * 0.1).toFixed(1)})"/>
+      </g>
+      <circle r="${r}" fill="none" stroke="#1b1b1b" stroke-width="3.5"/>`;
+  }
   function drawBall(R, t, s) {
     if (!window.TIMELINE.scenes.some(x => x.doodle && x.doodle.ball)) return;
     if (!R.ball) { R.ball = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(R.ball); }
     const b = ballState(t), ink = INK[R.d.ink] || INK.pencil, r = b.r;
     R.ball.setAttribute('transform', `translate(${b.x.toFixed(1)} ${b.y.toFixed(1)}) rotate(${(b.a * 180 / Math.PI).toFixed(1)})`);
     const fast = Math.hypot(b.vx, b.vy) > 900, ang = Math.atan2(b.vy, b.vx);
-    R.ball.innerHTML = `<circle r="${r}" fill="${R.d.ballc || '#ffb347'}" stroke="${ink}" stroke-width="6"/>
-      <path d="M0 ${-r * 0.42} L${r * 0.4} ${-r * 0.13} L${r * 0.25} ${r * 0.34} L${-r * 0.25} ${r * 0.34} L${-r * 0.4} ${-r * 0.13}Z" fill="${ink}"/>
-      <path d="M0 ${-r * 0.42} V${-r} M${r * 0.4} ${-r * 0.13} L${r * 0.95} ${-r * 0.3} M${r * 0.25} ${r * 0.34} L${r * 0.6} ${r * 0.8} M${-r * 0.25} ${r * 0.34} L${-r * 0.6} ${r * 0.8} M${-r * 0.4} ${-r * 0.13} L${-r * 0.95} ${-r * 0.3}" stroke="${ink}" stroke-width="4"/>`;
+    R.ball.innerHTML = soccerBall(r, R.uid || (R.uid = ++UID));
+    if (!R.gloss) { R.gloss = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(R.gloss); }
+    R.gloss.innerHTML = `<ellipse cx="${(b.x - r * 0.38).toFixed(1)}" cy="${(b.y - r * 0.42).toFixed(1)}" rx="${(r * 0.26).toFixed(1)}" ry="${(r * 0.15).toFixed(1)}" fill="#fff" opacity=".75" transform="rotate(-35 ${(b.x - r * 0.38).toFixed(1)} ${(b.y - r * 0.42).toFixed(1)})"/>`;
     // خطوط سرعة خلف الكرة السريعة (لا تدور معها)
     if (!R.trail) { R.trail = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').insertBefore(R.trail, R.ball); }
     R.trail.innerHTML = fast ? [0, -1, 1].map(k => `<path d="M${(b.x - Math.cos(ang) * (r + 20) + k * Math.sin(ang) * 22).toFixed(1)} ${(b.y - Math.sin(ang) * (r + 20) - k * Math.cos(ang) * 22).toFixed(1)} l${(-Math.cos(ang) * (110 - Math.abs(k) * 35)).toFixed(1)} ${(-Math.sin(ang) * (110 - Math.abs(k) * 35)).toFixed(1)}" stroke="${ink}" stroke-width="6" stroke-linecap="round" opacity=".7"/>`).join('') : '';
