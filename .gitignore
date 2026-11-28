@@ -3,3 +3,7 @@ build/
 output/
 __pycache__/
 .venv/
+
+# مقاطع مُخرجة لم يوافق عليها المستخدم بعد (المعتمد يُضاف بـ git add -f)
+ads/**/*.mp4
+ads/**/soundtrack.wav
