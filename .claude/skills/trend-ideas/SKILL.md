@@ -21,10 +21,23 @@ python3 .claude/skills/trend-ideas/scripts/trends.py \
 - **المفتاح:** محفوظ في إعدادات البيئة لـ `api.apify.com` ويحقنه الوكيل تلقائياً (لا تطلبه مجدداً).
   على جهاز آخر أو GitHub Actions: متغير `APIFY_TOKEN`.
 
+## تحليل المنافسين (آخر N مقطع لكل حساب: تيك توك + ريلز إنستغرام)
+```bash
+python3 .claude/skills/trend-ideas/scripts/competitors.py --handles "krwanbasha,mutqintech,youssefaymanc0" --n 30 --budget 1.3
+# إعادة بناء التقرير بلا تكلفة من بيانات محفوظة:
+python3 .claude/skills/trend-ideas/scripts/competitors.py --handles "..." --from-json reports/competitors/competitors-YYYY-MM-DD.json
+```
+- `--ig` لأسماء إنستغرام إن اختلفت عن تيك توك (m.jabaly و youssefaymanc0 لهما أسماء مختلفة في إنستغرام).
+- التقرير فيه: ملخص لكل حساب، **🔥 أعلى المقاطع مشاهدة**، **⚡ الأسرع انتشاراً (يومياً)**، و**🚀 الفيروسية الشاذة
+  (≥3× وسيط صاحبها)** — وهي الأهم: تكشف الفكرة التي نجحت لذاتها. اكتشاف المنافسين: هاشتاغات المجال في تيك توك
+  ثم ترتيب أصحاب المقاطع بالمتابعين والتفاعل (`reports/competitors/discovery-tiktok.json`).
+- المنافسون الحاليون (2026-11): krwanbasha، m.jabaly، ramanography.ar، teachkw.ai، mutqintech، youssefaymanc0.
+
 ## الأدوات المستخدمة في Apify
 | المنصة | الأداة | المدخل | السعر |
 |---|---|---|---|
 | تيك توك | `clockworks/tiktok-scraper` | هاشتاغات `hashtags` + `resultsPerPage` | 0.0037$/مقطع |
+| إنستغرام | `apify/instagram-reel-scraper` | `username` + `resultsLimit` | 0.0026$/ريل |
 | يوتيوب | `streamers/youtube-scraper` | بحث `searchQueries` + `maxResultsShorts` + `sortingOrder=views` + `dateFilter` | 0.004$/مقطع |
 لا تفعّل الإضافات المدفوعة (فلاتر التاريخ في تيك توك، التنزيل، التفريغ، ملخص AI) إلا بطلب.
 
