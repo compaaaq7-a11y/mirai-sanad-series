@@ -16,6 +16,7 @@
 html,body{background:#000;overflow:hidden}
 #stage{direction:rtl;position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;transform-origin:0 0;
   font-family:var(--font),Plex,Tajawal,sans-serif;color:var(--ink);background:linear-gradient(170deg,var(--bg1),var(--bg2))}
+.bgv{position:absolute;left:0;top:0;width:1080px;height:1920px;object-fit:cover;opacity:0;transform-origin:50% 50%}
 .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.75}
 .top{position:absolute;left:60px;right:60px;top:70px;display:flex;justify-content:space-between;align-items:center;font:500 30px var(--font),Plex;color:var(--muted);direction:ltr}
 .top b{font-weight:700;letter-spacing:6px;color:var(--ink);font-size:34px}
@@ -23,6 +24,9 @@ html,body{background:#000;overflow:hidden}
 .head{left:70px;right:70px;top:220px;text-align:center}
 .head .pre{font-weight:500;font-size:46px;color:var(--muted);margin-bottom:6px}
 .head .main{font-weight:700;font-size:var(--hsize,96px);line-height:1.18;text-wrap:balance}
+.headpill .head .main{display:inline-block;background:var(--headbg);color:var(--headink,#fff);padding:10px 34px 22px;border-radius:28px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.headpill .head .pre{display:table;margin-left:auto;margin-right:auto;background:var(--headbg);color:var(--headink,#fff);padding:4px 22px 10px;border-radius:20px;margin-bottom:12px}
+.headpill .top{color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)} .headpill .top b{color:#fff}
 .head .main i{font-style:normal;color:var(--accent)}
 .badge{top:140px;left:50%;padding:8px 26px;border-radius:30px;background:var(--accent);color:#fff;font:700 30px var(--font),Plex}
 .cap{left:50%;bottom:250px;max-width:900px;padding:22px 40px;border-radius:999px;background:var(--capbg);color:var(--capink);
@@ -69,7 +73,7 @@ const st=document.getElementById('stage'), W=TL.width||1080, H=TL.height||1920;
 st.style.transform=`scale(${W/1080},${H/1920})`; document.body.style.width=W+'px'; document.body.style.height=H+'px';
 const V={bg1:'#fff4ec',bg2:'#ffe9f0',blob1:'#ffb38a',blob2:'#ff8fb1',blob3:'#ffd59e',ink:'#1d1b20',muted:'#6b6470',accent:'#d6336c',
   good:'#2bb673',bad:'#e5383b',card:'#ffffff',line:'#f1e6ea',capbg:'#ffffff',capink:'#1d1b20',shadow:'rgba(120,40,70,.16)',cardborder:'none',font:'Plex',hsize:'96px'};
-Object.assign(V,S); for(const k in V) st.style.setProperty('--'+k,V[k]);
+Object.assign(V,S); for(const k in V) st.style.setProperty('--'+k,V[k]); if(S.headbg) st.classList.add('headpill');
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), eo=p=>1-Math.pow(1-p,3), eb=p=>{const c=1.6;return 1+(c+1)*Math.pow(p-1,3)+c*Math.pow(p-1,2)};
 const esc=s=>String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
 const keyed=(s,k)=>k?esc(s).replace(esc(k),`<i>${esc(k)}</i>`):esc(s);
@@ -77,6 +81,8 @@ const keyed=(s,k)=>k?esc(s).replace(esc(k),`<i>${esc(k)}</i>`):esc(s);
 // الخلفية: بقع ضوء مموّهة تتحرك ببطء (أو بلا بقع إن style.blobs=false)
 const blobs=[]; if(S.blobs!==false) [['blob1',700,-120,260],['blob2',650,720,1100],['blob3',560,-80,1500]].forEach(([c,s,x,y],k)=>{
   const b=document.createElement('div');b.className='blob';b.style.cssText=`width:${s}px;height:${s}px;background:var(--${c});left:0;top:0`;st.appendChild(b);blobs.push({b,x,y,k});});
+// لقطات فيديو خلفية لكل مشهد (render.mjs يستخرج الفريمات في s.frames) — بلا تعتيم
+const VL=[]; TL.scenes.forEach(sc=>{ if(!sc.frames) return; const im=document.createElement('img'); im.className='bgv'; st.appendChild(im); VL.push({im,s:sc,last:-1}); });
 const top=document.createElement('div');top.className='top';top.innerHTML=`<b>•••</b><span>${esc(TL.handle||'')}</span>`;st.appendChild(top);
 
 // ---- بناء العناصر لكل مشهد
@@ -108,6 +114,14 @@ TL.scenes.forEach(s=>{
 });
 
 function draw(t){
+  const pend=[];
+  VL.forEach(v=>{ const sc=v.s, a=sc.start, b=sc.end; if(t<a-0.01||t>b+0.3){v.im.style.opacity=0;return;}
+    const F=sc.frames, lt=(t-a)*(sc.video_rate||1)+(sc.video_from||0); let k=Math.floor(lt*F.fps); k=Math.min(Math.max(k,0),F.count-1);
+    if(k!==v.last){v.last=k; v.im.src=F.dir+'/'+String(k+1).padStart(5,'0')+'.jpg'; pend.push(v.im.decode().catch(()=>{}));}
+    v.im.style.opacity = t>b ? (1-clamp((t-b)/0.3)).toFixed(3) : 1;
+    const z=sc.zoom||[1,1.08], q=clamp((t-a)/Math.max(.1,b-a)); v.im.style.transform=`scale(${(z[0]+(z[1]-z[0])*q).toFixed(4)})`;
+    v.im.style.zIndex = 0; });
+  draw.pend=pend;
   blobs.forEach(o=>{o.b.style.transform=`translate(${o.x+Math.sin(t*0.3+o.k)*80}px,${o.y+Math.cos(t*0.25+o.k*2)*90}px)`;});
   EL.forEach(o=>{
     const pin=o.at!=null?o.at:o.start, d=t-pin, out=t-(o.end-0.22);
@@ -129,7 +143,7 @@ function draw(t){
     if(o.kind==='comment'){const a=o.at??pin+0.4,n=Math.round(o.text.length*clamp((t-a)/0.8));o.e.querySelector('.box').textContent=t<a?'أضف تعليقاً…':o.text.slice(0,n);}
   });
 }
-window.seek=t=>{draw(t);};
+window.seek=t=>{draw(t);return Promise.all(draw.pend||[]);};
 const imgs=[...document.querySelectorAll('img')].map(i=>i.decode().catch(()=>{}));
 window.engineReady=Promise.all([document.fonts.ready,...imgs]).then(()=>{draw(0);return true;});
 })();

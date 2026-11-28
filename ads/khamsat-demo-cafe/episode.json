@@ -1,0 +1,94 @@
+{
+ "handle": "@rukn.albunn",
+ "style": {
+  "font": "'Scheherazade New'",
+  "hsize": "84px",
+  "blobs": false,
+  "bg1": "#1b130d",
+  "bg2": "#1b130d",
+  "ink": "#ffffff",
+  "muted": "#ffffff",
+  "accent": "#ffd43b",
+  "headbg": "rgba(20,14,10,.80)",
+  "headink": "#ffffff",
+  "capbg": "rgba(20,14,10,.86)",
+  "capink": "#ffffff",
+  "card": "rgba(20,14,10,.88)",
+  "line": "rgba(255,255,255,.15)",
+  "bad": "#ffd43b",
+  "good": "#ffd43b",
+  "shadow": "rgba(0,0,0,.35)"
+ },
+ "voice": "voice.mp3",
+ "words": "words.json",
+ "music": "soundtrack.wav",
+ "music_volume": 0.55,
+ "scenes": [
+  {
+   "say": "قهوتك الصباحية *تُحضَّر* أمام عينيك.",
+   "video": "draft-clips/75115943.mp4",
+   "zoom": [
+    1.0,
+    1.08
+   ],
+   "head": {
+    "pre": "مقهى ركن البُنّ",
+    "main": "قهوة طازجة كل صباح",
+    "key": "طازجة"
+   }
+  },
+  {
+   "say": "وفي الظهيرة، قهوة *مثلّجة* تنعش يومك.",
+   "video": "draft-clips/69174279.mp4",
+   "zoom": [
+    1.0,
+    1.06
+   ],
+   "head": {
+    "main": "مثلّجة… ومنعشة",
+    "key": "مثلّجة"
+   }
+  },
+  {
+   "say": "وبمناسبة الافتتاح: الكوب الثاني *مجانًا*!",
+   "video": "draft-clips/69174279.mp4",
+   "video_from": 5.5,
+   "zoom": [
+    1.08,
+    1.16
+   ],
+   "cards": [
+    {
+     "t": "label",
+     "title": "عرض الافتتاح 🎉",
+     "y": 1080,
+     "rows": [
+      {
+       "k": "الكوب الأول",
+       "v": "3,000 د.ع"
+      },
+      {
+       "k": "الكوب الثاني",
+       "v": "مجانًا",
+       "hi": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "say": "مقهى ركن البن… *ننتظرك* اليوم.",
+   "video": "draft-clips/75115943.mp4",
+   "video_from": 3.0,
+   "zoom": [
+    1.1,
+    1.0
+   ],
+   "head": {
+    "pre": "بغداد – الكرادة",
+    "main": "ننتظرك اليوم",
+    "key": "ننتظرك"
+   }
+  }
+ ]
+}

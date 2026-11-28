@@ -1,0 +1,230 @@
+{
+ "engine": "explainer.html",
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "duration": 17.232,
+ "style": {
+  "font": "'Scheherazade New'",
+  "hsize": "84px",
+  "blobs": false,
+  "bg1": "#1b130d",
+  "bg2": "#1b130d",
+  "ink": "#ffffff",
+  "muted": "#ffffff",
+  "accent": "#ffd43b",
+  "headbg": "rgba(20,14,10,.80)",
+  "headink": "#ffffff",
+  "capbg": "rgba(20,14,10,.86)",
+  "capink": "#ffffff",
+  "card": "rgba(20,14,10,.88)",
+  "line": "rgba(255,255,255,.15)",
+  "bad": "#ffd43b",
+  "good": "#ffd43b",
+  "shadow": "rgba(0,0,0,.35)"
+ },
+ "handle": "@rukn.albunn",
+ "align": "transcript",
+ "scenes": [
+  {
+   "start": 0.0,
+   "end": 3.675,
+   "head": {
+    "pre": "مقهى ركن البُنّ",
+    "main": "قهوة طازجة كل صباح",
+    "key": "طازجة"
+   },
+   "zoom": [
+    1.0,
+    1.08
+   ],
+   "video": "draft-clips/75115943.mp4",
+   "cards": [],
+   "caps": [
+    {
+     "start": 0.05,
+     "end": 2.175,
+     "words": [
+      {
+       "w": "قهوتك"
+      },
+      {
+       "w": "الصباحية"
+      },
+      {
+       "w": "تُحضَّر",
+       "key": true
+      },
+      {
+       "w": "أمام"
+      }
+     ]
+    },
+    {
+     "start": 2.175,
+     "end": 3.625,
+     "words": [
+      {
+       "w": "عينيك"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "start": 3.675,
+   "end": 8.237,
+   "head": {
+    "main": "مثلّجة… ومنعشة",
+    "key": "مثلّجة"
+   },
+   "zoom": [
+    1.0,
+    1.06
+   ],
+   "video": "draft-clips/69174279.mp4",
+   "cards": [],
+   "caps": [
+    {
+     "start": 3.775,
+     "end": 4.95,
+     "words": [
+      {
+       "w": "وفي"
+      },
+      {
+       "w": "الظهيرة"
+      }
+     ]
+    },
+    {
+     "start": 4.95,
+     "end": 8.187,
+     "words": [
+      {
+       "w": "قهوة"
+      },
+      {
+       "w": "مثلّجة",
+       "key": true
+      },
+      {
+       "w": "تنعش"
+      },
+      {
+       "w": "يومك"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "start": 8.237,
+   "end": 12.762,
+   "video_from": 5.5,
+   "zoom": [
+    1.08,
+    1.16
+   ],
+   "video": "draft-clips/69174279.mp4",
+   "cards": [
+    {
+     "t": "label",
+     "title": "عرض الافتتاح 🎉",
+     "y": 1080,
+     "rows": [
+      {
+       "k": "الكوب الأول",
+       "v": "3,000 د.ع"
+      },
+      {
+       "k": "الكوب الثاني",
+       "v": "مجانًا",
+       "hi": true
+      }
+     ]
+    }
+   ],
+   "caps": [
+    {
+     "start": 8.337,
+     "end": 10.275,
+     "words": [
+      {
+       "w": "وبمناسبة"
+      },
+      {
+       "w": "الافتتاح:"
+      }
+     ]
+    },
+    {
+     "start": 10.275,
+     "end": 12.712,
+     "words": [
+      {
+       "w": "الكوب"
+      },
+      {
+       "w": "الثاني"
+      },
+      {
+       "w": "مجانًا!",
+       "key": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "start": 12.762,
+   "end": 17.232,
+   "head": {
+    "pre": "بغداد – الكرادة",
+    "main": "ننتظرك اليوم",
+    "key": "ننتظرك"
+   },
+   "video_from": 3.0,
+   "zoom": [
+    1.1,
+    1.0
+   ],
+   "video": "draft-clips/75115943.mp4",
+   "cards": [],
+   "caps": [
+    {
+     "start": 12.862,
+     "end": 15.012,
+     "words": [
+      {
+       "w": "مقهى"
+      },
+      {
+       "w": "ركن"
+      },
+      {
+       "w": "البن…"
+      }
+     ]
+    },
+    {
+     "start": 15.012,
+     "end": 17.182,
+     "words": [
+      {
+       "w": "ننتظرك",
+       "key": true
+      },
+      {
+       "w": "اليوم"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "audio": "voice.mp3",
+ "music": "soundtrack.wav",
+ "music_volume": 0.55,
+ "sfx": false
+}

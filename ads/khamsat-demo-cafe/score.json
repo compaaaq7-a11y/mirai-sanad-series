@@ -1,0 +1,3 @@
+{ "duration": 17.25, "bpm": 84, "key": "D", "music_gain": 1.0,
+  "sections": [ {"from": 0, "to": 17.25, "style": "lofi"} ],
+  "events": [ ["whoosh", 3.5, 0.35], ["whoosh", 8.06, 0.35], ["pop", 8.6], ["ding", 11.4], ["whoosh", 12.59, 0.35] ] }

@@ -76,9 +76,11 @@ def build(spec, base, out):
     for sc in S:
         s, ws = sc['src'], sc['_ws']
         o = {'start': sc['start'], 'end': sc['end']}
-        for k in ('head', 'badge'):
+        for k in ('head', 'badge', 'video_from', 'video_rate', 'zoom'):
             if k in s:
                 o[k] = s[k]
+        if s.get('video'):
+            o['video'] = os.path.relpath(os.path.join(base, s['video']), os.path.dirname(os.path.abspath(out)))
         cards = []
         for c in s.get('cards', []):
             c = dict(c)

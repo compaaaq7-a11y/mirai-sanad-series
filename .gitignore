@@ -9,3 +9,4 @@ ads/**/*.mp4
 ads/**/soundtrack.wav
 ads/sfx-library/SOURCES.tsv
 ads/sfx-library/SOURCES.log
+ads/**/draft-clips/
