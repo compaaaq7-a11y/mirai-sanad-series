@@ -9,3 +9,5 @@
 | #6 اضرب الكرة بقوة | https://youtu.be/yr4KK8Ni6UQ |
 | #7 سند يصيد السمك | https://youtu.be/bFzqHVo_-P0 |
 | #8 النوم داخل الصف | https://youtu.be/mBFVueu9toU |
+| مكعبات #1 كنز تحت الشجرة (إنجليزي) | https://youtu.be/xC64wsYbhD4 |
+- اللغة: `"lang": "en", "audioLang": "en"` للعناوين الإنجليزية (يوتيوب يرفض `zxx`).
