@@ -88,6 +88,22 @@
       <path class="dw" d="M-20 -20 Q60 -60 120 -170" stroke="#ffd43b" stroke-width="9" stroke-dasharray="1 0" fill="none"/>
       <path class="dw" d="M120 -170 l-34 6 M120 -170 l2 34" stroke="#ffd43b" stroke-width="9" fill="none"/>
       <circle class="dw" cx="140" cy="-200" r="32" fill="#ffffff" stroke="#1b1b1b"/><path class="dw" d="M140 -214 l13 9 -5 15 h-16 l-5 -15Z" fill="#1b1b1b" stroke="#1b1b1b"/>`,
+    deskside: c => `<path class="dw" d="M-115 -118 H115 V-104 H-115Z" fill="#f4f3ef" stroke="${c}"/><path class="dw" d="M-98 -104 V0 M98 -104 V0 M-98 -66 H50" stroke="${c}" fill="none"/>`,
+    board: c => `<rect class="dw" x="-190" y="-120" width="380" height="240" rx="8" fill="#5b6560" stroke="${c}" stroke-width="12"/>
+      <circle class="dw" cx="-80" cy="-10" r="44" fill="none" stroke="#f1f1ec" stroke-width="5"/><ellipse class="dw" cx="-80" cy="-10" rx="80" ry="18" fill="none" stroke="#f1f1ec" stroke-width="4"/>
+      <circle class="dw" cx="90" cy="-30" r="30" fill="none" stroke="#f1f1ec" stroke-width="5"/><path class="dw" d="M90 -78 V-68 M90 8 V18 M42 -30 H52 M128 -30 H138 M56 -64 l7 7 M117 3 l7 7 M124 -64 l-7 7 M63 3 l-7 7" stroke="#f1f1ec" stroke-width="4" fill="none"/>
+      <path class="dw" d="M-20 60 H60 M-20 82 H30" stroke="#f1f1ec" stroke-width="5" stroke-dasharray="14 10" fill="none"/>
+      <path class="dw" d="M-150 140 H150" stroke="${c}" stroke-width="8" fill="none"/>`,
+    winnight: c => `<rect class="dw" x="-110" y="-130" width="220" height="260" fill="#3c4660" stroke="${c}" stroke-width="10"/><path class="dw" d="M0 -130 V130 M-110 0 H110" stroke="${c}" stroke-width="6" fill="none"/>
+      <path class="dw" d="M40 -95 a32 32 0 1 0 22 54 a26 26 0 1 1 -22 -54Z" fill="#f6efc9" stroke="#f6efc9"/><circle class="dw" cx="-60" cy="-80" r="4" fill="#fff" stroke="#fff"/><circle class="dw" cx="-30" cy="60" r="3" fill="#fff" stroke="#fff"/><circle class="dw" cx="70" cy="70" r="4" fill="#fff" stroke="#fff"/>`,
+    winday: c => `<rect class="dw" x="-110" y="-130" width="220" height="260" fill="#e7eef3" stroke="${c}" stroke-width="10"/><path class="dw" d="M0 -130 V130 M-110 0 H110" stroke="${c}" stroke-width="6" fill="none"/>
+      <circle class="dw" cx="-55" cy="-65" r="28" fill="none" stroke="${c}" stroke-width="5"/><path class="dw" d="M-55 -110 v12 M-55 -32 v12 M-100 -65 h12 M-22 -65 h12" stroke="${c}" stroke-width="4" fill="none"/>`,
+    bedg: c => `<path class="dw" d="M-200 60 V-110 M200 60 V-50" stroke="${c}" stroke-width="14" fill="none"/><rect class="dw" x="-200" y="-12" width="400" height="46" rx="8" fill="#e4e2dc" stroke="${c}"/><path class="dw" d="M-185 -12 C-185 -50 -120 -55 -105 -22" fill="#ffffff" stroke="${c}"/>`,
+    blanketg: c => `<path class="dw" d="M-110 -20 C-60 -60 60 -60 175 -30 L180 30 L-110 30Z" fill="#d9d6cf" stroke="${c}"/><path class="dw" d="M-60 -32 v58 M20 -40 v66 M100 -36 v62" stroke="${c}" stroke-width="3" fill="none" opacity=".5"/>`,
+    phone: c => `<circle class="dw" r="85" fill="rgba(190,225,255,.35)" stroke="none"/><rect class="dw" x="-24" y="-42" width="48" height="84" rx="9" fill="#cfe9ff" stroke="${c}" stroke-width="5"/>`,
+    phoneoff: c => `<rect class="dw" x="-24" y="-42" width="48" height="84" rx="9" fill="#2b2b2b" stroke="${c}" stroke-width="5"/>`,
+    chairfallen: c => `<path class="dw" d="M-120 -8 H60 M-110 -8 V-60 M40 -8 V-55 M60 -8 H190" stroke="${c}" stroke-width="10" fill="none"/>`,
+    nightshade: c => `<rect x="-2000" y="-2000" width="4000" height="4000" fill="rgba(25,30,55,.28)"/>`,
     fishbig: c => fishSVG('big', 1, 0, c, false),
     dock: c => `<path class="dw" d="M0 0 H540 V30 H0Z" fill="#efe3c8" stroke="${c}"/>
       <path class="dw" d="M90 0 V30 M190 0 V30 M290 0 V30 M390 0 V30 M490 0 V30" stroke="${c}" stroke-width="4" fill="none"/>
@@ -117,6 +133,8 @@
       case 'star': return `${starEye(-26)}${starEye(26)}<path d="M-30 18 Q0 58 30 18Z" fill="#7a1f1f" stroke="${ink}" stroke-width="4"/>`;
       case 'laugh': return `<path d="M-36 -6 Q-24 -22 -12 -6 M12 -6 Q24 -22 36 -6" stroke="${ink}" stroke-width="5" fill="none"/><path d="M-30 14 Q0 ${54 + Math.sin(t * 25) * 6} 30 14Z" fill="#7a1f1f" stroke="${ink}" stroke-width="4"/>`;
       case 'angry': return `<path d="M-40 -34 L-12 -20 M40 -34 L12 -20" stroke="${ink}" stroke-width="6"/>${dot(-24, 6)}${dot(24, 6)}<path d="M-20 30 H20" stroke="${ink}" stroke-width="6"/>`;
+      case 'drowsy': return `<path d="M-40 -10 H-8 M8 -10 H40" stroke="${ink}" stroke-width="6"/><path d="M-36 -10 A12 8 0 0 0 -12 -10Z M12 -10 A12 8 0 0 0 36 -10Z" fill="${ink}"/><path d="M-14 28 Q0 ${32 + Math.sin(t * 2) * 3} 14 28" stroke="${ink}" stroke-width="5" fill="none"/>`;
+      case 'dream': return `<path d="M-36 -6 Q-24 6 -12 -6 M12 -6 Q24 6 36 -6" stroke="${ink}" stroke-width="5" fill="none"/><path d="M-20 22 Q0 40 20 22" stroke="${ink}" stroke-width="5" fill="none"/><path d="M18 30 q4 ${(14 + Math.sin(t * 1.5) * 6).toFixed(1)} 0 ${(22 + Math.sin(t * 1.5) * 8).toFixed(1)} q-6 -4 0 -${(22 + Math.sin(t * 1.5) * 8).toFixed(1)}Z" fill="#cfe8ff" stroke="${ink}" stroke-width="2"/>`;
       case 'sleep': return `<path d="M-36 -8 Q-24 2 -12 -8 M12 -8 Q24 2 36 -8" stroke="${ink}" stroke-width="5" fill="none"/><ellipse cy="30" rx="7" ry="${5 + Math.sin(t * 3) * 3}" fill="${ink}"/>`;
       case 'cry': { const y = 10 + ((t * 120) % 60); return face('sad', ink, t) + `<path d="M-26 ${y} q-6 10 0 14 q6 -4 0 -14Z M26 ${y} q-6 10 0 14 q6 -4 0 -14Z" fill="#3a86ff"/>`; }
       case 'wink': return `${dot(-24)}<path d="M12 -8 Q24 -20 36 -8" stroke="${ink}" stroke-width="5" fill="none"/><path d="M-24 18 Q0 40 24 18" stroke="${ink}" stroke-width="5" fill="none"/>`;
@@ -194,6 +212,15 @@
       case 'pull': P.lean = -14; P.aR = [140, -5]; P.aL = [120, 0]; P.lL = [28, -8]; P.lR = [-12, -4]; P.fx.rodA = 155; break;   // يسحب بقوة
       case 'reel': P.lean = -12; P.aR = [135, -5]; P.aL = [100 + 25 * Math.sin(t * 16), 30 + 20 * Math.cos(t * 16)]; P.lL = [28, -8]; P.lR = [-12, -4]; P.fx.rodA = 150; break;
       case 'yank': { const p = ph == null ? 0.5 : ph, k = sm(clamp((p - 0.35) / 0.12)); P.aR = [lerp(95, 165, k), lerp(30, -10, k)]; P.aL = [lerp(75, 140, k), 0]; P.lean = -10 * k; P.fx.rodA = lerp(125, 168, k); break; }
+      case 'sit_chair': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [72, 38]; P.aL = [62, 48]; P.lean = 4; break;
+      case 'nod': { const p = ph == null ? 0.5 : ph, cyc = (t * 0.55) % 1, v = cyc < 0.82 ? sm(cyc / 0.82) : 1 - sm((cyc - 0.82) / 0.18);
+        P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [72, 38]; P.aL = [62, 48]; P.lean = 4 + v * lerp(14, 42, p); P.fx.headTilt = v * 18; break; }
+      case 'sleep_desk': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.lean = 56 + Math.sin(t * 1.8) * 2; P.aR = [118, 72]; P.aL = [112, 78]; P.fx.headTilt = 28; break;
+      case 'startle': P.y = 20; P.lL = [118, -50]; P.lR = [106, -40]; P.aR = [165 + Math.sin(t * 30) * 12, 30]; P.aL = [-160 - Math.sin(t * 30) * 12, -30]; P.lean = -18; break;
+      case 'raise_hand': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [176 + Math.sin(t * 9) * 7, -4]; P.aL = [62, 48]; P.lean = 2; P.fx.wave = true; break;
+      case 'laughsit': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [25, 95]; P.aL = [18, 100]; P.sway = Math.sin(t * 28) * 4; P.lean = 8 + Math.sin(t * 14) * 5; break;
+      case 'knock': { const k = Math.max(0, Math.sin(t * 13)); P.lean = 24; P.aR = [lerp(70, 135, k), lerp(10, -10, k)]; P.aL = [20, 30]; break; }
+      case 'hips': P.aR = [40, -120]; P.aL = [40, -120]; break;
       case 'look_up': P.aR = [150, 30]; P.aL = [-20, 10]; P.lean = -10; P.fx.lookup = true; break;
       case 'throw': {   // رمي: تحضير للخلف ← قذف سريع للأمام ← متابعة
         const p = ph == null ? (t % 2) / 2 : ph;
@@ -268,10 +295,10 @@
       ${c.scarf ? `<g transform="translate(${nx.toFixed(1)} ${(ny + 6).toFixed(1)})"><path d="M-46 -12 C-15 6 15 6 46 -12 L46 14 C15 30 -15 30 -46 14Z" fill="#e63946" stroke="#9d0208" stroke-width="5"/>
         <path d="M18 14 L${26 + Math.sin(t * 6) * 6} 80 L${46 + Math.sin(t * 6) * 6} 76 L38 10" fill="#e63946" stroke="#9d0208" stroke-width="5"/></g>` : ''}
       <path d="${AL.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AL, body, burnt, c.paper)}
-      <g transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)}) rotate(${P.lean * 0.4})">
+      <g transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)}) rotate(${P.lean * 0.4 + (P.fx.headTilt || 0)})">
         <circle r="${R}" fill="${burnt ? '#111' : (c.paper || '#fff')}" stroke="${body}" stroke-width="7"/>
         <path d="M-10 -68 q-6 -22 -2 -30 M4 -70 q2 -24 10 -30 M16 -66 q10 -16 20 -18" stroke="${body}" stroke-width="5" fill="none"/>
-        ${P.fx.lookup ? '<g transform="translate(6 -22)">' : '<g>'}${face(P.fx.eat > 0.6 ? (c.hold === 'icecream' ? 'lick' : 'chew') : faceKind, burnt ? '#fff' : ink, t)}</g>
+        ${P.fx.lookup ? '<g transform="translate(6 -22)">' : '<g>'}${face(P.fx.eat > 0.6 ? (c.hold === 'icecream' ? 'lick' : 'chew') : faceKind, burnt ? '#fff' : ink, t)}</g>${c.glasses ? `<g stroke="${ink}" stroke-width="4" fill="rgba(255,255,255,.25)"><circle cx="-24" cy="-8" r="19"/><circle cx="24" cy="-8" r="19"/><path d="M-5 -10 Q0 -14 5 -10 M-43 -10 L-66 -16" fill="none"/></g>` : ''}
       </g>
       ${held}<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt, c.paper)}${grip}${front}</g>`;
     let tip = null, rodSvg = '';
@@ -285,7 +312,8 @@
       tip = { x: tx + P.sway, y: ty2 + P.y };
     }
     const svg2 = rodSvg ? svg.replace(/<\/g>$/, rodSvg + `<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt, c.paper)}</g>`) : svg;
-    return { svg: svg2, hand: { x: AR.ex + P.sway, y: AR.ey + P.y }, tip };
+    const chair = c.chair ? `<g stroke="${body}" stroke-width="8" fill="none" stroke-linecap="round"><path d="M-62 -58 H34 M30 -58 V0 M-56 -58 V0 M-58 -58 L-70 -232"/><path d="M-70 -232 L-66 -150" stroke-width="14"/></g>` : '';
+    return { svg: chair + svg2, hand: { x: AR.ex + P.sway, y: AR.ey + P.y }, tip };
   }
   // موضع اليد اليمنى لحظة الإفلات في الرمي (لنقطة بداية طيران الشيء)
   function releaseHand(c) { const r = charSVG(c, 0, 'happy', 'throw', false, 0.5); return r.hand; }
@@ -366,7 +394,8 @@
     });
     // الشخصيات
     const cg = svg.querySelector('.chars');
-    (d.chars || []).forEach(c => { if (d.paper && !c.paper) c.paper = d.paper; const g = document.createElementNS(NS, 'g'); cg.appendChild(g); R.chars.push({ g, c }); });
+    (d.chars || []).forEach(c => { if (d.paper && !c.paper) c.paper = d.paper; const g = document.createElementNS(NS, 'g'); R.chars.push({ g, c }); });
+    R.chars.slice().sort((a, b) => (a.c.z || 0) - (b.c.z || 0)).forEach(o => cg.appendChild(o.g));   // z= ترتيب الرسم (الأصغر خلف)
     // فقاعة التفكير
     if (d.think && d.think.length && R.chars.length) {
       const g = document.createElementNS(NS, 'g'); svg.querySelector('.think').appendChild(g);
@@ -460,6 +489,7 @@
     });
     drawBall(R, t, s);
     drawFishing(R, t, s, R.tipW);
+    drawClassExtras(R, t, s, headPos);
     // فقاعة التفكير تظهر ثم تنفجر
     if (R.think && headPos) {
       const a = s.start + 0.35, e = s.end - 0.35, pin = eob(clamp((t - a) / 0.35)), pop = clamp((t - e) / 0.3);
@@ -640,6 +670,36 @@
       if (rip != null && t >= rip) { const k = t - rip; out += [0, 0.35, 0.7].map(o => { const kk = k - o; if (kk < 0 || kk > 1.6) return ''; return `<ellipse cx="${fx}" cy="${W + 4}" rx="${(20 + kk * 90).toFixed(1)}" ry="${(6 + kk * 22).toFixed(1)}" fill="none" stroke="${ink}" stroke-width="3" opacity="${(0.8 * (1 - kk / 1.6)).toFixed(2)}"/>`; }).join(''); }
     }
     R.fl.innerHTML = out;
+  }
+
+  /* ---------------- ساعة حائط بعقارب تدور (clock=x,y,s,سرعة) وفقاعة حلم ملوّنة متحركة (dream=x,y,s,pop) ---------------- */
+  function drawClassExtras(R, t, s, headPos) {
+    const d = R.d, ink = INK[d.ink] || INK.pencil;
+    if (!R.cx) { R.cx = document.createElementNS(NS, 'g'); R.svg.querySelector('.draws').appendChild(R.cx); R.dr = document.createElementNS(NS, 'g'); R.svg.querySelector('.think').appendChild(R.dr); }
+    let out = '';
+    if (d.clock) { const [x, y, sc, sp] = d.clock, m = t * (sp || 0.02) * 360, h = m / 12;
+      out += `<g transform="translate(${x} ${y}) scale(${sc || 1})"><circle r="62" fill="#fff" stroke="${ink}" stroke-width="7"/>${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(k => `<path d="M0 -52 V${k % 3 ? -46 : -40}" transform="rotate(${k * 30})" stroke="${ink}" stroke-width="${k % 3 ? 3 : 5}"/>`).join('')}
+        <path d="M0 0 V-30" transform="rotate(${(h + 300).toFixed(1)})" stroke="${ink}" stroke-width="7" stroke-linecap="round"/><path d="M0 0 V-46" transform="rotate(${m.toFixed(1)})" stroke="${ink}" stroke-width="4" stroke-linecap="round"/><circle r="5" fill="${ink}"/></g>`; }
+    R.cx.innerHTML = out;
+    let dr = '';
+    if (d.dream) { const [x, y, sc, popF] = d.dream, T = f => s.start + f * (s.end - s.start);
+      const a = s.start + (d.dream_in != null ? d.dream_in : 0.3), pin = eob(clamp((t - a) / 0.5)), pop = popF ? clamp((t - T(popF)) / 0.25) : 0;
+      if (t >= a && pop < 1) {
+        const u = R.uid || (R.uid = ++UID), cyc = (t * 0.55) % 1, kx = clamp((cyc - 0.47) / 0.3), bx = -120 + 330 * kx, by = 40 - Math.sin(kx * Math.PI) * 70 - kx * 20;
+        const mini = charSVG({ ink: '#3b3b3b', paper: '#ffffff' }, t, 'laugh', 'kick', false, cyc);
+        dr = `<g transform="translate(${x} ${y}) scale(${(sc * (pop > 0 ? 1 + pop * 0.4 : 0.15 + 0.85 * pin)).toFixed(3)})" opacity="${(1 - pop).toFixed(2)}">
+          <defs><clipPath id="dc${u}"><ellipse rx="300" ry="190"/></clipPath><linearGradient id="dg${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fd3ff"/><stop offset=".62" stop-color="#d9f1ff"/><stop offset=".62" stop-color="#6cc46a"/><stop offset="1" stop-color="#3f9b46"/></linearGradient></defs>
+          <g clip-path="url(#dc${u})"><rect x="-320" y="-200" width="640" height="400" fill="url(#dg${u})"/>
+            <circle cx="200" cy="-120" r="34" fill="#ffd43b"/>${[-250, -200, -150, -100, -50, 0].map((cx2, k) => `<circle cx="${cx2}" cy="${-30 + (k % 2) * 8}" r="14" fill="${['#ff6b6b', '#ffd43b', '#4dabf7', '#f783ac', '#69db7c', '#ffa94d'][k]}" transform="translate(0 ${(Math.abs(Math.sin(t * 6 + k)) * -10).toFixed(1)})"/>`).join('')}
+            <path d="M190 118 V-10 H270 L280 118" stroke="#fff" stroke-width="8" fill="none"/><path d="M200 0 L268 110 M230 -10 L276 100 M196 40 H272 M196 80 H276" stroke="#fff" stroke-width="2.5" opacity=".7"/>
+            <g transform="translate(-170 118) scale(.55)">${mini.svg}</g>
+            <g transform="translate(${bx.toFixed(1)} ${by.toFixed(1)}) rotate(${(kx * 500).toFixed(0)})">${soccerBall(16, u + 'd')}</g></g>
+          <ellipse rx="300" ry="190" fill="none" stroke="${ink}" stroke-width="8"/></g>`;
+        if (headPos) { const hx = headPos.x, hy = headPos.y; dr += [0.35, 0.6, 0.82].map((f, k) => `<circle cx="${(hx + (x - hx) * f * 0.6).toFixed(1)}" cy="${(hy + (y + 160 * sc - hy) * f).toFixed(1)}" r="${(10 + k * 7) * (1 - pop)}" fill="#fff" stroke="${ink}" stroke-width="4" opacity="${(pin * (1 - pop)).toFixed(2)}"/>`).join(''); }
+        if (pop > 0) dr += [0, 1, 2, 3, 4, 5, 6, 7].map(k => { const an = k * 45 * D2R, r = 320 * sc * (1 + pop * 0.5); return `<path d="M${(x + Math.cos(an) * r).toFixed(1)} ${(y + Math.sin(an) * r * 0.65).toFixed(1)} l${(Math.cos(an) * 40).toFixed(1)} ${(Math.sin(an) * 30).toFixed(1)}" stroke="${ink}" stroke-width="6" opacity="${(1 - pop).toFixed(2)}"/>`; }).join('');
+      }
+    }
+    R.dr.innerHTML = dr;
   }
   window.Doodle = { build, draw, ballState, ICONS: Object.keys(ICONS) };
 })();

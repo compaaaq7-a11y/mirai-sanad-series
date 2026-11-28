@@ -13,3 +13,5 @@
 | Footstep_on_Gravel_(Gravity_Sound).mp3 (غير مستخدم حالياً) | CC BY 4.0 — **يتطلب نسبة** إن استُخدم | Gravity Sound | https://commons.wikimedia.org/wiki/File:Footstep_on_Gravel_(Gravity_Sound).mp3 |
 | mixkit-2458 نهر عند الشروق (ماء وطيور) · 1311 رذاذ ماء · 1304 قفز في الماء · 1198 رذاذ بحر · 2457 سمكة ترفرف · 1317 فقاعة | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/water/ |
 | mixkit-2269 تثاؤب · 2252 / 114 أكل · 1329 نار مخيم · 1131 نقرة ميكانيكية | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ |
+| mixkit-2254 أصوات أطفال في المدرسة · 580 جرس المدرسة · 427 ضحك أطفال · 422 ضحك وتصفيق | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/children/ |
+| mixkit-1060 / 1063 تكتكة ساعة · 1003 منبّه الصباح · 1911 شخير خفيف · 2182 طرقة خشب · 3141 سقوط خشب · 395 صفير سقوط كرتوني · 1016 صرير كرسي | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ |

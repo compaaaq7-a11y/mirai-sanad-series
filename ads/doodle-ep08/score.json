@@ -1,0 +1,30 @@
+{ "duration": 44.5, "bpm": 96, "key": "A", "music_gain": 0.8,
+  "sections": [
+    {"from": 0, "to": 6.0, "style": "musicbox", "gain": 0.8},
+    {"from": 6.0, "to": 18.0, "style": "musicbox", "gain": 0.6},
+    {"from": 18.0, "to": 24.4, "style": "dreampad", "gain": 0.9},
+    {"from": 28.5, "to": 31.4, "style": "bouncy", "gain": 0.45},
+    {"from": 31.5, "to": 35.0, "style": "musicbox", "gain": 0.5},
+    {"from": 35.6, "to": 44.5, "style": "bouncy", "gain": 0.8}
+  ],
+  "events": [
+    ["sample", 0.0, "../sfx-library/mixkit-1063.mp3", 0.5, 0, 2.48, 0.05], ["sample", 2.45, "../sfx-library/mixkit-1063.mp3", 0.5, 0, 2.48, 0.05], ["sample", 4.9, "../sfx-library/mixkit-1063.mp3", 0.45, 0, 1.1, 0.3],
+    ["sample", 3.6, "../sfx-library/mixkit-2269.mp3", 0.8, 0, 2.6, 0.3],
+    ["sample", 6.0, "../sfx-library/mixkit-580.mp3", 0.45, 0, 2.5, 0.8],
+    ["sample", 6.3, "../sfx-library/mixkit-2254.mp3", 0.22, 10, 18.2, 1.5],
+    ["sample", 6.0, "../sfx-library/mixkit-1060.mp3", 0.35, 0, 18.0, 1.0],
+    ["sample", 10.5, "../sfx-library/mixkit-1016.mp3", 0.4, 0, 0.65, 0.1], ["sample", 12.32, "../sfx-library/mixkit-1016.mp3", 0.4, 0, 0.65, 0.1], ["sample", 14.12, "../sfx-library/mixkit-1016.mp3", 0.45, 0, 0.65, 0.1],
+    ["sample", 15.1, "../sfx-library/mixkit-2269.mp3", 0.6, 0, 2.6, 0.3],
+    ["sample", 16.0, "../sfx-library/mixkit-1911.mp3", 0.5, 0, 8.5, 0.3],
+    ["sample", 19.5, "../sfx-library/mixkit-462.mp3", 0.22, 1.0, 5.0, 1.0],
+    ["sample", 18.89, "../sfx-library/mixkit-2108.mp3", 0.35, 0, 0.9, 0.1], ["sample", 20.7, "../sfx-library/mixkit-2108.mp3", 0.35, 0, 0.9, 0.1], ["sample", 22.52, "../sfx-library/mixkit-2108.mp3", 0.35, 0, 0.9, 0.1],
+    ["sample", 24.72, "../sfx-library/mixkit-2182.mp3", 0.9, 0, 0.42, 0.05], ["sample", 25.2, "../sfx-library/mixkit-2182.mp3", 0.9, 0, 0.42, 0.05], ["sample", 25.69, "../sfx-library/mixkit-2182.mp3", 0.9, 0, 0.42, 0.05], ["sample", 26.17, "../sfx-library/mixkit-2182.mp3", 0.9, 0, 0.42, 0.05],
+    ["pop", 25.14],
+    ["sample", 26.0, "../sfx-library/mixkit-395.mp3", 0.6, 0, 2.2, 0.3],
+    ["sample", 28.15, "../sfx-library/mixkit-3141.mp3", 0.9, 0, 1.7, 0.3],
+    ["sample", 27.2, "../sfx-library/mixkit-427.mp3", 0.7, 4.3, 4.3, 1.0],
+    ["sample", 31.6, "../sfx-library/mixkit-1911.mp3", 0.3, 3.0, 3.3, 0.6],
+    ["sample", 35.0, "../sfx-library/mixkit-1003.mp3", 0.55, 0, 2.4, 0.4],
+    ["ding", 38.0],
+    ["sample", 40.7, "../sfx-library/mixkit-422.mp3", 0.6, 0, 3.8, 0.8], ["ding", 41.8]
+  ] }

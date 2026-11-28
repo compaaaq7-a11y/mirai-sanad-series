@@ -435,7 +435,7 @@ def make_doodle(a):
     """شخصيات ورسومات الكرتون: who= / who2= ، draw= ، think= ، say= (انظر reference/doodle-cartoon.md)"""
     d = {}
     chars = []
-    for key in ('who', 'who2', 'who3'):
+    for key in ('who', 'who2', 'who3', 'who4', 'who5'):
         if key not in a:
             continue
         c = {}
@@ -450,7 +450,7 @@ def make_doodle(a):
                     c['xs'] = [float(v_) for v_ in x]     # مسار بنقاط مفتاحية
             elif k in ('y', 'rot', 'spin') and '>' in v:  # y=1660>900 صعود، spin=0>720 تدحرج
                 c[{'y': 'ys', 'rot': 'rots', 'spin': 'spins'}[k]] = [float(v_) for v_ in v.split('>')]
-            elif k in ('y', 'big', 'dir', 'walkEnd', 'rot', 'hold_s', 'bite', 'fire', 'rod'):
+            elif k in ('y', 'big', 'dir', 'walkEnd', 'rot', 'hold_s', 'bite', 'fire', 'rod', 'chair', 'glasses', 'z'):
                 c[k] = float(v)
             else:
                 c[k] = v   # face, pose, ink, shirt
@@ -496,6 +496,11 @@ def make_doodle(a):
                 else: f[k] = float(v)
             L.append(f)
         d['fishes'] = L
+    for k in ('clock', 'dream'):   # clock="x,y,s,سرعة"  dream="x,y,s,لحظة_الانفجار"
+        if a.get(k):
+            d[k] = [float(v) for v in a[k].split(',')]
+    if a.get('dream_in'):
+        d['dream_in'] = float(a['dream_in'])
     if a.get('water'):
         d['water'] = float(a['water'])
     if a.get('paper'):

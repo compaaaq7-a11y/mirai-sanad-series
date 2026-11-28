@@ -188,6 +188,32 @@ def section(buf, s, bpm, key):
             if k % 2 == 0: add(buf, bass(hz(sc[deg] - 24), beat * 1.6), t, 0.3 * g)
             m = mel[k % len(mel)]
             if m is not None and s.get('melody', True): add(buf, flute(hz(sc[m % 7] + 12 + (12 if m >= 7 else 0)), beat * 0.95), t, 0.9 * g)
+    if st == 'musicbox':   # تهويدة صندوق موسيقى (3/4 بطيء) — تُشعر بالنعاس
+        mel = [4, 2, 0, 2, 4, 4, 5, 4, 2, 1, 2, 0]
+        n = int((b - a) / beat)
+        for k in range(n):
+            t = a + k * beat; deg = [0, 3, 4, 0][(k // 3) % 4]
+            add(buf, bell(hz(sc[mel[k % 12] % 7] + 24), 1.6), t, 0.2 * g)
+            if k % 3 == 0: add(buf, bell(hz(sc[deg] + 12), 2.2), t, 0.12 * g)
+    if st == 'dreampad':   # حالم ملوّن: وسادة تآلفات ناعمة + أرپيجيو لامع سريع
+        n = int((b - a) / beat)
+        for k in range(n):
+            t = a + k * beat; deg = [0, 5, 3, 4][(k // 4) % 4]
+            if k % 4 == 0:
+                for dd in (0, 2, 4):
+                    tp = tt(beat * 4); f = hz(sc[(deg + dd) % 7] + (12 if deg + dd >= 7 else 0))
+                    add(buf, (np.sin(2 * np.pi * f * tp) + 0.3 * np.sin(2 * np.pi * f * 2.003 * tp)) * np.minimum(1, tp / 0.6) * np.minimum(1, (beat * 4 - tp) / 0.6) * 0.07, t, g)
+            for j in range(4):
+                add(buf, bell(hz(sc[(deg + [0, 2, 4, 7][j]) % 7] + 24 + (12 if j == 3 else 0)), 0.6), t + j * beat / 4, 0.1 * g)
+    if st == 'bouncy':   # مرح نشيط: باص متقافز + تصفيق خفيف + لحن صفير
+        mel = [0, 2, 4, None, 4, 5, 4, 2, 0, None, 2, 4, 2, 1, 0, None]
+        n = int((b - a) / beat)
+        for k in range(n):
+            t = a + k * beat; deg = [0, 3, 4, 0][(k // 4) % 4]
+            add(buf, bass(hz(sc[deg] - 24), beat * 0.4), t, 0.5 * g); add(buf, bass(hz(sc[deg] - 12), beat * 0.3), t + beat / 2, 0.3 * g)
+            if k % 2 == 1: add(buf, clap(0.5), t, g)
+            m = mel[k % 16]
+            if m is not None: add(buf, flute(hz(sc[m % 7] + 24), beat * 0.45), t, 0.7 * g)
     if st == 'tension':   # تشويق: أوتار نقر متقطعة منخفضة + نبض خافت
         k = 0; t = a
         while t < b:
