@@ -2,7 +2,7 @@
  "width": 1080,
  "height": 1920,
  "fps": 30,
- "duration": 44.5,
+ "duration": 44.2,
  "audio": null,
  "align": "pace 2.3 w/s (no audio)",
  "scenes": [
@@ -61,10 +61,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 3.5
+   "end": 3.0
   },
   {
-   "start": 3.5,
+   "start": 3.0,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -129,19 +129,75 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 6.0
+   "end": 5.5
   },
   {
-   "start": 6.0,
+   "start": 5.5,
    "bg": "classroom",
    "lines": [],
    "doodle": {
     "chars": [
      {
-      "x0": 470.0,
+      "x0": 930.0,
+      "x1": 930.0,
+      "face": "drowsy",
+      "pose": "stand",
+      "ink": "pencil",
+      "big": 1.3
+     }
+    ],
+    "draws": [
+     {
+      "icon": "winday",
+      "x": 860.0,
+      "y": 700.0,
+      "s": 1.0
+     },
+     {
+      "icon": "bedg",
+      "x": 620.0,
+      "y": 1430.0,
+      "s": 1.3
+     },
+     {
+      "icon": "alarm",
+      "x": 300.0,
+      "y": 1320.0,
+      "s": 0.8,
+      "wiggle": true
+     },
+     {
+      "icon": "zzz",
+      "x": 1010.0,
+      "y": 820.0,
+      "s": 0.5,
+      "delay": 1.0
+     }
+    ],
+    "clock": [
+     560.0,
+     560.0,
+     1.0,
+     0.05
+    ],
+    "ground": 1500.0,
+    "ink": "pencil",
+    "noground": true
+   },
+   "end": 8.1
+  },
+  {
+   "start": 8.1,
+   "bg": "classroom",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": -160.0,
       "x1": 470.0,
       "face": "drowsy",
-      "pose": "sit_chair",
+      "pose": "walk>walk>sit_chair",
+      "walkEnd": 0.66,
       "ink": "pencil",
       "big": 1.3,
       "chair": 1.0
@@ -192,14 +248,14 @@
       "s": 0.8
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85
      },
@@ -208,6 +264,12 @@
       "x": 336.0,
       "y": 1440.0,
       "s": 0.72
+     },
+     {
+      "icon": "chairside",
+      "x": 470.0,
+      "y": 1500.0,
+      "s": 1.3
      }
     ],
     "clock": [
@@ -220,10 +282,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 9.0
+   "end": 10.7
   },
   {
-   "start": 9.0,
+   "start": 10.7,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -285,15 +347,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -316,10 +378,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 13.0
+   "end": 14.2
   },
   {
-   "start": 13.0,
+   "start": 14.2,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -381,15 +443,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -412,10 +474,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 16.0
+   "end": 17.2
   },
   {
-   "start": 16.0,
+   "start": 17.2,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -477,15 +539,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -499,10 +561,10 @@
      },
      {
       "icon": "zzz",
-      "x": 640.0,
+      "x": 650.0,
       "y": 1060.0,
       "s": 0.6,
-      "delay": 0.6
+      "delay": 0.5
      }
     ],
     "clock": [
@@ -515,10 +577,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 18.0
+   "end": 19.0
   },
   {
-   "start": 18.0,
+   "start": 19.0,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -534,7 +596,7 @@
      },
      {
       "x0": 930.0,
-      "x1": 870.0,
+      "x1": 1040.0,
       "dir": -1.0,
       "face": "happy>angry>angry",
       "pose": "stand",
@@ -581,15 +643,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -617,10 +679,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 24.5
+   "end": 24.8
   },
   {
-   "start": 24.5,
+   "start": 24.8,
    "bg": "classroom",
    "lines": [],
    "fx": [
@@ -638,8 +700,8 @@
       "chair": 1.0
      },
      {
-      "x0": 870.0,
-      "x1": 870.0,
+      "x0": 1040.0,
+      "x1": 1040.0,
       "dir": -1.0,
       "face": "angry",
       "pose": "knock",
@@ -685,15 +747,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -716,28 +778,126 @@
      600.0,
      560.0,
      0.95,
-     0.32
+     0.3
     ],
     "dream_in": 0.0,
     "ground": 1500.0,
     "ink": "pencil",
     "noground": true
    },
-   "end": 26.5
+   "end": 26.8
   },
   {
-   "start": 26.5,
+   "start": 26.8,
    "bg": "classroom",
    "lines": [],
    "doodle": {
     "chars": [
      {
       "x0": 470.0,
-      "x1": 430.0,
+      "x1": 470.0,
+      "face": "shock",
+      "pose": "startle",
+      "ink": "pencil",
+      "big": 1.3,
+      "chair": 1.0
+     },
+     {
+      "x0": 1040.0,
+      "x1": 1040.0,
+      "dir": -1.0,
+      "face": "angry",
+      "pose": "hips",
+      "ink": "pencil",
+      "big": 1.5,
+      "glasses": 1.0
+     },
+     {
+      "x0": 80.0,
+      "x1": 80.0,
+      "z": -2.0,
+      "face": "shock",
+      "pose": "sit_chair",
+      "ink": "#9a9a9a",
+      "big": 0.85,
+      "chair": 1.0
+     },
+     {
+      "x0": 250.0,
+      "x1": 250.0,
+      "y": 1440.0,
+      "z": -1.0,
+      "face": "happy",
+      "pose": "sit_chair",
+      "ink": "#a8a8a8",
+      "big": 0.72,
+      "chair": 1.0
+     }
+    ],
+    "draws": [
+     {
+      "icon": "board",
+      "x": 860.0,
+      "y": 820.0,
+      "s": 1.1,
+      "instant": true
+     },
+     {
+      "icon": "winday",
+      "x": 180.0,
+      "y": 640.0,
+      "s": 0.8,
+      "instant": true
+     },
+     {
+      "icon": "desklong",
+      "x": 700.0,
+      "y": 1500.0,
+      "s": 1.3,
+      "instant": true
+     },
+     {
+      "icon": "deskside",
+      "x": 195.0,
+      "y": 1500.0,
+      "s": 0.85,
+      "instant": true
+     },
+     {
+      "icon": "deskside",
+      "x": 336.0,
+      "y": 1440.0,
+      "s": 0.72,
+      "instant": true
+     }
+    ],
+    "clock": [
+     560.0,
+     430.0,
+     0.9,
+     0.02
+    ],
+    "ground": 1500.0,
+    "ink": "pencil",
+    "noground": true
+   },
+   "end": 27.8
+  },
+  {
+   "start": 27.8,
+   "bg": "classroom",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 470.0,
+      "x1": 470.0,
       "rots": [
        0.0,
-       -28.0,
-       -80.0
+       -14.0,
+       -5.0,
+       -20.0,
+       -88.0
       ],
       "face": "shock",
       "pose": "startle",
@@ -746,8 +906,8 @@
       "chair": 1.0
      },
      {
-      "x0": 870.0,
-      "x1": 870.0,
+      "x0": 1040.0,
+      "x1": 1040.0,
       "dir": -1.0,
       "face": "angry",
       "pose": "hips",
@@ -793,15 +953,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -824,12 +984,15 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 28.5
+   "end": 30.0
   },
   {
-   "start": 28.5,
+   "start": 30.0,
    "bg": "classroom",
    "lines": [],
+   "fx": [
+    "shake"
+   ],
    "doodle": {
     "chars": [
      {
@@ -841,8 +1004,8 @@
       "big": 1.3
      },
      {
-      "x0": 870.0,
-      "x1": 870.0,
+      "x0": 1040.0,
+      "x1": 1040.0,
       "dir": -1.0,
       "face": "angry>angry>wink",
       "pose": "hips",
@@ -888,15 +1051,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -913,6 +1076,26 @@
       "x": 300.0,
       "y": 1500.0,
       "s": 1.2
+     },
+     {
+      "icon": "smoke",
+      "x": 300.0,
+      "y": 1440.0,
+      "s": 0.7
+     },
+     {
+      "icon": "star",
+      "x": 330.0,
+      "y": 1000.0,
+      "s": 0.45,
+      "delay": 0.1
+     },
+     {
+      "icon": "star",
+      "x": 470.0,
+      "y": 970.0,
+      "s": 0.4,
+      "delay": 0.2
      }
     ],
     "clock": [
@@ -925,10 +1108,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 31.5
+   "end": 32.6
   },
   {
-   "start": 31.5,
+   "start": 32.6,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -980,7 +1163,7 @@
       "x": 420.0,
       "y": 1100.0,
       "s": 0.6,
-      "delay": 1.2
+      "delay": 1.0
      }
     ],
     "clock": [
@@ -993,10 +1176,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 35.0
+   "end": 35.6
   },
   {
-   "start": 35.0,
+   "start": 35.6,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -1035,10 +1218,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 37.5
+   "end": 37.8
   },
   {
-   "start": 37.5,
+   "start": 37.8,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -1098,14 +1281,14 @@
       "s": 0.8
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85
      },
@@ -1126,10 +1309,10 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 41.5
+   "end": 41.4
   },
   {
-   "start": 41.5,
+   "start": 41.4,
    "bg": "classroom",
    "lines": [],
    "doodle": {
@@ -1191,15 +1374,15 @@
       "instant": true
      },
      {
-      "icon": "deskside",
-      "x": 625.0,
+      "icon": "desklong",
+      "x": 700.0,
       "y": 1500.0,
       "s": 1.3,
       "instant": true
      },
      {
       "icon": "deskside",
-      "x": 185.0,
+      "x": 195.0,
       "y": 1500.0,
       "s": 0.85,
       "instant": true
@@ -1236,7 +1419,7 @@
     "ink": "pencil",
     "noground": true
    },
-   "end": 44.5
+   "end": 44.2
   }
  ],
  "music": "soundtrack.wav",

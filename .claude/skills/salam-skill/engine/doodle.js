@@ -102,6 +102,8 @@
     blanketg: c => `<path class="dw" d="M-110 -20 C-60 -60 60 -60 175 -30 L180 30 L-110 30Z" fill="#d9d6cf" stroke="${c}"/><path class="dw" d="M-60 -32 v58 M20 -40 v66 M100 -36 v62" stroke="${c}" stroke-width="3" fill="none" opacity=".5"/>`,
     phone: c => `<circle class="dw" r="85" fill="rgba(190,225,255,.35)" stroke="none"/><rect class="dw" x="-24" y="-42" width="48" height="84" rx="9" fill="#cfe9ff" stroke="${c}" stroke-width="5"/>`,
     phoneoff: c => `<rect class="dw" x="-24" y="-42" width="48" height="84" rx="9" fill="#2b2b2b" stroke="${c}" stroke-width="5"/>`,
+    desklong: c => `<path class="dw" d="M-170 -118 H170 V-104 H-170Z" fill="#f4f3ef" stroke="${c}"/><path class="dw" d="M-152 -104 V0 M152 -104 V0 M-152 -66 H60" stroke="${c}" fill="none"/>`,
+    chairside: c => `<g stroke="${c}" stroke-width="8" fill="none" stroke-linecap="round"><path class="dw" d="M-62 -58 H34 M30 -58 V0 M-56 -58 V0 M-58 -58 L-70 -232"/><path class="dw" d="M-70 -232 L-66 -150" stroke-width="14"/></g>`,
     chairfallen: c => `<path class="dw" d="M-120 -8 H60 M-110 -8 V-60 M40 -8 V-55 M60 -8 H190" stroke="${c}" stroke-width="10" fill="none"/>`,
     nightshade: c => `<rect x="-2000" y="-2000" width="4000" height="4000" fill="rgba(25,30,55,.28)"/>`,
     fishbig: c => fishSVG('big', 1, 0, c, false),
@@ -219,7 +221,7 @@
       case 'startle': P.y = 20; P.lL = [118, -50]; P.lR = [106, -40]; P.aR = [165 + Math.sin(t * 30) * 12, 30]; P.aL = [-160 - Math.sin(t * 30) * 12, -30]; P.lean = -18; break;
       case 'raise_hand': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [176 + Math.sin(t * 9) * 7, -4]; P.aL = [62, 48]; P.lean = 2; P.fx.wave = true; break;
       case 'laughsit': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [25, 95]; P.aL = [18, 100]; P.sway = Math.sin(t * 28) * 4; P.lean = 8 + Math.sin(t * 14) * 5; break;
-      case 'knock': { const k = Math.max(0, Math.sin(t * 13)); P.lean = 24; P.aR = [lerp(70, 135, k), lerp(10, -10, k)]; P.aL = [20, 30]; break; }
+      case 'knock': { const k = Math.max(0, Math.sin(t * 13)); P.lean = 32; P.y = 30; P.lL = [20, -40]; P.lR = [-2, -38]; P.aR = [lerp(16, 72, k), lerp(0, -45, k)]; P.aL = [-15, 25]; P.fx.knock = k < 0.08; break; }
       case 'hips': P.aR = [40, -120]; P.aL = [40, -120]; break;
       case 'look_up': P.aR = [150, 30]; P.aL = [-20, 10]; P.lean = -10; P.fx.lookup = true; break;
       case 'throw': {   // رمي: تحضير للخلف ← قذف سريع للأمام ← متابعة
@@ -275,6 +277,7 @@
     }
     if (P.fx.swing) front += `<g stroke="${body}" stroke-width="6" fill="none" opacity=".6"><path d="M${nx - 60} ${ny - 120} Q${nx + 60} ${ny - 190} ${nx + 150} ${ny - 40}"/><path d="M${nx - 30} ${ny - 80} Q${nx + 50} ${ny - 140} ${nx + 120} ${ny - 20}"/></g>`;
     if (P.fx.kick) front += `<g stroke="${body}" stroke-width="6" fill="none" opacity=".6"><path d="M${LR.ex - 120} ${LR.ey - 70} Q${LR.ex - 40} ${LR.ey + 30} ${LR.ex + 40} ${LR.ey - 10}"/><path d="M${LR.ex - 90} ${LR.ey - 100} Q${LR.ex - 20} ${LR.ey} ${LR.ex + 30} ${LR.ey - 40}"/></g>`;
+    if (P.fx.knock) front += `<g stroke="${body}" stroke-width="5" opacity=".8"><path d="M${AR.ex - 34} ${AR.ey + 6} l-22 -10 M${AR.ex + 34} ${AR.ey + 6} l22 -10 M${AR.ex - 26} ${AR.ey - 16} l-16 -20 M${AR.ex + 26} ${AR.ey - 16} l16 -20"/></g>`;
     if (P.fx.clap > 0.85) front += `<g stroke="${body}" stroke-width="5" opacity=".7"><path d="M${AR.ex + 30} ${AR.ey - 30} l20 -18 M${AR.ex + 36} ${AR.ey} h26 M${AR.ex + 30} ${AR.ey + 30} l20 18"/></g>`;
     // الشيء المُمسك: يُرسم قبل الكف فتبدو اليد قابضة عليه، وعند الأكل يصعد إلى الفم
     let held = '', grip = '';
@@ -312,7 +315,7 @@
       tip = { x: tx + P.sway, y: ty2 + P.y };
     }
     const svg2 = rodSvg ? svg.replace(/<\/g>$/, rodSvg + `<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt, c.paper)}</g>`) : svg;
-    const chair = c.chair ? `<g stroke="${body}" stroke-width="8" fill="none" stroke-linecap="round"><path d="M-62 -58 H34 M30 -58 V0 M-56 -58 V0 M-58 -58 L-70 -232"/><path d="M-70 -232 L-66 -150" stroke-width="14"/></g>` : '';
+    const chair = c.chair && ['sit_chair', 'nod', 'sleep_desk', 'startle', 'raise_hand', 'laughsit', 'clap', 'wink'].includes(poseKind) ? `<g stroke="${body}" stroke-width="8" fill="none" stroke-linecap="round"><path d="M-62 -58 H34 M30 -58 V0 M-56 -58 V0 M-58 -58 L-70 -232"/><path d="M-70 -232 L-66 -150" stroke-width="14"/></g>` : '';
     return { svg: chair + svg2, hand: { x: AR.ex + P.sway, y: AR.ey + P.y }, tip };
   }
   // موضع اليد اليمنى لحظة الإفلات في الرمي (لنقطة بداية طيران الشيء)
