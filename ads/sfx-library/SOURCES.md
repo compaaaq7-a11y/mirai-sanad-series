@@ -10,3 +10,4 @@
 | mixkit-2099 / 2108 / 2112 ركلة كرة قدم | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/kick/ |
 | mixkit-2084 كرة في الشبكة · 2077 / 2089 ارتداد كرة | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ball/ |
 | mixkit-614 / 615 صافرة · 509 تصفيق فريق | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/whistle/ |
+| Footstep_on_Gravel_(Gravity_Sound).mp3 (غير مستخدم حالياً) | CC BY 4.0 — **يتطلب نسبة** إن استُخدم | Gravity Sound | https://commons.wikimedia.org/wiki/File:Footstep_on_Gravel_(Gravity_Sound).mp3 |
