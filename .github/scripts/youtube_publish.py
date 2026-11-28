@@ -63,7 +63,7 @@ def main():
         return
     body = json.dumps({
         "snippet": {"title": meta["title"], "description": meta["description"], "tags": meta.get("tags", []),
-                    "categoryId": meta.get("categoryId", "1"), "defaultLanguage": "ar", "defaultAudioLanguage": "ar"},
+                    "categoryId": meta.get("categoryId", "1"), "defaultLanguage": meta.get("lang", "ar"), "defaultAudioLanguage": meta.get("audioLang", meta.get("lang", "ar"))},
         # محتوى موجّه للأطفال: يلزم التصريح بذلك (قانون COPPA وسياسة يوتيوب)
         "status": {"privacyStatus": meta.get("privacy", "public"),
                    "selfDeclaredMadeForKids": meta.get("madeForKids", True)},
