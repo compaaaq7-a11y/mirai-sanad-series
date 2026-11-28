@@ -189,7 +189,30 @@ def load_sample(path, off=0.0, dur=None):
     return x
 
 
+def onset_slices(path, n_max=40, L=0.32):
+    """يقطع تسجيل خطوات حقيقي إلى خطوات منفردة (عند كل ارتفاع مفاجئ في الطاقة)."""
+    x = load_sample(path); hop = 441
+    e = np.array([np.sqrt((x[i:i + hop] ** 2).mean()) for i in range(0, len(x) - hop, hop)])
+    thr = np.percentile(e, 70); out = []; last = -99
+    for i in range(1, len(e)):
+        if e[i] > thr and e[i] > 1.8 * e[i - 1] + 1e-4 and (i - last) * hop / SR > 0.2:
+            a = max(0, i * hop - int(0.02 * SR)); sl = x[a:a + int(L * SR)].copy()
+            sl *= np.minimum(1, np.linspace(0, 6, len(sl)))[::-1].clip(0, 1) ** 0.5 if False else 1
+            fo = int(0.08 * SR); sl[-fo:] *= np.linspace(1, 0, fo)
+            out.append(sl / max(1e-6, np.abs(sl).max())); last = i
+        if len(out) >= n_max: break
+    return out
+
+
 def sfx(buf, name, t0, d=1.0, extra=None, ev=None):
+    if name == 'steps_real':   # ["steps_real", من, إلى, الدورة, الطور, "ملف", gain] — خطوة حقيقية عند كل ملامسة قدم
+        a, b, per, ph, path = ev[1], ev[2], ev[3], ev[4], ev[5]; g = ev[6] if len(ev) > 6 else 0.6
+        sl = onset_slices(path); k = 0
+        import math
+        t = a + ((ph - a) % per)
+        while t < b:
+            add(buf, sl[(k * 7) % len(sl)] * g * (0.85 + 0.15 * ((k * 37) % 5) / 4), t); k += 1; t += per
+        return
     if name == 'sample':   # تسجيل حقيقي: ["sample", t0, "ملف", gain, from, dur, fade_out]
         path, g = ev[2], ev[3] if len(ev) > 3 else 1.0
         x = load_sample(path, ev[4] if len(ev) > 4 else 0, ev[5] if len(ev) > 5 else None)
@@ -307,7 +330,7 @@ def main():
     # تدرّج دخول وخروج المقاطع الموسيقية بنعومة
     buf += mus * S.get('music_gain', 0.8)
     for e in S.get('events', []):
-        if e[0] == 'sample': sfx(buf, 'sample', e[1], ev=e)
+        if e[0] in ('sample', 'steps_real'): sfx(buf, e[0], e[1], ev=e)
         else: sfx(buf, e[0], e[1], e[2] if len(e) > 2 else 1.0, e[3] if len(e) > 3 else None)
     buf = buf[:int(D * SR)]
     fade = int(1.0 * SR); buf[-fade:] *= np.linspace(1, 0, fade)

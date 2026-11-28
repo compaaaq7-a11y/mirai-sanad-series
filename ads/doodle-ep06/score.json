@@ -1,23 +1,25 @@
-{ "duration": 29.9, "bpm": 112, "key": "G", "music_gain": 0.9,
+{ "duration": 29.9, "bpm": 112, "key": "G", "music_gain": 0.8,
   "sections": [
-    {"from": 0, "to": 8.0, "style": "pizz", "gain": 0.85},
-    {"from": 8.0, "to": 16.6, "style": "glock", "gain": 0.8},
-    {"from": 16.6, "to": 20.3, "style": "roll", "gain": 0.8},
-    {"from": 23.6, "to": 29.9, "style": "party", "gain": 0.75}
+    {"from": 0, "to": 8.0, "style": "pizz", "gain": 0.8},
+    {"from": 8.0, "to": 16.6, "style": "glock", "gain": 0.75},
+    {"from": 16.6, "to": 20.3, "style": "roll", "gain": 0.7},
+    {"from": 23.6, "to": 29.9, "style": "party", "gain": 0.6}
   ],
   "events": [
-    ["steps", 0.2, 3.3, 0.5],
+    ["steps_real", 0.0, 3.4, 0.4488, 0.2244, "../sfx-library/mixkit-1921.mp3", 0.55],
     ["pop", 5.2], ["ding", 5.25],
-    ["steps", 6.5, 1.3, 0.45],
-    ["pop", 11.25],
-    ["ding", 12.0],
-    ["pop", 16.25],
-    ["steps", 16.7, 1.5, 0.5],
-    ["steps", 18.4, 1.05, 0.15],
-    ["kick", 20.35], ["whoosh", 20.37, 0.4],
-    ["swish", 20.7], ["bounce", 21.0],
-    ["sample", 20.75, "../sfx-library/Clapping_hurray.ogg", 0.95, 0.3, 9.0, 1.5],
-    ["whistle", 20.9],
-    ["whoosh", 21.45, 0.9], ["swish", 22.5], ["bounce", 22.85],
-    ["sample", 23.9, "../sfx-library/Clapping_hurray.ogg", 0.7, 1.5, 6.0, 1.5]
+    ["steps_real", 6.4, 7.76, 0.4488, 0.2244, "../sfx-library/mixkit-1921.mp3", 0.55],
+    ["pop", 11.25], ["ding", 12.0], ["pop", 16.25],
+    ["steps_real", 16.6, 18.13, 0.4488, 0.2244, "../sfx-library/mixkit-1921.mp3", 0.5],
+    ["steps_real", 18.4, 19.34, 0.2417, 0.1208, "../sfx-library/mixkit-1232.mp3", 0.65],
+    ["sample", 20.18, "../sfx-library/mixkit-2099.mp3", 1.0, 0, 1.4, 0.3],
+    ["whoosh", 20.37, 0.35],
+    ["sample", 20.535, "../sfx-library/mixkit-2084.mp3", 0.8, 0, 0.78, 0.2],
+    ["sample", 20.975, "../sfx-library/mixkit-2077.mp3", 0.6, 0, 0.7, 0.2],
+    ["sample", 20.87, "../sfx-library/mixkit-614.mp3", 0.5, 0, 1.4, 0.3],
+    ["sample", 20.3, "../sfx-library/mixkit-462.mp3", 0.95, 0, 10.1, 2.0],
+    ["whoosh", 21.45, 0.9],
+    ["sample", 22.335, "../sfx-library/mixkit-2084.mp3", 0.8, 0, 0.78, 0.2],
+    ["sample", 22.825, "../sfx-library/mixkit-2077.mp3", 0.5, 0, 0.7, 0.2],
+    ["sample", 25.0, "../sfx-library/mixkit-3022.mp3", 0.55, 2.0, 5.0, 1.5]
   ] }
