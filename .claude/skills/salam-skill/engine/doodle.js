@@ -222,6 +222,10 @@
       case 'raise_hand': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [176 + Math.sin(t * 9) * 7, -4]; P.aL = [62, 48]; P.lean = 2; P.fx.wave = true; break;
       case 'laughsit': P.y = 60; P.lL = [90, -90]; P.lR = [84, -84]; P.aR = [25, 95]; P.aL = [18, 100]; P.sway = Math.sin(t * 28) * 4; P.lean = 8 + Math.sin(t * 14) * 5; break;
       case 'knock': { const k = Math.max(0, Math.sin(t * 13)); P.lean = 32; P.y = 30; P.lL = [20, -40]; P.lR = [-2, -38]; P.aR = [lerp(16, 72, k), lerp(0, -45, k)]; P.aL = [-15, 25]; P.fx.knock = k < 0.08; break; }
+      case 'tiptoe': {   // مشي هادئ متسلّل على أطراف الأصابع: خطوات بطيئة، ركبة ترتفع، ذراعان مرفوعتان قليلاً
+        const w = Math.sin(t * 2.4), up = Math.max(0, w), dn = Math.max(0, -w);
+        P.lL = [12 * w, -(8 + 36 * dn)]; P.lR = [-12 * w, -(8 + 36 * up)];
+        P.aL = [40 - 10 * w, -60]; P.aR = [40 + 10 * w, -60]; P.y = -8 - Math.abs(Math.cos(t * 2.4)) * 6; P.lean = 10; break; }
       case 'hips': P.aR = [40, -120]; P.aL = [40, -120]; break;
       case 'look_up': P.aR = [150, 30]; P.aL = [-20, 10]; P.lean = -10; P.fx.lookup = true; break;
       case 'throw': {   // رمي: تحضير للخلف ← قذف سريع للأمام ← متابعة
@@ -447,7 +451,8 @@
       const mv = Math.abs(x1 - x0) > 2, q = mv ? eoc(clamp(prog / (c.walkEnd || 0.85))) : 0;
       const pq = clamp(prog / (c.walkEnd || 1));   // تقدّم المسار (للصعود والسقوط والدوران)
       const x = c.xs ? kf(c.xs, pq) : x0 + (x1 - x0) * q;
-      const moving = mv && q < 0.999 && !c.ys;
+      const xN = c.xs ? kf(c.xs, clamp(pq + 0.004)) : x0 + (x1 - x0) * eoc(clamp((prog + 0.004) / (c.walkEnd || 0.85)));
+      const moving = mv && Math.abs(xN - x) > 0.15 && !c.ys;   // يمشي فقط حين يتحرك فعلاً (مع نقاط التوقف في x=a>a>b)
       const fk = seqAt(c.face, s, t), pk = seqAt(c.pose, s, t);
       const dir = c.dir != null ? c.dir : (x1 < x0 ? -1 : 1), big = c.big || 1;
       const y = c.ys ? kf(c.ys, pq) : (c.y != null ? c.y : R.ground);
