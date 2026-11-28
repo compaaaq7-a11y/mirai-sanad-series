@@ -320,5 +320,6 @@ python3 $S/scripts/tts.py voice.txt -o voice.mp3 --words words.json        # ص�
 python3 $S/scripts/explainer.py episode.json -o timeline.json              # (episode.json فيه voice و words)
 node $S/engine/render.mjs timeline.json out.mp4
 ```
+- **اللغة: الإعلانات والمحتوى المفيد بالفصحى نصاً وصوتاً** (`--voice ar-SA-HamedNeural --rate +5%`).
 - `tts.py` يعمل في الحاوية (يوجّه certifi لشهادة الوكيل). الأصوات: ar-IQ-BasselNeural / ar-IQ-RanaNeural.
 - مثال كامل: `ads/sweets-explainer/episode.json`. `w` في البطاقة = الكلمة التي تبدأ عندها الحركة، `y` لتغيير الارتفاع.
