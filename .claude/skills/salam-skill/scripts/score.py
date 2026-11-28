@@ -202,7 +202,9 @@ def sfx(buf, name, t0, d=1.0, extra=None):
         t = tt(0.08); add(buf, np.sin(2 * np.pi * (900 - 6000 * t) * t) * np.exp(-t * 50) * 0.4, t0)
     elif name == 'swish':   # الكرة في الشبكة
         t = tt(0.6); add(buf, hp(noise(0.6), 0.85) * np.exp(-t * 6) * (1 - np.exp(-t * 80)) * 0.6, t0)
-    elif name == 'crowd':   # هتاف جمهور: ضوضاء مرشّحة بتموجات + صيحات
+    elif name == 'crowd':   # هتاف جمهور حقيقي الطابع: أصوات بشرية بحروف علة + تصفيق + صدى ملعب
+        add(buf, crowd(d), t0)
+    elif name == 'crowd_noise':   # (القديم: ضوضاء — يشبه الوشوشة، لا تستخدمه للتشجيع)
         t = tt(d); n = lp(noise(d), 0.18) * 1.6
         sw = np.minimum(1, t / 0.25) * np.minimum(1, (d - t) / 1.2)
         mod = 0.75 + 0.25 * np.sin(2 * np.pi * 3.1 * t) * np.sin(2 * np.pi * 0.7 * t)
@@ -227,6 +229,48 @@ def sfx(buf, name, t0, d=1.0, extra=None):
         step = extra or 0.16; t = 0
         while t < d:
             add(buf, sfx_step(), t0 + t); t += step
+
+
+def crowd(d, voices=90, claps=520):
+    from scipy.signal import lfilter, fftconvolve
+    n = int(d * SR); out = np.zeros(n)
+    VOW = {'a': (800, 1200, 2500), 'e': (400, 2000, 2600), 'o': (500, 850, 2400), 'ay': (700, 1700, 2500)}
+    def reson(x, f, bw):
+        r = np.exp(-np.pi * bw / SR); th = 2 * np.pi * f / SR
+        return lfilter([1 - r], [1, -2 * r * np.cos(th), r * r], x)
+    for v in range(voices):
+        kind = rng.choice(['m', 'm', 'f', 'k'])
+        f0 = {'m': rng.uniform(140, 230), 'f': rng.uniform(260, 380), 'k': rng.uniform(380, 520)}[kind]
+        st = rng.uniform(0, d * 0.55) if v > voices * 0.3 else rng.uniform(0, 0.4)
+        L = min(d - st, rng.uniform(0.9, 2.8)); m = int(L * SR)
+        if m < SR * 0.3: continue
+        t = np.arange(m) / SR
+        # نبرة «ييييه!»: صعود سريع ثم ثبات ثم هبوط، مع اهتزاز طبيعي
+        glide = 1 + 0.35 * np.minimum(1, t / 0.18) - 0.25 * np.maximum(0, (t - L * 0.6) / (L * 0.4))
+        f = f0 * glide * (1 + 0.012 * np.sin(2 * np.pi * rng.uniform(4.5, 6.5) * t) + 0.004 * rng.standard_normal(m).cumsum() / np.sqrt(np.arange(1, m + 1)))
+        ph = np.cumsum(f) / SR
+        src = 2 * (ph % 1) - 1                          # موجة منشارية (صوت الحنجرة)
+        src += 0.04 * rng.uniform(-1, 1, m)             # نَفَس خفيف
+        vw = VOW[rng.choice(list(VOW))]
+        y = sum(reson(src, F * (1.12 if kind != 'm' else 1), 90 + 40 * k) * g for k, (F, g) in enumerate(zip(vw, (1, 0.6, 0.25))))
+        e = np.minimum(1, t / 0.08) * np.minimum(1, (L - t) / 0.35) * (0.8 + 0.2 * np.sin(2 * np.pi * rng.uniform(1, 3) * t))
+        i = int(st * SR); out[i:i + m] += y[:n - i] * e[:n - i] * rng.uniform(0.4, 1.0)
+    out /= max(1e-6, np.abs(out).max())
+    # تصفيق: مئات التصفيقات القصيرة بترددات مختلفة
+    ap = np.zeros(n); cl = int(0.03 * SR)
+    for k in range(claps):
+        st = int(rng.uniform(0.15, d - 0.1) * SR)
+        if st + cl >= n: continue
+        burst = reson(rng.uniform(-1, 1, cl), rng.uniform(900, 2200), 700) * np.exp(-np.arange(cl) / SR * rng.uniform(90, 160))   # تصفيق بنطاق اليد لا هسهسة
+        ap[st:st + cl] += burst * rng.uniform(0.3, 1)
+    ap /= max(1e-6, np.abs(ap).max())
+    mix = out * 0.9 + ap * 0.22
+    tail = rng.standard_normal(int(1.1 * SR)) * np.exp(-np.arange(int(1.1 * SR)) / SR * 4.5)   # صدى ملعب
+    wet = fftconvolve(mix, tail)[:n]; wet /= max(1e-6, np.abs(wet).max())
+    res = mix * 0.7 + wet * 0.35
+    t = np.arange(n) / SR
+    res *= np.minimum(1, t / 0.2) * np.minimum(1, (d - t) / 1.5)
+    return res / max(1e-6, np.abs(res).max()) * 0.75
 
 
 def sfx_step():
