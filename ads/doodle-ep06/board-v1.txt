@@ -1,0 +1,15 @@
+# حلقة كرتون #6: «اضرب الكرة بقوة» — سند يركل بخفة فلا تصل، ثم بكل قوته فتطير وتعود على رأسه،
+# ثم يفكّر ويصوّب فيسجّل. الدرس: القوة وحدها لا تكفي، التركيز والتصويب أولاً. بلا كتابة.
+# نظام بصري جديد: «سبورة المدرب» — خلفية سبورة خضراء وخط طباشير أبيض، والكرة وحدها ملوّنة.
+@ fps=30 music=soundtrack.wav music_volume=1 sfx=no
+
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3 who="x=-120>180 face=happy pose=walk ink=chalk big=1.5" draw="goal@760,1660:1.25" ball="x=330 r=42"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.6 who="x=180 face=happy>happy>sad pose=kick_soft ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="kick=0.47,380,0"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3 who="x=180 face=sad>angry pose=stand>shiver ink=chalk big=1.5" draw="goal@760,1660:1.25="]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=1.3 who="x=180>319 face=angry pose=run ink=chalk big=1.5" draw="goal@760,1660:1.25="]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.8 fx=shake who="x=319 face=angry>angry>shock pose=kick ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="kick=0.47,420,-3000"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.6 who="x=319 face=shock>shock>sad pose=look_up>look_up>stand ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="set=319,-150,0,600 bonk=1"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.4 who="x=319 face=sad>happy>wink pose=think>point ink=chalk big=1.5" draw="goal@760,1660:1.25=|bulb@470,880:0.9~0.9" ball="kick=0.55,70,-450 bonk=1 bonk_until=0.55"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.2 who="x=321 face=happy pose=kick ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="kick=0.47,1100,-900"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.4 fx=stars who="x=321 face=laugh pose=jump ink=chalk big=1.5" draw="goal@760,1660:1.25=|star@250,700:0.8~0.3|star@820,620:0.8~0.6"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.4 who="x=321 face=wink pose=cheer ink=chalk big=1.5" draw="goal@760,1660:1.25="]

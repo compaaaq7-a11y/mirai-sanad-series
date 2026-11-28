@@ -76,6 +76,18 @@
     cave: c => `<path class="dw" d="M-260 110 C-270 -60 -170 -210 0 -215 C170 -210 270 -60 260 110Z" fill="#a8a29e" stroke="#57534e"/><path class="dw" d="M-140 110 C-150 0 -90 -100 0 -105 C90 -100 150 0 140 110Z" fill="#292524" stroke="#1c1917"/><path class="dw" d="M-200 -60 l40 -20 M150 -120 l45 10 M180 20 l40 0 M-230 40 l30 10" stroke="#57534e" fill="none"/>`,
     smoke: c => `<circle class="dw" cx="-30" cy="20" r="34" fill="#d6d3d1" stroke="#78716c"/><circle class="dw" cx="20" cy="-10" r="40" fill="#e7e5e4" stroke="#78716c"/><circle class="dw" cx="-10" cy="-55" r="30" fill="#f5f5f4" stroke="#78716c"/>`,
     campfire: c => `<path class="dw" d="M-90 60 L80 20 M-80 20 L90 60" stroke="#7a4b24" stroke-width="22" fill="none"/><path class="dw" d="M0 30 C-60 10 -50 -60 -20 -90 C-20 -50 0 -50 5 -70 C30 -40 55 -30 45 10 C40 30 20 35 0 30Z" fill="#ff922b" stroke="#e8590c"/><path class="dw" d="M0 28 C-25 15 -20 -20 -5 -40 C0 -20 15 -15 20 0 C22 18 12 26 0 28Z" fill="#ffd43b" stroke="#fab005"/>`,
+    goalfront: c => `<path class="dw" d="M-200 0 V-260 H200 V0" stroke="${c}" stroke-width="12" fill="none"/>
+      <path class="dw net" d="M-150 -258 V0 M-100 -258 V0 M-50 -258 V0 M0 -258 V0 M50 -258 V0 M100 -258 V0 M150 -258 V0 M-198 -205 H198 M-198 -150 H198 M-198 -95 H198 M-198 -40 H198" stroke="${c}" stroke-width="3" fill="none" opacity=".5"/>`,
+    goaldoubt: c => `<path class="dw" d="M-200 0 V-260 H200 V0" stroke="${c}" stroke-width="12" fill="none"/>
+      <path class="dw" d="M-150 -258 V0 M-75 -258 V0 M0 -258 V0 M75 -258 V0 M150 -258 V0 M-198 -175 H198 M-198 -90 H198" stroke="${c}" stroke-width="3" fill="none" opacity=".45"/>
+      <path class="dw" d="M-150 -200 q0 -40 30 -40 q30 0 30 30 q0 22 -30 30 v20 M-120 -112 v6" stroke="#ffd43b" stroke-width="12" fill="none"/>
+      <path class="dw" d="M90 -200 q0 -40 30 -40 q30 0 30 30 q0 22 -30 30 v20 M120 -112 v6" stroke="#ffd43b" stroke-width="12" fill="none"/>`,
+    goalright: c => `<path class="dw" d="M-200 0 V-260 H200 V0" stroke="${c}" stroke-width="12" fill="none"/>
+      <path class="dw" d="M-150 -258 V0 M-75 -258 V0 M0 -258 V0 M75 -258 V0 M150 -258 V0 M-198 -175 H198 M-198 -90 H198" stroke="${c}" stroke-width="3" fill="none" opacity=".45"/>
+      <path class="dw" d="M-160 -210 l60 60 M-100 -210 l-60 60" stroke="#ff6b6b" stroke-width="12" fill="none"/>
+      <path class="dw" d="M-20 -20 Q60 -60 120 -170" stroke="#ffd43b" stroke-width="9" stroke-dasharray="1 0" fill="none"/>
+      <path class="dw" d="M120 -170 l-34 6 M120 -170 l2 34" stroke="#ffd43b" stroke-width="9" fill="none"/>
+      <circle class="dw" cx="140" cy="-200" r="32" fill="#ffffff" stroke="#1b1b1b"/><path class="dw" d="M140 -214 l13 9 -5 15 h-16 l-5 -15Z" fill="#1b1b1b" stroke="#1b1b1b"/>`,
     goal: c => `<path class="dw" d="M0 0 V-330 H170 L230 0" stroke="${c}" stroke-width="12" fill="none"/>
       <path class="dw net" d="M14 -316 L210 -30 M40 -330 L222 -8 M90 -330 L224 0 M140 -330 L228 0 M10 -250 L190 -250 M10 -170 L205 -170 M10 -90 L218 -90" stroke="${c}" stroke-width="3" fill="none" opacity=".55"/>`,
     ball: c => `<circle class="dw" r="60" fill="#ff8c42" stroke="${c}"/><path class="dw" d="M-60 0 C-20 -25 20 -25 60 0 M0 -60 C25 -20 25 20 0 60" stroke="${c}" fill="none"/>`,
@@ -331,7 +343,7 @@
     // فقاعة التفكير
     if (d.think && d.think.length && R.chars.length) {
       const g = document.createElementNS(NS, 'g'); svg.querySelector('.think').appendChild(g);
-      const icons = d.think.map((n, k) => ICONS[n] ? `<g transform="translate(${(k - (d.think.length - 1) / 2) * 150} 0) scale(.62)">${ICONS[n](gink)}</g>` : '').join('');
+      const icons = d.think.map((n, k) => ICONS[n] ? (/^goal/.test(n) ? `<g transform="translate(${(k - (d.think.length - 1) / 2) * 150} 92) scale(.74)">${ICONS[n](gink)}</g>` : `<g transform="translate(${(k - (d.think.length - 1) / 2) * 150} 0) scale(.62)">${ICONS[n](gink)}</g>`) : '').join('');
       g.innerHTML = `<path d="M-230 40 C-290 40 -290 -40 -230 -45 C-230 -120 -120 -135 -80 -95 C-50 -150 60 -150 90 -95 C150 -130 240 -100 230 -40 C290 -30 285 50 225 55 C230 110 130 125 100 90 C60 135 -60 135 -90 95 C-140 130 -240 110 -230 40Z" fill="#fffef6" stroke="${gink}" stroke-width="6"/>
         <g transform="translate(0 -5)">${icons}</g>
         <circle cx="-120" cy="150" r="18" fill="#fffef6" stroke="${gink}" stroke-width="5"/><circle cx="-150" cy="200" r="11" fill="#fffef6" stroke="${gink}" stroke-width="4"/>`;
@@ -500,7 +512,21 @@
   function drawBall(R, t, s) {
     if (!window.TIMELINE.scenes.some(x => x.doodle && x.doodle.ball)) return;
     if (!R.ball) { R.ball = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(R.ball); }
-    const b = ballState(t), ink = INK[R.d.ink] || INK.pencil, r = b.r;
+    let b = ballState(t); const ink = INK[R.d.ink] || INK.pencil;
+    const sh = R.d.ball && R.d.ball.shot;
+    if (sh) {   // لقطة إعادة أمامية: الكرة تبتعد عن الكاميرا نحو نقطة في المرمى (تصغر)، ثم ترتج الشبكة وتسقط
+      const [x0, y0, x1, y1, r0, r1, a, e] = sh, T = f => s.start + f * (s.end - s.start);
+      const q = clamp((t - T(a)) / Math.max(0.05, T(e) - T(a))), k = 1 - Math.pow(1 - q, 2.2);
+      const fall = Math.max(0, t - T(e)), gy = R.d.ball.floor || y1, yy = Math.min(gy, y1 + 0.5 * 2600 * 0.35 * fall * fall);
+      b = { x: x0 + (x1 - x0) * k, y: q < 1 ? y0 + (y1 - y0) * k - Math.sin(q * Math.PI) * 120 : yy, vx: q < 1 ? 2000 : 0, vy: q < 1 ? -400 : 0,
+            a: q * 9, r: r0 + (r1 - r0) * k, net: q >= 1 ? T(e) : -9, bonk: -9 };
+      R.d.shotNet = q >= 1 ? T(e) : -9;
+      R.draws.forEach(o => { if (o.w.icon !== 'goalfront') return; const net = o.g.querySelector('.net'); if (!net) return;
+        const kk = t - T(e), amp = kk >= 0 && kk < 1.2 ? Math.sin(kk * 16) * Math.exp(-kk * 3.5) : 0;
+        const cx = (x1 - o.w.x) / (o.w.s || 1), cy = (y1 - o.w.y) / (o.w.s || 1);
+        net.setAttribute('transform', `translate(${cx} ${cy}) scale(${(1 + amp * 0.06).toFixed(3)}) translate(${-cx} ${-cy})`); });
+    }
+    const r = b.r;
     R.ball.setAttribute('transform', `translate(${b.x.toFixed(1)} ${b.y.toFixed(1)}) rotate(${(b.a * 180 / Math.PI).toFixed(1)})`);
     const fast = Math.hypot(b.vx, b.vy) > 900, ang = Math.atan2(b.vy, b.vx);
     R.ball.innerHTML = soccerBall(r, R.uid || (R.uid = ++UID));

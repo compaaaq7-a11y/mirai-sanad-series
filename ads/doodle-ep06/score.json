@@ -1,23 +1,23 @@
-{ "duration": 28.7, "bpm": 116, "key": "G", "music_gain": 0.9,
+{ "duration": 29.9, "bpm": 112, "key": "G", "music_gain": 0.9,
   "sections": [
-    {"from": 0, "to": 5.0, "style": "pizz"},
-    {"from": 8.6, "to": 11.2, "style": "roll"},
-    {"from": 15.6, "to": 20.6, "style": "glock", "gain": 0.8},
-    {"from": 20.6, "to": 21.2, "style": "roll", "gain": 0.7},
-    {"from": 21.75, "to": 28.7, "style": "party"}
+    {"from": 0, "to": 8.0, "style": "pizz", "gain": 0.85},
+    {"from": 8.0, "to": 16.6, "style": "glock", "gain": 0.8},
+    {"from": 16.6, "to": 20.3, "style": "roll", "gain": 0.8},
+    {"from": 23.6, "to": 29.9, "style": "party", "gain": 0.75}
   ],
   "events": [
-    ["steps", 0.15, 2.5, 0.42],
-    ["tap", 4.22], ["whoosh", 4.25, 0.5],
-    ["wah", 5.3],
-    ["rise", 7.1, 1.5],
-    ["steps", 8.6, 1.3, 0.15],
-    ["kick", 11.22], ["whoosh_up", 11.25, 1.0],
-    ["boing", 13.42], ["bounce", 14.5], ["bounce", 15.1], ["pop", 15.4],
-    ["ding", 17.45],
-    ["bounce", 19.03], ["tap", 19.3],
-    ["kick", 21.2], ["whoosh", 21.22, 0.45],
-    ["swish", 21.7], ["bounce", 21.88],
-    ["whistle", 21.95], ["crowd", 21.8, 5.5],
-    ["ding", 26.9]
+    ["steps", 0.2, 3.3, 0.5],
+    ["pop", 5.2], ["ding", 5.25],
+    ["steps", 6.5, 1.3, 0.45],
+    ["pop", 11.25],
+    ["ding", 12.0],
+    ["pop", 16.25],
+    ["steps", 16.7, 1.5, 0.5],
+    ["steps", 18.4, 1.05, 0.15],
+    ["kick", 20.35], ["whoosh", 20.37, 0.4],
+    ["swish", 20.7], ["bounce", 21.0],
+    ["sample", 20.75, "../sfx-library/Clapping_hurray.ogg", 0.95, 0.3, 9.0, 1.5],
+    ["whistle", 20.9],
+    ["whoosh", 21.45, 0.9], ["swish", 22.5], ["bounce", 22.85],
+    ["sample", 23.9, "../sfx-library/Clapping_hurray.ogg", 0.7, 1.5, 6.0, 1.5]
   ] }

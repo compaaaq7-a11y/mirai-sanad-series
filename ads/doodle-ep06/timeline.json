@@ -2,7 +2,7 @@
  "width": 1080,
  "height": 1920,
  "fps": 30,
- "duration": 28.7,
+ "duration": 29.9,
  "audio": null,
  "align": "pace 2.3 w/s (no audio)",
  "scenes": [
@@ -14,7 +14,7 @@
     "chars": [
      {
       "x0": -120.0,
-      "x1": 180.0,
+      "x1": 200.0,
       "face": "happy",
       "pose": "walk",
       "ink": "chalk",
@@ -24,32 +24,32 @@
     "draws": [
      {
       "icon": "goal",
-      "x": 760.0,
+      "x": 850.0,
       "y": 1660.0,
-      "s": 1.25
+      "s": 0.85
      }
     ],
     "ball": {
-     "x": 330.0,
+     "x": 420.0,
      "r": 42.0
     },
     "paper": "#24423a",
     "ground": 1660.0,
     "ink": "chalk"
    },
-   "end": 3.0
+   "end": 4.0
   },
   {
-   "start": 3.0,
+   "start": 4.0,
    "bg": "chalk",
    "lines": [],
    "doodle": {
     "chars": [
      {
-      "x0": 180.0,
-      "x1": 180.0,
-      "face": "happy>happy>sad",
-      "pose": "kick_soft",
+      "x0": 200.0,
+      "x1": 200.0,
+      "face": "happy>star",
+      "pose": "stand>point",
       "ink": "chalk",
       "big": 1.5
      }
@@ -57,36 +57,29 @@
     "draws": [
      {
       "icon": "goal",
-      "x": 760.0,
+      "x": 850.0,
       "y": 1660.0,
-      "s": 1.25,
+      "s": 0.85,
       "instant": true
      }
     ],
-    "ball": {
-     "kick": [
-      0.47,
-      380.0,
-      0.0
-     ]
-    },
     "paper": "#24423a",
     "ground": 1660.0,
     "ink": "chalk"
    },
-   "end": 5.6
+   "end": 6.4
   },
   {
-   "start": 5.6,
+   "start": 6.4,
    "bg": "chalk",
    "lines": [],
    "doodle": {
     "chars": [
      {
-      "x0": 180.0,
-      "x1": 180.0,
-      "face": "sad>angry",
-      "pose": "stand>shiver",
+      "x0": 200.0,
+      "x1": 270.0,
+      "face": "star",
+      "pose": "walk",
       "ink": "chalk",
       "big": 1.5
      }
@@ -94,9 +87,9 @@
     "draws": [
      {
       "icon": "goal",
-      "x": 760.0,
+      "x": 850.0,
       "y": 1660.0,
-      "s": 1.25,
+      "s": 0.85,
       "instant": true
      }
     ],
@@ -104,17 +97,151 @@
     "ground": 1660.0,
     "ink": "chalk"
    },
-   "end": 8.6
+   "end": 8.0
   },
   {
-   "start": 8.6,
+   "start": 8.0,
    "bg": "chalk",
    "lines": [],
    "doodle": {
     "chars": [
      {
-      "x0": 180.0,
-      "x1": 319.0,
+      "x0": 270.0,
+      "x1": 270.0,
+      "face": "happy",
+      "pose": "think",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 850.0,
+      "y": 1660.0,
+      "s": 0.85,
+      "instant": true
+     }
+    ],
+    "paper": "#24423a",
+    "think": [
+     "goaldoubt"
+    ],
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 11.6
+  },
+  {
+   "start": 11.6,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 270.0,
+      "x1": 270.0,
+      "face": "shock>happy",
+      "pose": "stand",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 850.0,
+      "y": 1660.0,
+      "s": 0.85,
+      "instant": true
+     },
+     {
+      "icon": "bulb",
+      "x": 270.0,
+      "y": 900.0,
+      "s": 0.9,
+      "delay": 0.25
+     }
+    ],
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 13.6
+  },
+  {
+   "start": 13.6,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 270.0,
+      "x1": 270.0,
+      "face": "wink",
+      "pose": "point",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 850.0,
+      "y": 1660.0,
+      "s": 0.85,
+      "instant": true
+     }
+    ],
+    "paper": "#24423a",
+    "think": [
+     "goalright"
+    ],
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 16.6
+  },
+  {
+   "start": 16.6,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 270.0,
+      "x1": 140.0,
+      "dir": 1.0,
+      "face": "angry",
+      "pose": "walk",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 850.0,
+      "y": 1660.0,
+      "s": 0.85,
+      "instant": true
+     }
+    ],
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 18.4
+  },
+  {
+   "start": 18.4,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 140.0,
+      "x1": 270.0,
       "face": "angry",
       "pose": "run",
       "ink": "chalk",
@@ -124,9 +251,9 @@
     "draws": [
      {
       "icon": "goal",
-      "x": 760.0,
+      "x": 850.0,
       "y": 1660.0,
-      "s": 1.25,
+      "s": 0.85,
       "instant": true
      }
     ],
@@ -134,10 +261,10 @@
     "ground": 1660.0,
     "ink": "chalk"
    },
-   "end": 9.9
+   "end": 19.5
   },
   {
-   "start": 9.9,
+   "start": 19.5,
    "bg": "chalk",
    "lines": [],
    "fx": [
@@ -146,9 +273,9 @@
    "doodle": {
     "chars": [
      {
-      "x0": 319.0,
-      "x1": 319.0,
-      "face": "angry>angry>shock",
+      "x0": 270.0,
+      "x1": 270.0,
+      "face": "angry",
       "pose": "kick",
       "ink": "chalk",
       "big": 1.5
@@ -157,36 +284,69 @@
     "draws": [
      {
       "icon": "goal",
-      "x": 760.0,
+      "x": 850.0,
       "y": 1660.0,
-      "s": 1.25,
+      "s": 0.85,
       "instant": true
      }
     ],
     "ball": {
      "kick": [
       0.47,
-      420.0,
-      -3000.0
+      1500.0,
+      -700.0
      ]
     },
     "paper": "#24423a",
     "ground": 1660.0,
     "ink": "chalk"
    },
-   "end": 12.7
+   "end": 21.3
   },
   {
-   "start": 12.7,
+   "start": 21.3,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "draws": [
+     {
+      "icon": "goalfront",
+      "x": 540.0,
+      "y": 1450.0,
+      "s": 2.1,
+      "instant": true
+     }
+    ],
+    "ball": {
+     "shot": [
+      540.0,
+      2050.0,
+      895.0,
+      968.0,
+      170.0,
+      46.0,
+      0.08,
+      0.5
+     ],
+     "floor": 1402.0
+    },
+    "paper": "#24423a",
+    "ground": 1450.0,
+    "ink": "chalk"
+   },
+   "end": 23.7
+  },
+  {
+   "start": 23.7,
    "bg": "chalk",
    "lines": [],
    "doodle": {
     "chars": [
      {
-      "x0": 319.0,
-      "x1": 319.0,
-      "face": "shock>shock>sad",
-      "pose": "look_up>look_up>stand",
+      "x0": 270.0,
+      "x1": 380.0,
+      "face": "laugh",
+      "pose": "jump>dance",
       "ink": "chalk",
       "big": 1.5
      }
@@ -194,166 +354,48 @@
     "draws": [
      {
       "icon": "goal",
-      "x": 760.0,
+      "x": 850.0,
       "y": 1660.0,
-      "s": 1.25,
-      "instant": true
+      "s": 0.85
+     },
+     {
+      "icon": "star",
+      "x": 230.0,
+      "y": 700.0,
+      "s": 0.8,
+      "delay": 0.4
+     },
+     {
+      "icon": "star",
+      "x": 760.0,
+      "y": 620.0,
+      "s": 0.8,
+      "delay": 0.8
      }
     ],
     "ball": {
      "set": [
-      319.0,
-      -150.0,
+      945.0,
+      1618.0,
       0.0,
-      600.0
-     ],
-     "bonk": 1.0
-    },
-    "paper": "#24423a",
-    "ground": 1660.0,
-    "ink": "chalk"
-   },
-   "end": 16.3
-  },
-  {
-   "start": 16.3,
-   "bg": "chalk",
-   "lines": [],
-   "doodle": {
-    "chars": [
-     {
-      "x0": 319.0,
-      "x1": 319.0,
-      "face": "sad>happy>wink",
-      "pose": "think>point",
-      "ink": "chalk",
-      "big": 1.5
-     }
-    ],
-    "draws": [
-     {
-      "icon": "goal",
-      "x": 760.0,
-      "y": 1660.0,
-      "s": 1.25,
-      "instant": true
-     },
-     {
-      "icon": "bulb",
-      "x": 470.0,
-      "y": 880.0,
-      "s": 0.9,
-      "delay": 0.9
-     }
-    ],
-    "ball": {
-     "kick": [
-      0.55,
-      70.0,
-      -450.0
-     ],
-     "bonk": 1.0,
-     "bonk_until": 0.55
-    },
-    "paper": "#24423a",
-    "ground": 1660.0,
-    "ink": "chalk"
-   },
-   "end": 19.7
-  },
-  {
-   "start": 19.7,
-   "bg": "chalk",
-   "lines": [],
-   "doodle": {
-    "chars": [
-     {
-      "x0": 321.0,
-      "x1": 321.0,
-      "face": "happy",
-      "pose": "kick",
-      "ink": "chalk",
-      "big": 1.5
-     }
-    ],
-    "draws": [
-     {
-      "icon": "goal",
-      "x": 760.0,
-      "y": 1660.0,
-      "s": 1.25,
-      "instant": true
-     }
-    ],
-    "ball": {
-     "kick": [
-      0.47,
-      1100.0,
-      -900.0
+      0.0
      ]
     },
     "paper": "#24423a",
     "ground": 1660.0,
     "ink": "chalk"
    },
-   "end": 22.9
+   "end": 27.3
   },
   {
-   "start": 22.9,
-   "bg": "chalk",
-   "lines": [],
-   "fx": [
-    "stars"
-   ],
-   "doodle": {
-    "chars": [
-     {
-      "x0": 321.0,
-      "x1": 321.0,
-      "face": "laugh",
-      "pose": "jump",
-      "ink": "chalk",
-      "big": 1.5
-     }
-    ],
-    "draws": [
-     {
-      "icon": "goal",
-      "x": 760.0,
-      "y": 1660.0,
-      "s": 1.25,
-      "instant": true
-     },
-     {
-      "icon": "star",
-      "x": 250.0,
-      "y": 700.0,
-      "s": 0.8,
-      "delay": 0.3
-     },
-     {
-      "icon": "star",
-      "x": 820.0,
-      "y": 620.0,
-      "s": 0.8,
-      "delay": 0.6
-     }
-    ],
-    "paper": "#24423a",
-    "ground": 1660.0,
-    "ink": "chalk"
-   },
-   "end": 26.3
-  },
-  {
-   "start": 26.3,
+   "start": 27.3,
    "bg": "chalk",
    "lines": [],
    "doodle": {
     "chars": [
      {
-      "x0": 321.0,
-      "x1": 321.0,
+      "x0": 380.0,
+      "x1": 380.0,
       "face": "wink",
       "pose": "cheer",
       "ink": "chalk",
@@ -363,9 +405,9 @@
     "draws": [
      {
       "icon": "goal",
-      "x": 760.0,
+      "x": 850.0,
       "y": 1660.0,
-      "s": 1.25,
+      "s": 0.85,
       "instant": true
      }
     ],
@@ -373,7 +415,7 @@
     "ground": 1660.0,
     "ink": "chalk"
    },
-   "end": 28.7
+   "end": 29.9
   }
  ],
  "music": "soundtrack.wav",

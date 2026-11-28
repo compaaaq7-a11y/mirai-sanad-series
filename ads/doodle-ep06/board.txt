@@ -1,15 +1,17 @@
-# حلقة كرتون #6: «اضرب الكرة بقوة» — سند يركل بخفة فلا تصل، ثم بكل قوته فتطير وتعود على رأسه،
-# ثم يفكّر ويصوّب فيسجّل. الدرس: القوة وحدها لا تكفي، التركيز والتصويب أولاً. بلا كتابة.
-# نظام بصري جديد: «سبورة المدرب» — خلفية سبورة خضراء وخط طباشير أبيض، والكرة وحدها ملوّنة.
+# حلقة كرتون #6: «اضرب الكرة بقوة» (قصة المستخدم) — سند يتمشى فيرى كرة في الملعب، يقف بعيداً عن المرمى
+# يتأمل: في أي جهة من الشباك يسدد؟ تأتيه الفكرة (الزاوية اليمنى)، يرجع ويركض ويضرب بقوة فيسجّل، إعادة أمامية، احتفال.
+# نظام بصري: «سبورة المدرب» — سبورة خضراء وخط طباشير، والكرة وحدها بلونها الحقيقي. بلا كتابة.
 @ fps=30 music=soundtrack.wav music_volume=1 sfx=no
 
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3 who="x=-120>180 face=happy pose=walk ink=chalk big=1.5" draw="goal@760,1660:1.25" ball="x=330 r=42"]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.6 who="x=180 face=happy>happy>sad pose=kick_soft ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="kick=0.47,380,0"]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3 who="x=180 face=sad>angry pose=stand>shiver ink=chalk big=1.5" draw="goal@760,1660:1.25="]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=1.3 who="x=180>319 face=angry pose=run ink=chalk big=1.5" draw="goal@760,1660:1.25="]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.8 fx=shake who="x=319 face=angry>angry>shock pose=kick ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="kick=0.47,420,-3000"]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.6 who="x=319 face=shock>shock>sad pose=look_up>look_up>stand ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="set=319,-150,0,600 bonk=1"]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.4 who="x=319 face=sad>happy>wink pose=think>point ink=chalk big=1.5" draw="goal@760,1660:1.25=|bulb@470,880:0.9~0.9" ball="kick=0.55,70,-450 bonk=1 bonk_until=0.55"]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.2 who="x=321 face=happy pose=kick ink=chalk big=1.5" draw="goal@760,1660:1.25=" ball="kick=0.47,1100,-900"]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.4 fx=stars who="x=321 face=laugh pose=jump ink=chalk big=1.5" draw="goal@760,1660:1.25=|star@250,700:0.8~0.3|star@820,620:0.8~0.6"]
-[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.4 who="x=321 face=wink pose=cheer ink=chalk big=1.5" draw="goal@760,1660:1.25="]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=4 who="x=-120>200 face=happy pose=walk ink=chalk big=1.5" draw="goal@850,1660:0.85" ball="x=420 r=42"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.4 who="x=200 face=happy>star pose=stand>point ink=chalk big=1.5" draw="goal@850,1660:0.85="]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=1.6 who="x=200>270 face=star pose=walk ink=chalk big=1.5" draw="goal@850,1660:0.85="]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.6 who="x=270 face=happy pose=think ink=chalk big=1.5" draw="goal@850,1660:0.85=" think="goaldoubt"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2 who="x=270 face=shock>happy pose=stand ink=chalk big=1.5" draw="goal@850,1660:0.85=|bulb@270,900:0.9~0.25"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3 who="x=270 face=wink pose=point ink=chalk big=1.5" draw="goal@850,1660:0.85=" think="goalright"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=1.8 who="x=270>140 dir=1 face=angry pose=walk ink=chalk big=1.5" draw="goal@850,1660:0.85="]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=1.1 who="x=140>270 face=angry pose=run ink=chalk big=1.5" draw="goal@850,1660:0.85="]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=1.8 fx=shake who="x=270 face=angry pose=kick ink=chalk big=1.5" draw="goal@850,1660:0.85=" ball="kick=0.47,1500,-700"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a ground=1450 dur=2.4 draw="goalfront@540,1450:2.1=" ball="shot=540,2050,895,968,170,46,0.08,0.5 floor=1402"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=3.6 who="x=270>380 face=laugh pose=jump>dance ink=chalk big=1.5" draw="goal@850,1660:0.85|star@230,700:0.8~0.4|star@760,620:0.8~0.8" ball="set=945,1618,0,0"]
+[bg=chalk ground=1660 ink=chalk paper=#24423a dur=2.6 who="x=380 face=wink pose=cheer ink=chalk big=1.5" draw="goal@850,1660:0.85="]

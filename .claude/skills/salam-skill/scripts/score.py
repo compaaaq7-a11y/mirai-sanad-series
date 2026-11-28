@@ -180,7 +180,23 @@ def section(buf, s, bpm, key):
         add(buf, bass(hz(sc[4] - 24), b - a), a, 0.25 * g)
 
 
-def sfx(buf, name, t0, d=1.0, extra=None):
+BASE = '.'
+def load_sample(path, off=0.0, dur=None):
+    import subprocess, os
+    p = path if os.path.isabs(path) else os.path.join(BASE, path)
+    cmd = ['ffmpeg', '-v', 'error', '-ss', str(off), '-i', p] + (['-t', str(dur)] if dur else []) + ['-ac', '1', '-ar', str(SR), '-f', 's16le', '-']
+    x = np.frombuffer(subprocess.run(cmd, capture_output=True, check=True).stdout, np.int16).astype(np.float64) / 32768
+    return x
+
+
+def sfx(buf, name, t0, d=1.0, extra=None, ev=None):
+    if name == 'sample':   # تسجيل حقيقي: ["sample", t0, "ملف", gain, from, dur, fade_out]
+        path, g = ev[2], ev[3] if len(ev) > 3 else 1.0
+        x = load_sample(path, ev[4] if len(ev) > 4 else 0, ev[5] if len(ev) > 5 else None)
+        fo = int((ev[6] if len(ev) > 6 else 0.4) * SR)
+        if fo and len(x) > fo: x[-fo:] *= np.linspace(1, 0, fo)
+        x[:200] *= np.linspace(0, 1, 200)
+        add(buf, x / max(1e-6, np.abs(x).max()) * g, t0); return
     if name == 'tap':
         t = tt(0.15); add(buf, np.sin(2 * np.pi * 140 * t) * np.exp(-t * 35) * 0.6 + hp(noise(0.15), 0.6) * np.exp(-t * 60) * 0.2, t0)
     elif name == 'kick':
@@ -282,6 +298,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('spec'); ap.add_argument('-o', default='soundtrack.wav')
     a = ap.parse_args()
+    global BASE
+    import os; BASE = os.path.dirname(os.path.abspath(a.spec))
     S = json.load(open(a.spec, encoding='utf-8'))
     D = float(S['duration']); buf = np.zeros(int((D + 2) * SR)); mus = np.zeros_like(buf)
     for s in S.get('sections', []):
@@ -289,7 +307,8 @@ def main():
     # تدرّج دخول وخروج المقاطع الموسيقية بنعومة
     buf += mus * S.get('music_gain', 0.8)
     for e in S.get('events', []):
-        sfx(buf, e[0], e[1], e[2] if len(e) > 2 else 1.0, e[3] if len(e) > 3 else None)
+        if e[0] == 'sample': sfx(buf, 'sample', e[1], ev=e)
+        else: sfx(buf, e[0], e[1], e[2] if len(e) > 2 else 1.0, e[3] if len(e) > 3 else None)
     buf = buf[:int(D * SR)]
     fade = int(1.0 * SR); buf[-fade:] *= np.linspace(1, 0, fade)
     buf /= max(1e-6, np.abs(buf).max()) / 0.9
