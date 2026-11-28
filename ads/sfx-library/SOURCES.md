@@ -11,3 +11,5 @@
 | mixkit-2084 كرة في الشبكة · 2077 / 2089 ارتداد كرة | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ball/ |
 | mixkit-614 / 615 صافرة · 509 تصفيق فريق | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/whistle/ |
 | Footstep_on_Gravel_(Gravity_Sound).mp3 (غير مستخدم حالياً) | CC BY 4.0 — **يتطلب نسبة** إن استُخدم | Gravity Sound | https://commons.wikimedia.org/wiki/File:Footstep_on_Gravel_(Gravity_Sound).mp3 |
+| mixkit-2458 نهر عند الشروق (ماء وطيور) · 1311 رذاذ ماء · 1304 قفز في الماء · 1198 رذاذ بحر · 2457 سمكة ترفرف · 1317 فقاعة | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/water/ |
+| mixkit-2269 تثاؤب · 2252 / 114 أكل · 1329 نار مخيم · 1131 نقرة ميكانيكية | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ |

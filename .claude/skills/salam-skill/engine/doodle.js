@@ -88,6 +88,17 @@
       <path class="dw" d="M-20 -20 Q60 -60 120 -170" stroke="#ffd43b" stroke-width="9" stroke-dasharray="1 0" fill="none"/>
       <path class="dw" d="M120 -170 l-34 6 M120 -170 l2 34" stroke="#ffd43b" stroke-width="9" fill="none"/>
       <circle class="dw" cx="140" cy="-200" r="32" fill="#ffffff" stroke="#1b1b1b"/><path class="dw" d="M140 -214 l13 9 -5 15 h-16 l-5 -15Z" fill="#1b1b1b" stroke="#1b1b1b"/>`,
+    fishbig: c => fishSVG('big', 1, 0, c, false),
+    dock: c => `<path class="dw" d="M0 0 H540 V30 H0Z" fill="#efe3c8" stroke="${c}"/>
+      <path class="dw" d="M90 0 V30 M190 0 V30 M290 0 V30 M390 0 V30 M490 0 V30" stroke="${c}" stroke-width="4" fill="none"/>
+      <path class="dw" d="M40 30 V300 M260 30 V300 M500 30 V300" stroke="${c}" stroke-width="16" fill="none"/>`,
+    seaweed: c => `<path class="dw" d="M0 0 C-30 -60 30 -110 0 -170 C-25 -220 20 -260 0 -300" stroke="#3a7d44" stroke-width="10" fill="none"/><path class="dw" d="M30 0 C10 -50 50 -90 30 -150" stroke="#3a7d44" stroke-width="8" fill="none"/>`,
+    rock: c => `<path class="dw" d="M-90 0 C-95 -40 -50 -70 -10 -60 C30 -80 85 -50 90 0Z" fill="#c9c3b6" stroke="${c}"/>`,
+    fishgrill: (c, b = 0) => b > 0.75 ? `<path class="dw" d="M0 120 V-10" stroke="#7a4b24" stroke-width="8" fill="none"/>
+        <path class="dw" d="M0 -80 V40 M-18 -60 h36 M-22 -35 h44 M-22 -10 h44 M-18 15 h36" stroke="${c}" stroke-width="5" fill="none"/><path class="dw" d="M-26 -82 L0 -112 L26 -82Z" fill="none" stroke="${c}"/><path class="dw" d="M-20 40 L0 62 L20 40" fill="none" stroke="${c}"/>`
+      : `<path class="dw" d="M0 120 V-10" stroke="#7a4b24" stroke-width="8" fill="none"/>
+        <path class="dw" d="M0 ${-110 + 60 * b} C34 ${-80 + 50 * b} 34 20 0 40 C-34 20 -34 ${-80 + 50 * b} 0 ${-110 + 60 * b}Z" fill="#c8722c" stroke="#7a3d12"/>
+        <path class="dw" d="M-14 -40 l28 -14 M-16 -10 l32 -14 M-14 18 l28 -12" stroke="#5a2a0a" stroke-width="4" fill="none"/><path class="dw" d="M0 40 L-22 70 L22 70Z" fill="#c8722c" stroke="#7a3d12"/>`,
     goal: c => `<path class="dw" d="M0 0 V-330 H170 L230 0" stroke="${c}" stroke-width="12" fill="none"/>
       <path class="dw net" d="M14 -316 L210 -30 M40 -330 L222 -8 M90 -330 L224 0 M140 -330 L228 0 M10 -250 L190 -250 M10 -170 L205 -170 M10 -90 L218 -90" stroke="${c}" stroke-width="3" fill="none" opacity=".55"/>`,
     ball: c => `<circle class="dw" r="60" fill="#ff8c42" stroke="${c}"/><path class="dw" d="M-60 0 C-20 -25 20 -25 60 0 M0 -60 C25 -20 25 20 0 60" stroke="${c}" fill="none"/>`,
@@ -124,9 +135,9 @@
   // الجسم الملتف (curl): مركزه فوق القدمين بـ BALL_C ونصف قطره BALL_R (بوحدات الشخصية قبل big)
   const BALL_C = 290, BALL_R = 140;
   // الإمساك: حجم الشيء في اليد، ونقطة القبض (بُعدها عن مركز الرسمة للأسفل)، وارتفاع قمته (للأكل)
-  const HOLD_S = { umbrella: 0.95, umbrella_broken: 0.95, icecream: 0.62, cone: 0.62, apple: 0.5, cup: 0.5, ball: 0.45, heart: 0.45, box: 0.6, book: 0.5, flower: 0.5, coin: 0.45, can: 0.55, water: 0.5 };
-  const GRIP = { umbrella: 135, umbrella_broken: 135, icecream: 60, cone: 60, cup: 10, water: 20, flower: 70, can: -10 };
-  const TOP = { icecream: 100, cone: 0, apple: 50, cup: 30, water: 50 };
+  const HOLD_S = { fishgrill: 0.7, fishbig: 0.75, umbrella: 0.95, umbrella_broken: 0.95, icecream: 0.62, cone: 0.62, apple: 0.5, cup: 0.5, ball: 0.45, heart: 0.45, box: 0.6, book: 0.5, flower: 0.5, coin: 0.45, can: 0.55, water: 0.5 };
+  const GRIP = { fishgrill: 95, umbrella: 135, umbrella_broken: 135, icecream: 60, cone: 60, cup: 10, water: 20, flower: 70, can: -10 };
+  const TOP = { fishgrill: 110, icecream: 100, cone: 0, apple: 50, cup: 30, water: 50 };
   const lerp = (a, b, p) => a + (b - a) * p;
   function pose(kind, t, moving, ph) {
     const P = { aL: [14, 8], aR: [-14, -8], lL: [6, -3], lR: [-6, -3], lean: 0, y: 0, sway: 0, fx: {} };
@@ -178,6 +189,11 @@
         P.lR = [th, kn]; P.lL = [-6, -4]; P.lean = ln;
         P.aL = [lerp(20, 70, clamp(th / 100 + 0.3)), 20]; P.aR = [lerp(-20, -70, clamp(th / 100 + 0.3)), -15];
         break; }
+      case 'rod': P.aR = [95, 30]; P.aL = [75, 20]; P.fx.hand = true; P.fx.rodA = 125; break;          // يمسك الصنارة أمامه
+      case 'sit_rod': P.y = 95; P.lL = [95, -90]; P.lR = [85, -80]; P.aR = [95, 30]; P.aL = [75, 20]; P.fx.rodA = 120; break;
+      case 'pull': P.lean = -14; P.aR = [140, -5]; P.aL = [120, 0]; P.lL = [28, -8]; P.lR = [-12, -4]; P.fx.rodA = 155; break;   // يسحب بقوة
+      case 'reel': P.lean = -12; P.aR = [135, -5]; P.aL = [100 + 25 * Math.sin(t * 16), 30 + 20 * Math.cos(t * 16)]; P.lL = [28, -8]; P.lR = [-12, -4]; P.fx.rodA = 150; break;
+      case 'yank': { const p = ph == null ? 0.5 : ph, k = sm(clamp((p - 0.35) / 0.12)); P.aR = [lerp(95, 165, k), lerp(30, -10, k)]; P.aL = [lerp(75, 140, k), 0]; P.lean = -10 * k; P.fx.rodA = lerp(125, 168, k); break; }
       case 'look_up': P.aR = [150, 30]; P.aL = [-20, 10]; P.lean = -10; P.fx.lookup = true; break;
       case 'throw': {   // رمي: تحضير للخلف ← قذف سريع للأمام ← متابعة
         const p = ph == null ? (t % 2) / 2 : ph;
@@ -189,7 +205,7 @@
         P.fx.hand = p < 0.5; P.fx.thrown = p >= 0.5; break; }
     }
     // المشي مع الإمساك: سيقان المشي + وضعية اليد كما هي (يمشي حاملاً الشيء أو مقدّماً إياه)
-    if (moving && ['hold', 'offer', 'give', 'carry', 'eat', 'drink', 'wave', 'greet', 'point'].includes(kind)) {
+    if (moving && ['rod', 'hold', 'offer', 'give', 'carry', 'eat', 'drink', 'wave', 'greet', 'point'].includes(kind)) {
       const W = pose('walk', t, true, ph); P.lL = W.lL; P.lR = W.lR; P.y = W.y; P.lean = Math.max(P.lean, 3);
     }
     return P;
@@ -258,7 +274,18 @@
         ${P.fx.lookup ? '<g transform="translate(6 -22)">' : '<g>'}${face(P.fx.eat > 0.6 ? (c.hold === 'icecream' ? 'lick' : 'chew') : faceKind, burnt ? '#fff' : ink, t)}</g>
       </g>
       ${held}<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt, c.paper)}${grip}${front}</g>`;
-    return { svg, hand: { x: AR.ex + P.sway, y: AR.ey + P.y } };
+    let tip = null, rodSvg = '';
+    if (c.rod) {   // صنارة من الكف: زاويتها حسب الوضعية (0 للأسفل، 90 للأمام، 180 للأعلى)، وتنحني عند الشد
+      const a = (P.fx.rodA != null ? P.fx.rodA : (poseKind === 'throw' ? AR.a + 15 : (P.fx.walk ? 165 : 125))) * D2R, L = 235;
+      const bend = c._bend || 0, ex = AR.ex + Math.sin(a) * L, ey = AR.ey + Math.cos(a) * L;
+      const tx = AR.ex + Math.sin(a - bend * 0.9) * L * (1 - 0.12 * bend), ty2 = AR.ey + Math.cos(a - bend * 0.9) * L * (1 - 0.12 * bend) + bend * 60;
+      const cx = AR.ex + Math.sin(a) * L * 0.62, cy = AR.ey + Math.cos(a) * L * 0.62;
+      rodSvg = `<path d="M${AR.ex.toFixed(1)} ${AR.ey.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${tx.toFixed(1)} ${ty2.toFixed(1)}" stroke="#7a4b24" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="${(AR.ex + Math.sin(a) * 30).toFixed(1)}" cy="${(AR.ey + Math.cos(a) * 30).toFixed(1)}" r="9" fill="#fff" stroke="${body}" stroke-width="4"/>`;
+      tip = { x: tx + P.sway, y: ty2 + P.y };
+    }
+    const svg2 = rodSvg ? svg.replace(/<\/g>$/, rodSvg + `<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt, c.paper)}</g>`) : svg;
+    return { svg: svg2, hand: { x: AR.ex + P.sway, y: AR.ey + P.y }, tip };
   }
   // موضع اليد اليمنى لحظة الإفلات في الرمي (لنقطة بداية طيران الشيء)
   function releaseHand(c) { const r = charSVG(c, 0, 'happy', 'throw', false, 0.5); return r.hand; }
@@ -382,6 +409,7 @@
     });
     // الشخصيات
     let headPos = null;
+    if (R.d.fish && R.chars[0]) R.chars[0].c._bend = ({ fight: 1, jump: 0.45, bite: 0.5 })[R.d.fish.mode] || 0;
     R.chars.forEach((o, k) => {
       const c = o.c, x0 = c.x0 != null ? c.x0 : 540, x1 = c.x1 != null ? c.x1 : x0;
       const mv = Math.abs(x1 - x0) > 2, q = mv ? eoc(clamp(prog / (c.walkEnd || 0.85))) : 0;
@@ -406,6 +434,7 @@
       o.g.setAttribute('transform', `translate(${x.toFixed(1)} ${ty.toFixed(1)})${rot}${spin} scale(${(dir * big).toFixed(2)} ${big})`);
       const r = c.kind === 'dragon' ? dragonSVG(c, t + k * 0.37, fk, pk, prog) : charSVG(c, t + k * 0.37, fk, pk, moving, prog);
       o.g.innerHTML = r.svg;
+      if (k === 0) R.tipW = r.tip ? { x: x + dir * big * r.tip.x, y: ty + big * r.tip.y } : null;
       // الرمي: بعد لحظة الإفلات يطير الشيء في قوس نحو الهدف
       if (pk === 'throw' && c.hold && ICONS[c.hold]) {
         if (!o.fly) { o.fly = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(o.fly); o.fly.innerHTML = ICONS[c.hold](INK[c.ink] || INK.pencil); }
@@ -430,6 +459,7 @@
       o.g.setAttribute('transform', `translate(${o.w.x} ${base}) scale(${(sc * (1 + sq * 0.55)).toFixed(3)} ${(sc * (1 - sq)).toFixed(3)}) translate(0 ${-85})`);
     });
     drawBall(R, t, s);
+    drawFishing(R, t, s, R.tipW);
     // فقاعة التفكير تظهر ثم تنفجر
     if (R.think && headPos) {
       const a = s.start + 0.35, e = s.end - 0.35, pin = eob(clamp((t - a) / 0.35)), pop = clamp((t - e) / 0.3);
@@ -545,6 +575,71 @@
     if (kb >= 0 && kb < 2.2 && R.d.chars && R.d.chars[0]) { const c = R.d.chars[0], big = c.big || 1, hx = c.x1 != null ? c.x1 : c.x0, hy = (c.y != null ? c.y : R.ground) - 335 * big - 90 * big;
       R.dizzy.innerHTML = [0, 1, 2].map(i => { const a2 = t * 5 + i * 2.1; return `<path transform="translate(${(hx + Math.cos(a2) * 110).toFixed(1)} ${(hy + Math.sin(a2) * 26).toFixed(1)}) scale(.5)" d="M0 -30 L9 -9 L30 -9 L13 5 L19 28 L0 14 L-19 28 L-13 5 L-30 -9 L-9 -9Z" fill="#ffd43b" stroke="${ink}" stroke-width="5"/>`; }).join('');
     } else R.dizzy.innerHTML = '';
+  }
+
+  /* ---------------- الصيد: سطح الماء، الصنارة والخيط والعوّامة والخطاف، والسمك (fish= / fishes= / water=) ---------------- */
+  function fishSVG(kind, s, t, ink, hooked) {
+    const w = Math.sin(t * (hooked ? 22 : 9)) * (hooked ? 22 : 12);
+    if (kind === 'big') return `<g transform="scale(${s})"><path d="M-70 0 L-118 ${-30 + w} L-112 ${30 + w}Z" fill="#ff8c42" stroke="#b34a00" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M-80 0 C-60 -52 50 -56 82 -6 C70 30 -40 50 -80 0Z" fill="#ff8c42" stroke="#b34a00" stroke-width="6"/>
+      <path d="M-10 -40 C0 -62 30 -60 38 -44" fill="#ffb37a" stroke="#b34a00" stroke-width="4"/><path d="M-20 10 C-6 26 10 26 16 14" fill="none" stroke="#b34a00" stroke-width="4"/>
+      <path d="M-40 -20 q10 20 0 40 M-25 -26 q12 26 0 52" stroke="#b34a00" stroke-width="3" fill="none" opacity=".6"/>
+      <circle cx="52" cy="-14" r="11" fill="#fff" stroke="#1b1b1b" stroke-width="3"/><circle cx="55" cy="-14" r="5" fill="#1b1b1b"/>
+      <path d="M78 6 q6 3 0 8" stroke="#b34a00" stroke-width="4" fill="none"/></g>`;
+    return `<g transform="scale(${s})"><path d="M-40 0 L-66 ${-18 + w} L-62 ${18 + w}Z" fill="none" stroke="${ink}" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M-44 0 C-30 -30 30 -32 46 -4 C36 18 -24 28 -44 0Z" fill="#eaf4fa" stroke="${ink}" stroke-width="5"/><circle cx="28" cy="-8" r="4" fill="${ink}"/></g>`;
+  }
+  function fishPos(f, R, t, s) {
+    const q = clamp((t - s.start) / Math.max(0.1, s.end - s.start));
+    const x = f.xs ? kf(f.xs, q) : f.x, y = f.ys ? kf(f.ys, q) : f.y;
+    const q2 = clamp(q + 0.01), x2 = f.xs ? kf(f.xs, q2) : x, y2 = f.ys ? kf(f.ys, q2) : y;
+    const dir = f.dir != null ? f.dir : (x2 < x - 0.01 ? -1 : 1);
+    const ang = f.ys ? Math.atan2(y2 - y, Math.abs(x2 - x) + 1e-3) * 180 / Math.PI * (Math.abs(y2 - y) > 2 ? 1 : 0) : 0;
+    return { x, y, dir, ang: clamp(ang, -70, 70) * (f.tilt === 0 ? 0 : 1), mouth: { x: x + dir * 80 * (f.s || 1), y: y + 6 * (f.s || 1) } };
+  }
+  function drawFishing(R, t, s, tipW) {
+    const d = R.d, W = d.water; if (W == null) return;
+    const ink = INK[d.ink] || INK.pencil, prog = clamp((t - s.start) / Math.max(0.1, s.end - s.start)), T = f => s.start + f * (s.end - s.start);
+    if (!R.wat) { R.wat = document.createElementNS(NS, 'g'); R.svg.querySelector('.draws').prepend(R.wat); R.fl = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(R.fl); }
+    // سطح الماء المتموّج + خطوط ضوء تحت الماء + فقاعات
+    let wave = `M0 ${W}`; for (let x = 0; x <= 1080; x += 30) wave += ` L${x} ${(W + Math.sin(x / 70 + t * 1.8) * 6 + Math.sin(x / 31 - t * 2.6) * 2).toFixed(1)}`;
+    let caus = ''; for (let k = 0; k < 7; k++) { const y = W + 120 + k * 120, o = Math.sin(t * 1.2 + k) * 30; caus += `<path d="M${60 + k * 37 + o} ${y} q60 -14 120 0 t120 0" stroke="#ffffff" stroke-width="5" fill="none" opacity=".35"/>`; }
+    let bub = ''; for (let k = 0; k < 9; k++) { const ph = ((t * 0.18 + k * 0.137) % 1), bx = 120 + ((k * 263) % 860) + Math.sin(t * 2 + k) * 10, by = 1900 - ph * (1900 - W - 20); bub += `<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="${4 + (k % 3) * 3}" fill="none" stroke="#fff" stroke-width="3" opacity="${(0.7 * (1 - ph)).toFixed(2)}"/>`; }
+    R.wat.innerHTML = `${caus}${bub}<path d="${wave}" stroke="${ink}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    // السمك
+    let fishSvg = '', hooked = null;
+    (d.fishes || []).forEach((f, i) => { const p = fishPos(f, R, t, s); if (f.hooked) hooked = p;
+      fishSvg += `<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) scale(${p.dir} 1) rotate(${(p.ang * p.dir).toFixed(1)})">${fishSVG(f.kind, f.s || 1, t + i * 0.7, ink, f.hooked)}</g>`;
+      if (Math.abs(p.y - W) < 70 && f.ys) { const k2 = 1 - Math.abs(p.y - W) / 70;   // رذاذ عند عبور السطح
+        fishSvg += [0, 1, 2, 3, 4, 5].map(j => { const a = (-150 + j * 24) * D2R, r = 50 + 70 * k2; return `<path d="M${(p.x + Math.cos(a) * r * 0.6).toFixed(1)} ${(W + Math.sin(a) * r * 0.9).toFixed(1)} q6 -14 0 -22 q-6 8 0 22Z" fill="#9cc9e4" stroke="${ink}" stroke-width="3" opacity="${k2.toFixed(2)}"/>`; }).join(''); } });
+    // العوّامة والخطاف والخيط
+    const F = d.fish || {}; let out = fishSvg;
+    if (tipW && F.mode) {
+      const fx = F.x || 800, depth = F.depth || W + 380, a = T(F.at != null ? F.at : 0.3);
+      let fl = { x: fx, y: W + Math.sin(t * 2.2) * 5 }, hook = { x: fx, y: depth + Math.sin(t * 1.7) * 6 }, slack = 1, show = true, rip = null, under = true;
+      const dangle = { x: tipW.x + 30, y: tipW.y + 120 };
+      if (F.mode === 'cast') {
+        if (t < a) { fl = dangle; hook = { x: dangle.x, y: dangle.y + 70 }; under = false; }
+        else { const q = clamp((t - a) / 0.7), qq = 1 - Math.pow(1 - q, 1.6);
+          if (q < 1) { fl = { x: dangle.x + (fx - dangle.x) * qq, y: dangle.y + (W - dangle.y) * q - Math.sin(q * Math.PI) * 260 }; hook = { x: fl.x, y: fl.y + 70 }; under = false; }
+          else { const k = clamp((t - a - 0.7) / 1.3); hook = { x: fx, y: W + 70 + (depth - W - 70) * (1 - Math.pow(1 - k, 2)) }; rip = a + 0.7; } }
+      }
+      if (F.mode === 'nibble') (F.dips || [0.3, 0.5, 0.72]).forEach(dp => { const k = t - T(dp); if (k > 0 && k < 0.6) { fl.y += Math.sin(k / 0.6 * Math.PI) * 22; hook.x += Math.sin(k * 40) * 6; rip = T(dp); } });
+      if (F.mode === 'bite') { const k = clamp((t - a) / 0.35); fl.y += k * 140; rip = a; slack = 1 - k; hook = hooked ? hooked.mouth : hook; }
+      if (F.mode === 'yank') { const k = clamp((t - a) / 0.35), k2 = 1 - Math.pow(1 - k, 2);
+        if (k > 0) { fl = { x: fx + (dangle.x - fx) * k2, y: W + (dangle.y - W) * k2 - Math.sin(k * Math.PI) * 120 }; hook = { x: fl.x, y: fl.y + 70 + (1 - k) * (depth - W - 70) }; rip = a; under = k < 0.3; } }
+      if (F.mode === 'fight' || F.mode === 'jump') { hook = hooked ? hooked.mouth : hook; fl = null; slack = 0; }
+      if (F.mode === 'none') show = false;
+      if (show) {
+        const end = fl || hook, mx = (tipW.x + end.x) / 2, my = (tipW.y + end.y) / 2 + 90 * slack;
+        out += `<path d="M${tipW.x.toFixed(1)} ${tipW.y.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${end.x.toFixed(1)} ${end.y.toFixed(1)}" stroke="${ink}" stroke-width="2.5" fill="none" opacity=".85"/>`;
+        if (fl) out += `<path d="M${fl.x.toFixed(1)} ${fl.y.toFixed(1)} L${hook.x.toFixed(1)} ${hook.y.toFixed(1)}" stroke="${ink}" stroke-width="2" fill="none" opacity=".7"/>
+          <g transform="translate(${fl.x.toFixed(1)} ${fl.y.toFixed(1)})"><path d="M0 -26 V-40" stroke="${ink}" stroke-width="4"/><path d="M-14 -4 A14 14 0 0 1 14 -4 L14 -14 A14 14 0 0 0 -14 -14Z" fill="#e63946"/><circle r="15" cy="-10" fill="none" stroke="${ink}" stroke-width="4"/><path d="M-14 -8 h28" stroke="${ink}" stroke-width="3"/><path d="M-14 -8 A14 14 0 0 0 14 -8" fill="#fff" stroke="${ink}" stroke-width="3"/></g>`;
+        if (!hooked || (F.mode !== 'fight' && F.mode !== 'jump' && F.mode !== 'bite')) out += `<g transform="translate(${hook.x.toFixed(1)} ${hook.y.toFixed(1)})"><path d="M0 0 V22 Q0 36 -12 32 Q-20 26 -16 18" stroke="${ink}" stroke-width="4" fill="none"/>${F.worm === 0 ? '' : `<path d="M-2 14 q${(8 + Math.sin(t * 9) * 5).toFixed(1)} 8 0 16 q-8 6 0 14" stroke="#d6336c" stroke-width="7" fill="none" stroke-linecap="round"/>`}</g>`;
+      }
+      if (rip != null && t >= rip) { const k = t - rip; out += [0, 0.35, 0.7].map(o => { const kk = k - o; if (kk < 0 || kk > 1.6) return ''; return `<ellipse cx="${fx}" cy="${W + 4}" rx="${(20 + kk * 90).toFixed(1)}" ry="${(6 + kk * 22).toFixed(1)}" fill="none" stroke="${ink}" stroke-width="3" opacity="${(0.8 * (1 - kk / 1.6)).toFixed(2)}"/>`; }).join(''); }
+    }
+    R.fl.innerHTML = out;
   }
   window.Doodle = { build, draw, ballState, ICONS: Object.keys(ICONS) };
 })();

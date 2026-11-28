@@ -450,7 +450,7 @@ def make_doodle(a):
                     c['xs'] = [float(v_) for v_ in x]     # مسار بنقاط مفتاحية
             elif k in ('y', 'rot', 'spin') and '>' in v:  # y=1660>900 صعود، spin=0>720 تدحرج
                 c[{'y': 'ys', 'rot': 'rots', 'spin': 'spins'}[k]] = [float(v_) for v_ in v.split('>')]
-            elif k in ('y', 'big', 'dir', 'walkEnd', 'rot', 'hold_s', 'bite', 'fire'):
+            elif k in ('y', 'big', 'dir', 'walkEnd', 'rot', 'hold_s', 'bite', 'fire', 'rod'):
                 c[k] = float(v)
             else:
                 c[k] = v   # face, pose, ink, shirt
@@ -479,6 +479,25 @@ def make_doodle(a):
             k, v = tok.split('=', 1)
             b[k] = [float(x) for x in v.split(',')] if ',' in v else float(v)
         d['ball'] = b
+    if a.get('fish'):   # الصيد: fish="mode=cast x=800 at=0.4 depth=1380 dips=0.3,0.5"
+        f = {}
+        for tok in a['fish'].split():
+            k, v = tok.split('=', 1)
+            f[k] = v if k == 'mode' else ([float(x) for x in v.split(',')] if ',' in v else float(v))
+        if isinstance(f.get('dips'), float): f['dips'] = [f['dips']]
+        d['fish'] = f
+    if a.get('fishes'):   # fishes="big x=900>700 y=1500>1400 hooked=1 | small x=..."
+        L = []
+        for part in a['fishes'].split('|'):
+            toks = part.split(); f = {'kind': toks[0]}
+            for tok in toks[1:]:
+                k, v = tok.split('=', 1)
+                if k in ('x', 'y') and '>' in v: f[k + 's'] = [float(z) for z in v.split('>')]
+                else: f[k] = float(v)
+            L.append(f)
+        d['fishes'] = L
+    if a.get('water'):
+        d['water'] = float(a['water'])
     if a.get('paper'):
         d['paper'] = a['paper']
     if a.get('think'):

@@ -74,6 +74,14 @@ def brass(f, d=0.4):
     return s * a * 0.18
 
 
+def flute(f, d=0.5):
+    t = tt(d); vib = 1 + 0.006 * np.sin(2 * np.pi * 5.2 * t) * np.minimum(1, t / 0.25)
+    ph = np.cumsum(f * vib) / SR
+    s = np.sin(2 * np.pi * ph) + 0.18 * np.sin(4 * np.pi * ph) + 0.05 * np.sin(6 * np.pi * ph)
+    br = lp(rng.uniform(-1, 1, len(t)), 0.08) * 0.08
+    return (s + br) * np.minimum(1, t / 0.06) * np.minimum(1, (d - t) / 0.08).clip(0, 1) * 0.22
+
+
 def bass(f, d=0.4):
     t = tt(d)
     return (np.sin(2 * np.pi * f * t) + 0.3 * np.sin(4 * np.pi * f * t)) * env(len(t), 0.004, d * 0.6) * 0.5
@@ -171,6 +179,29 @@ def section(buf, s, bpm, key):
             if k % 2 == 0:
                 for d in (0, 2, 4):
                     add(buf, brass(hz(sc[(deg + d) % 7] + (12 if (deg + d) >= 7 else 0)), beat * 0.8), t, 0.35 * g)
+    if st == 'folk':   # ريفي هادئ: نقر أوتار (يوكوليلي) بإيقاع أرپيجيو + ناي يغني لحناً بسيطاً
+        mel = [4, 2, 0, 2, 4, 4, 4, None, 2, 2, 2, None, 4, 7, 7, None]
+        for k in range(int((b - a) / beat)):
+            t = a + k * beat; bar = k // 4; deg = [0, 4, 5, 3][bar % 4]
+            for j, dd in enumerate((0, 2, 4, 2)):
+                add(buf, pluck(hz(sc[(deg + dd) % 7] - 12 + (12 if deg + dd >= 7 else 0)), 0.5), t + j * beat / 4, 0.16 * g)
+            if k % 2 == 0: add(buf, bass(hz(sc[deg] - 24), beat * 1.6), t, 0.3 * g)
+            m = mel[k % len(mel)]
+            if m is not None and s.get('melody', True): add(buf, flute(hz(sc[m % 7] + 12 + (12 if m >= 7 else 0)), beat * 0.95), t, 0.9 * g)
+    if st == 'tension':   # تشويق: أوتار نقر متقطعة منخفضة + نبض خافت
+        k = 0; t = a
+        while t < b:
+            add(buf, pluck(hz(sc[[0, 0, 1, 0][k % 4]] - 24), 0.3), t, 0.4 * g)
+            if k % 4 == 0: add(buf, kickdrum(0.25), t, g)
+            t += beat / 2; k += 1
+    if st == 'chase':   # مطاردة: طبل سريع + باص نابض + نحاسيات قصيرة
+        k = 0; t = a
+        while t < b:
+            add(buf, kickdrum(0.55), t, g) if k % 2 == 0 else add(buf, snare(0.4), t, g)
+            add(buf, bass(hz(sc[[0, 0, 3, 4][(k // 4) % 4]] - 24), beat / 2 * 0.9), t, 0.45 * g)
+            add(buf, hat(0.8), t + beat / 4, g)
+            if k % 4 == 0: add(buf, brass(hz(sc[[0, 0, 3, 4][(k // 4) % 4]]), beat * 0.4), t, 0.3 * g)
+            t += beat / 2; k += 1
     if st == 'roll':   # قرع يتسارع ويعلو
         t = a
         while t < b:
@@ -233,6 +264,10 @@ def sfx(buf, name, t0, d=1.0, extra=None, ev=None):
     elif name == 'boing':
         t = tt(0.7); f = 180 + 120 * np.sin(2 * np.pi * 9 * t) * np.exp(-t * 4)
         add(buf, np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 4) * 0.55, t0); add(buf, kickdrum(0.5), t0)
+    elif name == 'reel':   # بكرة الصنارة: نقرات سريعة متتالية
+        k = 0; t = 0
+        while t < d:
+            tc = tt(0.012); add(buf, hp(noise(0.012), 0.6) * np.exp(-tc * 400) * 0.35, t0 + t); t += 1 / 22; k += 1
     elif name == 'bounce':
         t = tt(0.18); add(buf, np.sin(2 * np.pi * 120 * t) * np.exp(-t * 28) * 0.45, t0)
     elif name == 'ding':
