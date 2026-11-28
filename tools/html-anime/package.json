@@ -1,0 +1,8 @@
+{
+  "name": "html-anime",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node harness/compile.test.mjs"
+  }
+}
