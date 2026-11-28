@@ -214,6 +214,23 @@ def section(buf, s, bpm, key):
             if k % 2 == 1: add(buf, clap(0.5), t, g)
             m = mel[k % 16]
             if m is not None: add(buf, flute(hz(sc[m % 7] + 24), beat * 0.45), t, 0.7 * g)
+    if st == 'chiptune':   # ألعاب فيديو: أرپيجيو موجة مربعة + باص نابض + طبول ضوضاء (لعالم المكعبات)
+        def sq(f, d, duty=0.5):
+            tq = tt(d); ph = (f * tq) % 1
+            return np.where(ph < duty, 1.0, -1.0) * np.minimum(1, tq / 0.004) * np.exp(-tq * 6) * 0.12
+        mel = [0, 2, 4, 7, 4, 2, 4, 5, 7, 9, 7, 4, 2, 4, 0, None]
+        n = int((b - a) / beat)
+        for k in range(n):
+            t = a + k * beat; deg = [0, 5, 3, 4][(k // 4) % 4]
+            for j in range(4):   # أرپيجيو بأربعة نقرات لكل نبضة
+                dd = [0, 2, 4, 2][j]; add(buf, sq(hz(sc[(deg + dd) % 7] + 12 + (12 if deg + dd >= 7 else 0)), beat / 4 * 0.9, 0.25), t + j * beat / 4, 0.55 * g)
+            add(buf, sq(hz(sc[deg] - 12), beat * 0.45, 0.5) * 1.4, t, g); add(buf, sq(hz(sc[deg] - 12), beat * 0.3, 0.5), t + beat / 2, g)
+            if s.get('melody', True):
+                m = mel[k % 16]
+                if m is not None: add(buf, sq(hz(sc[m % 7] + 24 + (12 if m >= 7 else 0)), beat * 0.8, 0.5) * 1.1, t, g)
+            if k % 2 == 0: add(buf, kickdrum(0.6), t, g)
+            else: add(buf, hp(noise(0.08), 0.6) * np.exp(-tt(0.08) * 40) * 0.35, t, g)
+            add(buf, hat(0.6), t + beat / 2, g)
     if st == 'tension':   # تشويق: أوتار نقر متقطعة منخفضة + نبض خافت
         k = 0; t = a
         while t < b:

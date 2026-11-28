@@ -15,3 +15,5 @@
 | mixkit-2269 تثاؤب · 2252 / 114 أكل · 1329 نار مخيم · 1131 نقرة ميكانيكية | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ |
 | mixkit-2254 أصوات أطفال في المدرسة · 580 جرس المدرسة · 427 ضحك أطفال · 422 ضحك وتصفيق | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/children/ |
 | mixkit-1060 / 1063 تكتكة ساعة · 1003 منبّه الصباح · 1911 شخير خفيف · 2182 طرقة خشب · 3141 سقوط خشب · 395 صفير سقوط كرتوني · 1016 صرير كرسي | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ |
+| mixkit-1918 / 1915 / 1916 حفر بالمجرفة · 833 ضربة معدن · 1163 صرير فتح · 837 وضع خشب | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/ |
+| mixkit-2066 كنز لعبة · 1936 / 1992 فوز بعملة · 1993 عملات · 1989 كيس نقود · 2350 / 2352 بريق سحري · 3190 فتح صندوق مفاجأة · 2261 أطفال يلعبون ويضحكون | Mixkit SFX Free | Mixkit | https://mixkit.co/free-sound-effects/coins/ |
