@@ -7,3 +7,5 @@ __pycache__/
 # مقاطع مُخرجة لم يوافق عليها المستخدم بعد (المعتمد يُضاف بـ git add -f)
 ads/**/*.mp4
 ads/**/soundtrack.wav
+ads/sfx-library/SOURCES.tsv
+ads/sfx-library/SOURCES.log
