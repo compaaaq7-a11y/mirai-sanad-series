@@ -39,6 +39,7 @@ TL.scenes.forEach(s => { if (s.image && !/^(https?|file|data):/.test(s.image)) s
 const abs = x => /^(https?|file|data):/.test(x) ? x : 'file://' + path.resolve(tlDir, x);
 TL.scenes.forEach(s => { if (s.stickers) s.stickers = s.stickers.map(abs); if (s.photos) s.photos = s.photos.map(abs); });
 TL.scenes.forEach(s => { if (s.prop && s.prop.image && !/^(https?|file|data):/.test(s.prop.image)) s.prop.image = 'file://' + path.resolve(tlDir, s.prop.image); });
+TL.scenes.forEach(s => (s.cards || []).forEach(c => { if (c.src && !/^(https?|file|data):/.test(c.src)) c.src = 'file://' + path.resolve(tlDir, c.src); }));
 // مقاطع الفيديو: Chromium المضمّن لا يشغّل H.264، فنستخرج الفريمات مسبقاً بـ ffmpeg
 TL.scenes.forEach((s, i) => {
   if (!s.video) return;
@@ -55,7 +56,7 @@ fs.writeFileSync(path.join(work, 'timeline.js'), 'window.TIMELINE=' + JSON.strin
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: TL.width, height: TL.height }, deviceScaleFactor: 1 });
 page.on('pageerror', e => console.error('page error:', e.message));
-await page.goto('file://' + path.join(work, 'salam.html'));
+await page.goto('file://' + path.join(work, TL.engine || 'salam.html'));
 await page.evaluate(() => window.engineReady);
 
 const stills = opt('still', null);

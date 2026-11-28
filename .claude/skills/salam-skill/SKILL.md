@@ -308,3 +308,17 @@ salam-skill/
 - **عند الرندر بصوت المرجع** (فيه موسيقى ومؤثرات) استخدم `--no-sfx`.
 - **الإعادة الكاملة للمرجع للاختبار**:
   `python3 scripts/salam.py make examples/darba-ad.board.txt reference/reference.mp4 --words examples/darba-ad.words.json -o out.mp4 --no-sfx`
+
+## محرك «الشرح بالبطاقات» (engine/explainer.html) — للمحتوى المفيد
+مشتق من نظام «واجهات ناعمة» في `reference/top-reels-visual.md`: خلفية متدرجة ببقع ضوء، عنوان بكلمة ملوّنة،
+بطاقات واجهات (صورة بوسم، ملصق غذائي، عدّاد ملاعق، أشرطة مقارنة مع خط حد، ختم «خرافة»، قائمة ✓/✕، صندوق تعليق)،
+وترجمة بكبسولة. بلا قطع. **غيّر `style` (الألوان/الخط/البقع) لكل مقطع** حتى لا يتكرر الشكل.
+```bash
+S=.claude/skills/salam-skill
+python3 $S/scripts/explainer.py episode.json --voice-text voice.txt        # نص التعليق
+python3 $S/scripts/tts.py voice.txt -o voice.mp3 --words words.json        # صوت عراقي مجاني + توقيت الكلمات
+python3 $S/scripts/explainer.py episode.json -o timeline.json              # (episode.json فيه voice و words)
+node $S/engine/render.mjs timeline.json out.mp4
+```
+- `tts.py` يعمل في الحاوية (يوجّه certifi لشهادة الوكيل). الأصوات: ar-IQ-BasselNeural / ar-IQ-RanaNeural.
+- مثال كامل: `ads/sweets-explainer/episode.json`. `w` في البطاقة = الكلمة التي تبدأ عندها الحركة، `y` لتغيير الارتفاع.
