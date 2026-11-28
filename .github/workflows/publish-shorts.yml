@@ -1,0 +1,38 @@
+name: نشر حلقات سند على يوتيوب شورتس
+
+# يعمل عند إضافة ملف في publish/shorts/ (نشر صريح بموافقة صاحب القناة).
+# الفيديو من المستودع نفسه (المسار في الملف)، ولا يكرر عنواناً منشوراً.
+on:
+  push:
+    paths:
+      - publish/shorts/*.json
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: النشر
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          base="$BEFORE"
+          if [ -z "$base" ] || ! git cat-file -e "$base" 2>/dev/null; then base=HEAD~1; fi
+          for meta in $(git diff --name-only --diff-filter=AM "$base" HEAD -- 'publish/shorts/*.json'); do
+            [ -f "$meta" ] || continue
+            video=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['video'])" "$meta")
+            echo "== $meta -> $video"
+            python .github/scripts/youtube_publish.py "$meta" "$video"
+          done
