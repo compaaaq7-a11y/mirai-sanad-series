@@ -1,0 +1,32 @@
+{
+  "_help": {
+    "accent": "brand color (hex) for the spoken word, the hook word and the progress bar",
+    "textColor": "color of the other caption words",
+    "font": "Cairo | Tajawal | Almarai | Noto Kufi Arabic",
+    "captionSize": "font size in px on a 1080x1920 frame (70-110)",
+    "captionY": "vertical position of the captions, 0 = top, 1 = bottom",
+    "maxWordsPerCaption": "how many words appear together (1-4)",
+    "hook": "optional title shown on top for the first seconds; empty = none",
+    "hookAccentWord": "the word inside the hook painted in the accent color",
+    "hookSeconds": "how long the hook stays on screen",
+    "music": "optional path to an MP3 you own (relative to the work folder or absolute); null = none",
+    "musicVolume": "0.08-0.15 keeps the voice clear",
+    "zoomOnCuts": "alternate a slight punch-in on every cut so jump cuts feel intentional",
+    "progressBar": "thin accent bar on top that fills while the reel plays",
+    "remove": "extra parts to delete, as [start, end] in seconds of the ORIGINAL video"
+  },
+  "accent": "#C9FF2F",
+  "textColor": "#FFFFFF",
+  "font": "Cairo",
+  "captionSize": 88,
+  "captionY": 0.7,
+  "maxWordsPerCaption": 3,
+  "hook": "",
+  "hookAccentWord": "",
+  "hookSeconds": 2.6,
+  "music": null,
+  "musicVolume": 0.12,
+  "zoomOnCuts": true,
+  "progressBar": true,
+  "remove": []
+}

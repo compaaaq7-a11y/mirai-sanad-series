@@ -13,8 +13,20 @@
 أرسل لـ Claude من 4 إلى 8 لقطات شاشة متتالية من الموشن الذي يعجبك وقل:
 > حلّل أسلوب الحركة في المرجع (الانتقالات، حركة العناصر، التفاصيل البصرية، الإيقاع) وطبّقه على مشروعي: [فكرتك + ألوانك + المقاس]. أعطني جدول مشاهد بالثانية + كود HTML/GSAP كامل في ملف واحد. خذ الحركة فقط، لا التصميم.
 
-## مهاراته الخاصة على Google Drive (لم تُنزّل بعد)
-تحتاج تنزيلاً يدوياً من المستخدم ثم رفعها هنا (أو السماح بـ drive.google.com):
+## مهاراته الخاصة (نُزّلت من Google Drive 2026-11-28 — هدايا مجانية منه، للاستخدام الشخصي مع ذكره)
+| المهارة | المكان | ماذا تفعل |
+|---|---|---|
+| es-montage | `.claude/skills/es-montage/` | فيديو كلام للكاميرا ← ريل 9:16: قص السكتات، تفريغ Whisper، كابشن عربي متزامن بألوان البراند، عنوان افتتاحي، تقريب عند القطع، موسيقى (Remotion: مجانية للأفراد) |
+| /calligraphy | `.claude/skills/calligraphy/` | خط عربي فاخر يكتب نفسه |
+| /minimal | `.claude/skills/minimal/` | فكرة في موشن مينيمال أبيض وأسود |
+| /breakdown | `.claude/skills/breakdown/` | منظر مفكّك لأي منتج بأجزاء مرقّمة |
+| /map-route | `.claude/skills/map-route/` | مسار متحرك على خريطة 3D |
+| /graph | `.claude/skills/graph/` | عدّاد + منحنى نمو |
+| /dots | `.claude/skills/dots/` | صورة من آلاف النقاط |
+- نصوص الأدلة وبرومبتات «7 إفكتات بأمر واحد» (HyperFrames): `docs/es-igner/*.txt`.
+- مهارتا motion-design و logo-design في Drive هما نفس نسختي GitHub المثبتتين.
+
+### روابط Drive الأصلية
 
 - **مهارة المونتاج - الحلقة 1** — المهارة + دليل التسطيب. ابدأ بالدليل وبعدها ركّب es-montage.zip (ZIP, PDF): https://drive.google.com/drive/folders/1OcPzuBg2n1UOK6AWHDWGVk7Cymu4lBtM
 - **Claude Connectors** — دليل ربط Claude بـ Higgsfield و Kling خطوة بخطوة (PDF): https://drive.google.com/drive/folders/1oE80x0GCq8xO7DmLvyjdJ_eY1C7Og0F5

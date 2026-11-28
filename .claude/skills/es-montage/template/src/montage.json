@@ -1,0 +1,27 @@
+{
+ "fps": 30,
+ "width": 1080,
+ "height": 1920,
+ "durationInFrames": 30,
+ "video": "source.mp4",
+ "segments": [],
+ "captions": [],
+ "music": null,
+ "brand": {
+  "accent": "#C9FF2F",
+  "textColor": "#FFFFFF",
+  "font": "Cairo",
+  "captionSize": 88,
+  "captionY": 0.7,
+  "maxWordsPerCaption": 3,
+  "hook": "",
+  "hookAccentWord": "",
+  "hookSeconds": 2.6,
+  "music": null,
+  "musicVolume": 0.12,
+  "zoomOnCuts": true,
+  "progressBar": true,
+  "remove": []
+ },
+ "face": null
+}
