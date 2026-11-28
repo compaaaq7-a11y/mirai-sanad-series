@@ -1,0 +1,23 @@
+{ "duration": 28.7, "bpm": 116, "key": "G", "music_gain": 0.9,
+  "sections": [
+    {"from": 0, "to": 5.0, "style": "pizz"},
+    {"from": 8.6, "to": 11.2, "style": "roll"},
+    {"from": 15.6, "to": 20.6, "style": "glock", "gain": 0.8},
+    {"from": 20.6, "to": 21.2, "style": "roll", "gain": 0.7},
+    {"from": 21.75, "to": 28.7, "style": "party"}
+  ],
+  "events": [
+    ["steps", 0.15, 2.5, 0.42],
+    ["tap", 4.22], ["whoosh", 4.25, 0.5],
+    ["wah", 5.3],
+    ["rise", 7.1, 1.5],
+    ["steps", 8.6, 1.3, 0.15],
+    ["kick", 11.22], ["whoosh_up", 11.25, 1.0],
+    ["boing", 13.42], ["bounce", 14.5], ["bounce", 15.1], ["pop", 15.4],
+    ["ding", 17.45],
+    ["bounce", 19.03], ["tap", 19.3],
+    ["kick", 21.2], ["whoosh", 21.22, 0.45],
+    ["swish", 21.7], ["bounce", 21.88],
+    ["whistle", 21.95], ["crowd", 21.8, 5.5],
+    ["ding", 26.9]
+  ] }

@@ -7,7 +7,7 @@
   const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
   const eob = p => { const c1 = 1.7, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
   const eoc = p => 1 - Math.pow(1 - p, 3);
-  const INK = { pencil: '#4a4a4a', blue: '#1f3fae', black: '#1b1b1b' };
+  const INK = { pencil: '#4a4a4a', blue: '#1f3fae', black: '#1b1b1b', chalk: '#f3f0e6' };
   const D2R = Math.PI / 180;
   let UID = 0;
 
@@ -76,6 +76,8 @@
     cave: c => `<path class="dw" d="M-260 110 C-270 -60 -170 -210 0 -215 C170 -210 270 -60 260 110Z" fill="#a8a29e" stroke="#57534e"/><path class="dw" d="M-140 110 C-150 0 -90 -100 0 -105 C90 -100 150 0 140 110Z" fill="#292524" stroke="#1c1917"/><path class="dw" d="M-200 -60 l40 -20 M150 -120 l45 10 M180 20 l40 0 M-230 40 l30 10" stroke="#57534e" fill="none"/>`,
     smoke: c => `<circle class="dw" cx="-30" cy="20" r="34" fill="#d6d3d1" stroke="#78716c"/><circle class="dw" cx="20" cy="-10" r="40" fill="#e7e5e4" stroke="#78716c"/><circle class="dw" cx="-10" cy="-55" r="30" fill="#f5f5f4" stroke="#78716c"/>`,
     campfire: c => `<path class="dw" d="M-90 60 L80 20 M-80 20 L90 60" stroke="#7a4b24" stroke-width="22" fill="none"/><path class="dw" d="M0 30 C-60 10 -50 -60 -20 -90 C-20 -50 0 -50 5 -70 C30 -40 55 -30 45 10 C40 30 20 35 0 30Z" fill="#ff922b" stroke="#e8590c"/><path class="dw" d="M0 28 C-25 15 -20 -20 -5 -40 C0 -20 15 -15 20 0 C22 18 12 26 0 28Z" fill="#ffd43b" stroke="#fab005"/>`,
+    goal: c => `<path class="dw" d="M0 0 V-330 H170 L230 0" stroke="${c}" stroke-width="12" fill="none"/>
+      <path class="dw net" d="M14 -316 L210 -30 M40 -330 L222 -8 M90 -330 L224 0 M140 -330 L228 0 M10 -250 L190 -250 M10 -170 L205 -170 M10 -90 L218 -90" stroke="${c}" stroke-width="3" fill="none" opacity=".55"/>`,
     ball: c => `<circle class="dw" r="60" fill="#ff8c42" stroke="${c}"/><path class="dw" d="M-60 0 C-20 -25 20 -25 60 0 M0 -60 C25 -20 25 20 0 60" stroke="${c}" fill="none"/>`,
     box: c => `<path class="dw" d="M-70 -50 H70 V60 H-70Z" fill="#d9a76a" stroke="#7a4b24"/><path class="dw" d="M-70 -50 L-50 -75 H90 L70 -50 M70 60 L90 35 V-75" fill="#e8c08c" stroke="#7a4b24"/><path class="dw" d="M-15 -50 V60" stroke="#7a4b24" fill="none"/>`,
     exclaim: c => `<path class="dw" d="M0 -80 V30" stroke="#e63946" fill="none"/><circle class="dw" cy="65" r="10" fill="#e63946" stroke="#e63946"/>`,
@@ -153,6 +155,18 @@
         const d = Math.sin(t * 16); P.aL = [150 + d * 25, 30]; P.aR = [-150 - d * 25, -30]; P.lL = [35, -40 + d * 15]; P.lR = [-30, -30 - d * 15]; P.fx.fall = true; break; }
       case 'curl':         // ملتف ككرة (للتدحرج): ركبتان للصدر، ذراعان تحضنان
         P.lL = [150, -150]; P.lR = [140, -140]; P.aL = [60, 90]; P.aR = [80, 80]; P.lean = 25; P.y = -40; break;
+      case 'kick': case 'kick_soft': {   // ركل: سحب الساق للخلف ← ضربة سريعة ← متابعة (kick_soft أخف)
+        const p = ph == null ? (t % 2) / 2 : ph, hard = kind === 'kick';
+        const back = hard ? -65 : -30, fwd = hard ? 105 : 50, kb = hard ? -95 : -55;
+        let th, kn, ln;
+        if (p < 0.4) { const k = sm(p / 0.4); th = lerp(0, back, k); kn = lerp(0, kb, k); ln = lerp(0, hard ? 10 : 4, k); }
+        else if (p < 0.5) { const k = sm((p - 0.4) / 0.1); th = lerp(back, fwd * 0.7, k); kn = lerp(kb, 0, k); ln = lerp(hard ? 10 : 4, -6, k); P.fx.kick = true; }
+        else { const k = sm(clamp((p - 0.5) / 0.3)); th = lerp(fwd * 0.7, fwd, k); kn = 0; ln = lerp(-6, hard ? -14 : -4, k);
+          if (p > 0.8) { const r = sm((p - 0.8) / 0.2); th = lerp(fwd, 4, r); ln = lerp(hard ? -14 : -4, 0, r); } }
+        P.lR = [th, kn]; P.lL = [-6, -4]; P.lean = ln;
+        P.aL = [lerp(20, 70, clamp(th / 100 + 0.3)), 20]; P.aR = [lerp(-20, -70, clamp(th / 100 + 0.3)), -15];
+        break; }
+      case 'look_up': P.aR = [150, 30]; P.aL = [-20, 10]; P.lean = -10; P.fx.lookup = true; break;
       case 'throw': {   // رمي: تحضير للخلف ← قذف سريع للأمام ← متابعة
         const p = ph == null ? (t % 2) / 2 : ph;
         let up, lo, ln;
@@ -176,7 +190,7 @@
   }
   const foot = (L, body) => { const a = (L.a + 90) * D2R;   // القدم تشير للأمام عمودياً على الساق
     return `<path d="M${L.ex.toFixed(1)} ${L.ey.toFixed(1)} l${(Math.sin(a) * 26).toFixed(1)} ${(Math.cos(a) * 26).toFixed(1)}" stroke="${body}" stroke-width="9" fill="none"/>`; };
-  const hand = (A, body, burnt) => `<circle cx="${A.ex.toFixed(1)}" cy="${A.ey.toFixed(1)}" r="11" fill="${burnt ? '#111' : '#fff'}" stroke="${body}" stroke-width="6"/>`;
+  const hand = (A, body, burnt, paper) => `<circle cx="${A.ex.toFixed(1)}" cy="${A.ey.toFixed(1)}" r="11" fill="${burnt ? '#111' : (paper || '#fff')}" stroke="${body}" stroke-width="6"/>`;
 
   function charSVG(c, t, faceKind, poseKind, moving, ph) {
     const ink = INK[c.ink] || c.ink || INK.pencil;
@@ -205,6 +219,7 @@
       front += `<g stroke="${body}" stroke-width="5" fill="none" opacity="${(0.4 + 0.5 * o).toFixed(2)}"><path d="M${AR.ex - 38} ${AR.ey - 20} q-14 20 0 40"/><path d="M${AR.ex + 38} ${AR.ey - 20} q14 20 0 40"/><path d="M${AR.ex - 56} ${AR.ey - 30} q-18 30 0 60"/></g>`;
     }
     if (P.fx.swing) front += `<g stroke="${body}" stroke-width="6" fill="none" opacity=".6"><path d="M${nx - 60} ${ny - 120} Q${nx + 60} ${ny - 190} ${nx + 150} ${ny - 40}"/><path d="M${nx - 30} ${ny - 80} Q${nx + 50} ${ny - 140} ${nx + 120} ${ny - 20}"/></g>`;
+    if (P.fx.kick) front += `<g stroke="${body}" stroke-width="6" fill="none" opacity=".6"><path d="M${LR.ex - 120} ${LR.ey - 70} Q${LR.ex - 40} ${LR.ey + 30} ${LR.ex + 40} ${LR.ey - 10}"/><path d="M${LR.ex - 90} ${LR.ey - 100} Q${LR.ex - 20} ${LR.ey} ${LR.ex + 30} ${LR.ey - 40}"/></g>`;
     if (P.fx.clap > 0.85) front += `<g stroke="${body}" stroke-width="5" opacity=".7"><path d="M${AR.ex + 30} ${AR.ey - 30} l20 -18 M${AR.ex + 36} ${AR.ey} h26 M${AR.ex + 30} ${AR.ey + 30} l20 18"/></g>`;
     // الشيء المُمسك: يُرسم قبل الكف فتبدو اليد قابضة عليه، وعند الأكل يصعد إلى الفم
     let held = '', grip = '';
@@ -224,13 +239,13 @@
       <path d="M0 ${hipY} L${nx.toFixed(1)} ${ny.toFixed(1)}" stroke="${body}" stroke-width="9"/>${shirt}
       ${c.scarf ? `<g transform="translate(${nx.toFixed(1)} ${(ny + 6).toFixed(1)})"><path d="M-46 -12 C-15 6 15 6 46 -12 L46 14 C15 30 -15 30 -46 14Z" fill="#e63946" stroke="#9d0208" stroke-width="5"/>
         <path d="M18 14 L${26 + Math.sin(t * 6) * 6} 80 L${46 + Math.sin(t * 6) * 6} 76 L38 10" fill="#e63946" stroke="#9d0208" stroke-width="5"/></g>` : ''}
-      <path d="${AL.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AL, body, burnt)}
+      <path d="${AL.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AL, body, burnt, c.paper)}
       <g transform="translate(${hx.toFixed(1)} ${hy.toFixed(1)}) rotate(${P.lean * 0.4})">
-        <circle r="${R}" fill="${burnt ? '#111' : '#fff'}" stroke="${body}" stroke-width="7"/>
+        <circle r="${R}" fill="${burnt ? '#111' : (c.paper || '#fff')}" stroke="${body}" stroke-width="7"/>
         <path d="M-10 -68 q-6 -22 -2 -30 M4 -70 q2 -24 10 -30 M16 -66 q10 -16 20 -18" stroke="${body}" stroke-width="5" fill="none"/>
-        ${face(P.fx.eat > 0.6 ? (c.hold === 'icecream' ? 'lick' : 'chew') : faceKind, burnt ? '#fff' : ink, t)}
+        ${P.fx.lookup ? '<g transform="translate(6 -22)">' : '<g>'}${face(P.fx.eat > 0.6 ? (c.hold === 'icecream' ? 'lick' : 'chew') : faceKind, burnt ? '#fff' : ink, t)}</g>
       </g>
-      ${held}<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt)}${grip}${front}</g>`;
+      ${held}<path d="${AR.d}" stroke="${body}" stroke-width="8" fill="none"/>${hand(AR, body, burnt, c.paper)}${grip}${front}</g>`;
     return { svg, hand: { x: AR.ex + P.sway, y: AR.ey + P.y } };
   }
   // موضع اليد اليمنى لحظة الإفلات في الرمي (لنقطة بداية طيران الشيء)
@@ -312,7 +327,7 @@
     });
     // الشخصيات
     const cg = svg.querySelector('.chars');
-    (d.chars || []).forEach(c => { const g = document.createElementNS(NS, 'g'); cg.appendChild(g); R.chars.push({ g, c }); });
+    (d.chars || []).forEach(c => { if (d.paper && !c.paper) c.paper = d.paper; const g = document.createElementNS(NS, 'g'); cg.appendChild(g); R.chars.push({ g, c }); });
     // فقاعة التفكير
     if (d.think && d.think.length && R.chars.length) {
       const g = document.createElementNS(NS, 'g'); svg.querySelector('.think').appendChild(g);
@@ -402,6 +417,7 @@
       const base = o.w.y + 85 * sc;
       o.g.setAttribute('transform', `translate(${o.w.x} ${base}) scale(${(sc * (1 + sq * 0.55)).toFixed(3)} ${(sc * (1 - sq)).toFixed(3)}) translate(0 ${-85})`);
     });
+    drawBall(R, t, s);
     // فقاعة التفكير تظهر ثم تنفجر
     if (R.think && headPos) {
       const a = s.start + 0.35, e = s.end - 0.35, pin = eob(clamp((t - a) / 0.35)), pop = clamp((t - e) / 0.3);
@@ -418,5 +434,75 @@
     }
   }
 
-  window.Doodle = { build, draw, ICONS: Object.keys(ICONS) };
+  /* ---------------- الكرة الفيزيائية (ball= في المشاهد) ----------------
+     محاكاة واحدة متصلة عبر كل المشاهد (الكرة تبقى حيث توقفت): جاذبية، ارتداد عن الأرض، تدحرج باحتكاك
+     ودوران = المسافة ÷ نصف القطر، ارتطام برأس الشخصية (bonk=1)، وشبكة المرمى (goal) تمتص الكرة وتنتفخ. */
+  const BG = 2600, DT = 1 / 240;
+  let BS = null;
+  function ballEvents() {
+    const TL = window.TIMELINE, ev = [];
+    TL.scenes.forEach(s => { const b = s.doodle && s.doodle.ball; if (!b) return;
+      const T = f => s.start + f * (s.end - s.start);
+      if (b.kick) ev.push({ t: T(b.kick[0]), v: [b.kick[1], b.kick[2]] });
+      if (b.set) ev.push({ t: s.start, p: b.set });
+      if (b.x != null && !ev.length) ev.push({ t: 0, p: [b.x, null, 0, 0], r: b.r });
+    });
+    return ev.sort((a, b) => a.t - b.t);
+  }
+  function sceneAt(t) { const S = window.TIMELINE.scenes; for (let i = S.length - 1; i >= 0; i--) if (t >= S[i].start) return S[i]; return S[0]; }
+  function ballState(t) {
+    if (!BS || t < BS.t - 1e-9) { const ev = ballEvents(); const e0 = ev.find(e => e.p) || { p: [540, null, 0, 0] };
+      BS = { t: 0, x: e0.p[0], y: null, vx: 0, vy: 0, a: 0, r: (ev.find(e => e.r) || {}).r || 42, ev, k: 0, net: -9, air: false, hit: -9 }; }
+    while (BS.t < t) {
+      const s = sceneAt(BS.t), d = s.doodle || {}, gy = d.ground != null ? d.ground : 1560, r = BS.r;
+      while (BS.k < BS.ev.length && BS.ev[BS.k].t <= BS.t) { const e = BS.ev[BS.k++];
+        if (e.p) { BS.x = e.p[0]; BS.y = e.p[1]; BS.vx = e.p[2] || 0; BS.vy = e.p[3] || 0; }
+        if (e.v) { BS.vx = e.v[0]; BS.vy = e.v[1]; BS.hit = BS.t; } }
+      if (BS.y == null) BS.y = gy - r;
+      const onG = BS.y >= gy - r - 0.5 && Math.abs(BS.vy) < 1;
+      if (!onG) BS.vy += BG * DT;
+      BS.px = BS.x; BS.x += BS.vx * DT; BS.y += BS.vy * DT;
+      if (BS.y > gy - r) { BS.y = gy - r; BS.vy = Math.abs(BS.vy) > 260 ? -BS.vy * 0.5 : 0; if (BS.vy) BS.hit = BS.t; }
+      if (BS.y >= gy - r - 0.5 && !BS.vy) { const dec = 520 * DT; BS.vx = Math.abs(BS.vx) <= dec ? 0 : BS.vx - Math.sign(BS.vx) * dec; BS.a += BS.vx * DT / r; }
+      else BS.a += BS.vx * DT / r * 0.6;
+      // المرمى: الشبكة الخلفية مائلة من (gx+170, أعلى) إلى (gx+230, الأرض)
+      (d.draws || []).forEach(w => { if (w.icon !== 'goal') return; const sc = w.s || 1, gx = w.x, top = gy - 330 * sc;
+        // سقف المرمى (الشبكة العلوية): الكرة النازلة من فوق ترتد عنه ولا تدخل
+        if (BS.vy > 0 && BS.x > gx - r * 0.5 && BS.x < gx + 175 * sc && BS.y + r > top - 6 && BS.y < top) { BS.y = top - 6 - r; BS.vy = -BS.vy * 0.45; BS.vx += 160; }
+        else if (BS.x > gx && BS.y > top) { const wx = gx + (170 + 60 * (BS.y - top) / (gy - top)) * sc;
+          if (BS.x + r > wx && BS.vx > 0 && BS.px + r <= wx + 2) { BS.x = wx - r; BS.vx = -BS.vx * 0.04; BS.net = BS.t; } } });
+      // ارتطام برأس الشخصية الأولى
+      if (d.ball && d.ball.bonk && d.chars && d.chars[0] && BS.t < s.start + (d.ball.bonk_until != null ? d.ball.bonk_until : 1) * (s.end - s.start)) { const c = d.chars[0], big = c.big || 1, hx = c.x1 != null ? c.x1 : (c.x0 || 540), hy = (c.y != null ? c.y : gy) - 335 * big, R = 70 * big;
+        const dx = BS.x - hx, dy = BS.y - hy, dist = Math.hypot(dx, dy);
+        if (dist < R + r) { const nx = dx / dist, ny = dy / dist, vn = BS.vx * nx + BS.vy * ny;
+          if (vn < 0) { BS.vx -= 1.55 * vn * nx; BS.vy -= 1.55 * vn * ny; BS.x = hx + nx * (R + r); BS.y = hy + ny * (R + r); BS.bonk = BS.t; } } }
+      BS.t += DT;
+    }
+    if (BS.y == null) { const d = sceneAt(t).doodle || {}; BS.y = (d.ground != null ? d.ground : 1560) - BS.r; }
+    return BS;
+  }
+  function drawBall(R, t, s) {
+    if (!window.TIMELINE.scenes.some(x => x.doodle && x.doodle.ball)) return;
+    if (!R.ball) { R.ball = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(R.ball); }
+    const b = ballState(t), ink = INK[R.d.ink] || INK.pencil, r = b.r;
+    R.ball.setAttribute('transform', `translate(${b.x.toFixed(1)} ${b.y.toFixed(1)}) rotate(${(b.a * 180 / Math.PI).toFixed(1)})`);
+    const fast = Math.hypot(b.vx, b.vy) > 900, ang = Math.atan2(b.vy, b.vx);
+    R.ball.innerHTML = `<circle r="${r}" fill="${R.d.ballc || '#ffb347'}" stroke="${ink}" stroke-width="6"/>
+      <path d="M0 ${-r * 0.42} L${r * 0.4} ${-r * 0.13} L${r * 0.25} ${r * 0.34} L${-r * 0.25} ${r * 0.34} L${-r * 0.4} ${-r * 0.13}Z" fill="${ink}"/>
+      <path d="M0 ${-r * 0.42} V${-r} M${r * 0.4} ${-r * 0.13} L${r * 0.95} ${-r * 0.3} M${r * 0.25} ${r * 0.34} L${r * 0.6} ${r * 0.8} M${-r * 0.25} ${r * 0.34} L${-r * 0.6} ${r * 0.8} M${-r * 0.4} ${-r * 0.13} L${-r * 0.95} ${-r * 0.3}" stroke="${ink}" stroke-width="4"/>`;
+    // خطوط سرعة خلف الكرة السريعة (لا تدور معها)
+    if (!R.trail) { R.trail = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').insertBefore(R.trail, R.ball); }
+    R.trail.innerHTML = fast ? [0, -1, 1].map(k => `<path d="M${(b.x - Math.cos(ang) * (r + 20) + k * Math.sin(ang) * 22).toFixed(1)} ${(b.y - Math.sin(ang) * (r + 20) - k * Math.cos(ang) * 22).toFixed(1)} l${(-Math.cos(ang) * (110 - Math.abs(k) * 35)).toFixed(1)} ${(-Math.sin(ang) * (110 - Math.abs(k) * 35)).toFixed(1)}" stroke="${ink}" stroke-width="6" stroke-linecap="round" opacity=".7"/>`).join('') : '';
+    // انتفاخ الشبكة وارتجافها عند الهدف
+    R.draws.forEach(o => { if (o.w.icon !== 'goal') return; const k = t - b.net;
+      const net = o.g.querySelector('.net'); if (!net) return;
+      const bul = k >= 0 && k < 0.9 ? Math.sin(k * 18) * Math.exp(-k * 4) * 26 : 0; net.setAttribute('transform', `translate(${bul.toFixed(1)} 0)`); });
+    // نجوم الدوار بعد الارتطام بالرأس
+    const kb = t - (b.bonk || -9);
+    if (!R.dizzy) { R.dizzy = document.createElementNS(NS, 'g'); R.svg.querySelector('.front').appendChild(R.dizzy); }
+    if (kb >= 0 && kb < 2.2 && R.d.chars && R.d.chars[0]) { const c = R.d.chars[0], big = c.big || 1, hx = c.x1 != null ? c.x1 : c.x0, hy = (c.y != null ? c.y : R.ground) - 335 * big - 90 * big;
+      R.dizzy.innerHTML = [0, 1, 2].map(i => { const a2 = t * 5 + i * 2.1; return `<path transform="translate(${(hx + Math.cos(a2) * 110).toFixed(1)} ${(hy + Math.sin(a2) * 26).toFixed(1)}) scale(.5)" d="M0 -30 L9 -9 L30 -9 L13 5 L19 28 L0 14 L-19 28 L-13 5 L-30 -9 L-9 -9Z" fill="#ffd43b" stroke="${ink}" stroke-width="5"/>`; }).join('');
+    } else R.dizzy.innerHTML = '';
+  }
+  window.Doodle = { build, draw, ballState, ICONS: Object.keys(ICONS) };
 })();

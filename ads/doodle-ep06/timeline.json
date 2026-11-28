@@ -1,0 +1,382 @@
+{
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "duration": 28.7,
+ "audio": null,
+ "align": "pace 2.3 w/s (no audio)",
+ "scenes": [
+  {
+   "start": 0.0,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": -120.0,
+      "x1": 180.0,
+      "face": "happy",
+      "pose": "walk",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25
+     }
+    ],
+    "ball": {
+     "x": 330.0,
+     "r": 42.0
+    },
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 3.0
+  },
+  {
+   "start": 3.0,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 180.0,
+      "x1": 180.0,
+      "face": "happy>happy>sad",
+      "pose": "kick_soft",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     }
+    ],
+    "ball": {
+     "kick": [
+      0.47,
+      380.0,
+      0.0
+     ]
+    },
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 5.6
+  },
+  {
+   "start": 5.6,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 180.0,
+      "x1": 180.0,
+      "face": "sad>angry",
+      "pose": "stand>shiver",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     }
+    ],
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 8.6
+  },
+  {
+   "start": 8.6,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 180.0,
+      "x1": 319.0,
+      "face": "angry",
+      "pose": "run",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     }
+    ],
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 9.9
+  },
+  {
+   "start": 9.9,
+   "bg": "chalk",
+   "lines": [],
+   "fx": [
+    "shake"
+   ],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 319.0,
+      "x1": 319.0,
+      "face": "angry>angry>shock",
+      "pose": "kick",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     }
+    ],
+    "ball": {
+     "kick": [
+      0.47,
+      420.0,
+      -3000.0
+     ]
+    },
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 12.7
+  },
+  {
+   "start": 12.7,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 319.0,
+      "x1": 319.0,
+      "face": "shock>shock>sad",
+      "pose": "look_up>look_up>stand",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     }
+    ],
+    "ball": {
+     "set": [
+      319.0,
+      -150.0,
+      0.0,
+      600.0
+     ],
+     "bonk": 1.0
+    },
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 16.3
+  },
+  {
+   "start": 16.3,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 319.0,
+      "x1": 319.0,
+      "face": "sad>happy>wink",
+      "pose": "think>point",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     },
+     {
+      "icon": "bulb",
+      "x": 470.0,
+      "y": 880.0,
+      "s": 0.9,
+      "delay": 0.9
+     }
+    ],
+    "ball": {
+     "kick": [
+      0.55,
+      70.0,
+      -450.0
+     ],
+     "bonk": 1.0,
+     "bonk_until": 0.55
+    },
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 19.7
+  },
+  {
+   "start": 19.7,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 321.0,
+      "x1": 321.0,
+      "face": "happy",
+      "pose": "kick",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     }
+    ],
+    "ball": {
+     "kick": [
+      0.47,
+      1100.0,
+      -900.0
+     ]
+    },
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 22.9
+  },
+  {
+   "start": 22.9,
+   "bg": "chalk",
+   "lines": [],
+   "fx": [
+    "stars"
+   ],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 321.0,
+      "x1": 321.0,
+      "face": "laugh",
+      "pose": "jump",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     },
+     {
+      "icon": "star",
+      "x": 250.0,
+      "y": 700.0,
+      "s": 0.8,
+      "delay": 0.3
+     },
+     {
+      "icon": "star",
+      "x": 820.0,
+      "y": 620.0,
+      "s": 0.8,
+      "delay": 0.6
+     }
+    ],
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 26.3
+  },
+  {
+   "start": 26.3,
+   "bg": "chalk",
+   "lines": [],
+   "doodle": {
+    "chars": [
+     {
+      "x0": 321.0,
+      "x1": 321.0,
+      "face": "wink",
+      "pose": "cheer",
+      "ink": "chalk",
+      "big": 1.5
+     }
+    ],
+    "draws": [
+     {
+      "icon": "goal",
+      "x": 760.0,
+      "y": 1660.0,
+      "s": 1.25,
+      "instant": true
+     }
+    ],
+    "paper": "#24423a",
+    "ground": 1660.0,
+    "ink": "chalk"
+   },
+   "end": 28.7
+  }
+ ],
+ "music": "soundtrack.wav",
+ "music_volume": 1.0,
+ "sfx": false
+}

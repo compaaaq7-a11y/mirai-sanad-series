@@ -473,6 +473,14 @@ def make_doodle(a):
             if '=' in fl: w['instant'] = True   # موجودة من المشهد السابق: بلا إعادة رسم
             draws.append(w)
         d['draws'] = draws
+    if a.get('ball'):   # كرة بفيزياء حقيقية: ball="x=560 r=42" ثم kick=0.47,1500,-2600 / set=x,y,vx,vy / bonk=1
+        b = {}
+        for tok in a['ball'].split():
+            k, v = tok.split('=', 1)
+            b[k] = [float(x) for x in v.split(',')] if ',' in v else float(v)
+        d['ball'] = b
+    if a.get('paper'):
+        d['paper'] = a['paper']
     if a.get('think'):
         d['think'] = [x for x in a['think'].split('|') if x]
     if a.get('say'):
