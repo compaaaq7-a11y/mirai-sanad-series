@@ -52,7 +52,7 @@ const lidB = rbox(1.12, 0.3, 0.78, '#8b4513', { rough: 0.45, r: 0.12 }); lidB.po
 [-0.42, 0.42].forEach(x => { const b = rbox(0.13, 0.32, 0.8, '#ffc93c', { metal: 1, rough: 0.2, emissive: '#ff9a00', ei: 0.2, r: 0.04 }); b.position.set(x, 0.15, 0.38); lid.add(b); });
 const lock = rbox(0.2, 0.24, 0.08, '#ffc93c', { metal: 1, rough: 0.15, emissive: '#ff9a00', ei: 0.3, r: 0.04 }); lock.position.set(0, 0.6, 0.4); chest.add(lock);
 const loot = new THREE.Group(); loot.position.y = 0.6; chest.add(loot);
-const GM = gold({ ei: 0.2 });
+const GM = gold({ ei: 0.18 });
 const R3 = rnd(11);
 for (let i = 0; i < 34; i++) { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.03, 20), GM); c.position.set((R3() - 0.5) * 0.9, R3() * 0.12, (R3() - 0.5) * 0.55); c.rotation.set(R3() * 0.8, 0, R3() * 0.8); loot.add(c); }
 ['#ff3b6b', '#33d1ff', '#7cff6b', '#c77dff'].forEach((col, i) => { const g = new THREE.Mesh(new THREE.OctahedronGeometry(0.11), new THREE.MeshStandardMaterial({ color: col, metalness: 0.3, roughness: 0.05, emissive: col, emissiveIntensity: 0.25 })); g.position.set(-0.3 + i * 0.2, 0.14, (i % 2 - 0.5) * 0.25); loot.add(g); });
@@ -140,7 +140,7 @@ function update(t) {
   else if (t < 18.5) { const j = Math.abs(Math.sin((t - 15) * 5)); P0 = t > 15 ? { aL: -2.8, aR: -2.8, aLz: 0.3, aRz: -0.3, y: j * 0.5, lL: 0.3 * j, lR: -0.3 * j } : { aL: -0.6, aR: -0.6, lean: 0.2 }; setFace(sanad, t > 14.4 ? 'star' : 'shock'); sry = -PI / 2 + sm(seg(t, 15.2, 16)) * PI / 2.2; }
   else if (t < 25) { sry = lerp(-PI / 2 + PI / 2.2, -PI / 3, sm(seg(t, 18.5, 19.5))); P0 = t > 23.6 ? { nod: Math.max(0, Math.sin((t - 23.6) * 8)) * 0.3 } : {}; setFace(sanad, t > 23.4 ? 'laugh' : 'happy'); }
   else if (t < 32) { // في المحل: يحمل الصندوق ثم يضعه
-    const q = seg(t, 25, 27); sx = lerp(SHOP + 2.8, SHOP + 0.6, sm(q)); sz = 0.9; sry = PI * 0.82; P0 = q < 1 ? { ...walk(t, 0.7), aL: -1.3, aR: -1.3 } : { aL: lerp(-1.3, 0, seg(t, 27, 27.4)), aR: lerp(-1.3, 0, seg(t, 27, 27.4)) };
+    const q = seg(t, 25, 27); sx = lerp(SHOP + 2.8, SHOP + 0.6, sm(q)); sz = 0.9; sry = PI * 0.82; P0 = q < 1 ? { ...walk(t, 0.55), aL: -1.32, aR: -1.32, aLz: -0.05, aRz: 0.05 } : t < 27.45 ? { aL: lerp(-1.32, -1.5, seg(t, 27, 27.45)), aR: lerp(-1.32, -1.5, seg(t, 27, 27.45)), lean: 0.12 * seg(t, 27, 27.45) } : { aL: lerp(-1.5, 0, seg(t, 27.45, 27.9)), aR: lerp(-1.5, 0, seg(t, 27.45, 27.9)) };
     if (t > 29.2) { const j = Math.abs(Math.sin((t - 29.2) * 6)); P0 = { aL: -2.8, aR: -2.8, aLz: 0.3, aRz: -0.3, y: j * 0.45 }; }
     setFace(sanad, t > 28.6 ? 'star' : 'happy');
   } else { // يزرعان الفرع
@@ -181,7 +181,11 @@ function update(t) {
   // --- الصندوق والكنز
   chest.visible = t > CLANG - 0.1 && t < 32;
   if (t < 25) { const up = sm(seg(t, 12.3, 13.6)); chest.position.set(HOLE.x, lerp(-0.95, 0.02, up), HOLE.z + up * 1.0); chest.rotation.set(0, up * 0.25, 0); }
-  else { const q = seg(t, 25, 27); chest.position.set(lerp(SHOP + 1.6, SHOP, sm(seg(t, 27, 27.4))), q < 1 ? 1.25 : lerp(1.25, 1.28, 1), lerp(0.4, -0.6, sm(seg(t, 27, 27.4)))); if (q < 1) { holdAt(chest, sanad, 'R', [-0.64, -0.95, 0.45]); chest.rotation.set(0, 0, 0); chest.position.y -= 0.35; } chest.rotation.set(0, 0, 0); }
+  else {   // في المحل: يحمله أمام صدره بيديه (اليدان على جانبيه) ثم يضعه على الطاولة
+    sanad.root.updateMatrixWorld(true);
+    const held = sanad.root.localToWorld(V(0, 1.27, 0.86)), onC = V(SHOP, 1.24, -0.55), k = sm(seg(t, 27.0, 27.45));
+    chest.position.set(lerp(held.x, onC.x, k), lerp(held.y, onC.y, k) + Math.sin(k * PI) * 0.12, lerp(held.z, onC.z, k));
+    chest.rotation.set(0, lerp(sanad.root.rotation.y + PI, 0, k), 0); }
   const open = t < 25 ? sm(seg(t, OPEN, OPEN + 0.6)) : sm(seg(t, 27.5, 28.1)); lid.rotation.x = -open * 1.95; loot.visible = open > 0.05;
   const shine = t < 25 ? (t > CLANG ? (t < 12 ? 0.6 + Math.sin(t * 20) * 0.2 : open * (2.5 + Math.sin(t * 9) * 0.4)) : 0) : open * 2.5;
   glow.position.copy(chest.position).add(V(0, 1.0, 0.2)); glow.intensity = t < 32 ? shine * 0.9 : 0;

@@ -49,7 +49,7 @@ export function rbox(w, h, d, color, o = {}) {
   m.castShadow = o.shadow !== false; m.receiveShadow = true;
   return m;
 }
-export function gold(o = {}) { return new THREE.MeshStandardMaterial({ color: '#ffc93c', metalness: 1, roughness: 0.18, emissive: '#ff9a00', emissiveIntensity: o.ei ?? 0.12 }); }
+export function gold(o = {}) { return new THREE.MeshStandardMaterial({ color: '#ffd93b', metalness: 0.55, roughness: 0.22, emissive: '#ffcf1a', emissiveIntensity: o.ei ?? 0.12 }); }
 
 // وجوه مرسومة على مقدمة الرأس
 const FACE = {};
